@@ -1,18 +1,19 @@
-import { View, Text, StatusBar } from 'react-native'
 import React from 'react'
 import { useFocusEffect } from '@react-navigation/native'
+import { styles } from '../../styles'
 
+const {ImageBackground, Text, StatusBar, View} = require('react-native')
+const background = require('../../assets/images/background.png')
 type Props = {}
 
-const Joinas = (props: Props) => {
+const Joinas: React.FC = (props: Props) => {
 
-    useFocusEffect(() => {
-        StatusBar.setBackgroundColor('#e7e3e0')
-    })
+
+
   return (
-    <View>
+    <ImageBackground source={background} resizeMode ='cover' style = {styles.container}>
       <Text>Joinas</Text>
-    </View>
+      </ImageBackground>
   )
 }
 
