@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "558379420401",
+    "project_id": "skillmapping-5a3a1",
+    "storage_bucket": "skillmapping-5a3a1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:558379420401:android:52cd520f7bf2ec1dd2f750",
+        "android_client_info": {
+          "package_name": "com.skillmapapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "558379420401-i5uqfem6nqs00q5qpclgu66j3k9unecu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.skillmapapp",
+            "certificate_hash": "d7549edcb2e27af829fd70ac5a37ff0db24f11d8"
+          }
+        },
+        {
+          "client_id": "558379420401-38efn3u98oidr93phodvdfoa04c6p7ga.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvbzHBXnMnX5XYtPnPI4kIW0jycNvFx20"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "558379420401-38efn3u98oidr93phodvdfoa04c6p7ga.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
