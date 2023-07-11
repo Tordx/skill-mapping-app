@@ -6,6 +6,8 @@ import Tabs from '../layouts'
 import Login from '../../screens/temp/login'
 import Splash from '../../screens/temp/splash'
 import Joinas from '../../screens/temp/joinas'
+import UserCreate from '../../screens/temp/usercreate'
+import Employercreate from '../../screens/temp/employercreate'
 
 type Props = {}
 
@@ -39,6 +41,22 @@ const  Stacks: React.FC = () => {
             <Stack.Screen
                 name='Tab'
                 component={Tabs}
+                options={{
+                    headerShown: false,
+                }}
+
+            />
+            <Stack.Screen
+                name='Usercreate'
+                component={UserCreate}
+                options={{
+                    headerShown: false,
+                }}
+
+            />
+            <Stack.Screen
+                name='Employercreate'
+                component={Employercreate}
                 options={{
                     headerShown: false,
                 }}
