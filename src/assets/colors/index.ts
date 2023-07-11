@@ -88,8 +88,8 @@ const colors: PaletteOptions = {
         secondary: '##3fdd2e',
         accenta: '#2dc11d',
         accentb: '#b9f3b3',
-        accentc: '#257c98',
-        accentd: '#83635a',
+        accentc: '#f8fbea',
+        accentd: '#acef9d',
     },
 
     black: {
