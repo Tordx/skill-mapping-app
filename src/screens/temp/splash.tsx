@@ -20,28 +20,25 @@ const Splash = (props: Props) => {
             try {
                 
                 setTimeout(async() => {
-            if(state.isConnected) {
-                const authCredentials = await AsyncStorage.getItem('loginauth')
-                if(authCredentials !== null){
-                    const loginAuth = JSON.parse(authCredentials)
-                    const email = loginAuth.email
-                    const password = loginAuth.password
-                    await firebase.auth().signInWithEmailAndPassword(email, password)
-                    .then(() => {
-                        ToastAndroid.show("Auto-login success", ToastAndroid.BOTTOM)
-                        navigation.navigate('Tab' as never)
-                     
-                    })
-                } else {
-                    navigation.navigate('Joinas' as never)
-                }
-            } else {
-                ToastAndroid.show("You are not connected to the internet", ToastAndroid.BOTTOM)
-                return
-            }
-            
-            }, 2000);
-                        
+                    if(state.isConnected) {
+                        const authCredentials = await AsyncStorage.getItem('loginauth')
+                        if(authCredentials !== null){
+                            const loginAuth = JSON.parse(authCredentials)
+                            const email = loginAuth.email
+                            const password = loginAuth.password
+                            await firebase.auth().signInWithEmailAndPassword(email, password)
+                            .then(() => {
+                                ToastAndroid.show("Auto-login success", ToastAndroid.BOTTOM)
+                                navigation.navigate('Tab' as never)
+                            })
+                        } else {
+                            navigation.navigate('Joinas' as never)
+                        }
+                    } else {
+                        ToastAndroid.show("You are not connected to the internet", ToastAndroid.BOTTOM)
+                        return
+                    }
+                }, 2000);       
             } catch(error){
                 ToastAndroid.show("Please check your internet connection", ToastAndroid.BOTTOM)
             }
