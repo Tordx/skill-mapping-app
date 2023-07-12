@@ -3,7 +3,7 @@ import { useFocusEffect, useNavigation,  } from '@react-navigation/native'
 import { styles } from '../../styles'
 import {  JoinasButton, LogButton, TextButton } from '../../global/partials/buttons'
 import { black, theme } from '../../assets/colors'
-import {ImageBackground, Text, StatusBar, View, ToastAndroid} from 'react-native'
+import {ImageBackground, Text, StatusBar, View, ToastAndroid, BackHandler} from 'react-native'
 const background = require('../../assets/images/background.png')
 
 type Props = {
@@ -15,6 +15,18 @@ const Joinas: React.FC<Props> = (props) => {
 
   const [usertype, setusertype] = useState('');
   const navigation = useNavigation();
+
+  useFocusEffect(() => {
+    
+    const Back = () => {
+        BackHandler.exitApp();
+        return true
+      };
+      const handler = BackHandler.addEventListener('hardwareBackPress', Back);
+      return () => handler.remove();
+})
+
+
 
   const routechecking = () => {
     if(usertype === 'employer') {
