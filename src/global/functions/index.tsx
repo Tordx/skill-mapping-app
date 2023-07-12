@@ -6,10 +6,11 @@ import { black, theme, white } from '../../assets/colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 type Props = {
     currentPosition: number,
+    stepCount: number,
 }
 
-export const Steps: React.FC<Props>  = ({currentPosition}) => {
-  const labels = ["1", "2", "3", "4"];
+export const Steps: React.FC<Props>  = ({currentPosition, stepCount}) => {
+  const labels = ["1", "2","3","4"]
 
   const stepIndicatorStyles = {
     stepIndicatorSize: 40,
@@ -41,7 +42,7 @@ export const Steps: React.FC<Props>  = ({currentPosition}) => {
       <StepIndicator
         customStyles={stepIndicatorStyles}
         currentPosition={currentPosition}
-        stepCount={4}
+        stepCount={stepCount}
         renderStepIndicator={(params) =>{
          return(
             <View style={[styles.stepIndicator, params.stepStatus === 'current' && styles.currentStep]}>
