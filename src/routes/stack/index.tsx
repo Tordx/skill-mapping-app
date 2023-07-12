@@ -8,6 +8,9 @@ import Splash from '../../screens/temp/splash'
 import Joinas from '../../screens/temp/joinas'
 import UserCreate from '../../screens/temp/usercreate'
 import Employercreate from '../../screens/temp/employercreate'
+import Verification from '../../screens/temp/verification'
+import Forgot from '../../screens/temp/forgot'
+import Forgotsent from '../../screens/temp/forgotsent'
 
 type Props = {}
 
@@ -39,7 +42,7 @@ const  Stacks: React.FC = () => {
 
             />
             <Stack.Screen
-                name='Tab'
+                name='Tabs'
                 component={Tabs}
                 options={{
                     headerShown: false,
@@ -62,6 +65,31 @@ const  Stacks: React.FC = () => {
                 }}
 
             />
+            <Stack.Screen
+                name='Verification'
+                component={Verification}
+                options={{
+                    headerShown: false,
+                }}
+
+            />
+            <Stack.Screen
+            name='Forgot'
+            component={Forgot}
+            options={{
+                headerShown: false,
+            }}
+
+             />
+             <Stack.Screen
+            name='Forgotsent'
+            component={Forgotsent}
+            options={{
+                headerShown: false,
+            }}
+
+             />
+            
         </Stack.Navigator>
     </NavigationContainer>
   )
