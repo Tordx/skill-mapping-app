@@ -1,13 +1,23 @@
-import { View, Text } from 'react-native'
+import { View, BackHandler } from 'react-native'
 import React from 'react'
 import { Tab } from '../../../App'
 import Home from '../../screens/home/freelance/home'
 import Notification from '../../screens/home/freelance/notification'
 import Saved from '../../screens/home/freelance/saved'
 import Account from '../../screens/home/freelance/account'
+import { useFocusEffect } from '@react-navigation/native'
 
 
 const Tabs: React.FC = () => {
+
+  useFocusEffect(() => {
+    const exit = () =>{
+      BackHandler.exitApp()
+      return true
+    }
+    const handler = BackHandler.addEventListener('hardwareBackPress', exit)
+      return() => handler.remove()
+  })
 
   return (
 
