@@ -81,14 +81,14 @@ export const styles = StyleSheet.create({
         borderRadius: 15,
         borderColor: black.main,
         borderWIdth: 1,
+        marginTop: 25
 
       },
       stepIndicator: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        alignContent: 'center',
-        borderRadius: 15,
+        borderRadius: 100,
         borderColor: black.main,
         borderWIdth: 1,
       },
@@ -99,14 +99,15 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         alignContent: 'center',
         borderWIdth: 1,
-        width: 30,
-        height: 30,
+        width: 45,
+        height: 45,
       },
       stepLabel: {
         color: '#000000',
-        fontSize: 12,
+        fontSize: 20,
         fontWeight: 'bold',
-        marginTop: 5,
+        textAlign: 'center',
+        alignSelf: 'center',
       },
       currentStepLabel: {
         color: '#ffffff',
