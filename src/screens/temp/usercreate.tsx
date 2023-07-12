@@ -23,6 +23,7 @@ const UserCreate = (props: Props) => {
        {position <= 0 ? <Image source={logo} resizeMode='contain' style = {{width: '50%', height: 200}}  /> : <GoBack onPress={() => setposition(position - 1)}/>}
           <Steps
             currentPosition={position}
+            stepCount={4}
           />
           <PersonalInfo position={position} setposition={setposition} />
         </View>
