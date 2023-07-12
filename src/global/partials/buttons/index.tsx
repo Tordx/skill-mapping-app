@@ -62,11 +62,22 @@ export const LogButton: React.FC<Props> = ({onPress, name, title}) => {
   )
 
 }
-export const TextButton: React.FC<Props> = ({onPress, text1, text2,}) => {
+export const TextButton: React.FC<Props> = ({onPress, text1, text2}) => {
   
   return (
     <Pressable onPress={onPress}  style = {[styles.createaccount]}>
       <Text style = {{fontSize: 15, fontFamily: 'Montserrat-Regular', color: black.main, textShadowColor: white.W004, textShadowRadius: .5,}}>{text1}<Text style = {{color: theme.primary}}>{text2}</Text></Text>
+      
+    </Pressable>
+  )
+
+}
+
+export const ForgotButton: React.FC<Props> = ({onPress, text1,}) => {
+  
+  return (
+    <Pressable onPress={onPress}  style = {[styles.createaccount, {justifyContent: 'flex-end', height: 25}]}>
+      <Text style = {{fontSize: 15, fontFamily: 'Montserrat-Regular', color: theme.primary, textShadowColor: white.W004, textShadowRadius: .5,}}>{text1}</Text>
       
     </Pressable>
   )
