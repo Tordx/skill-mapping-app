@@ -12,8 +12,8 @@ export const Steps: React.FC<Props>  = ({currentPosition}) => {
   const labels = ["1", "2", "3", "4"];
 
   const stepIndicatorStyles = {
-    stepIndicatorSize: 35,
-    currentStepIndicatorSize: 35,
+    stepIndicatorSize: 40,
+    currentStepIndicatorSize: 40,
     separatorStrokeWidth: 2,
     currentStepStrokeWidth: 1,
     stepStrokeCurrentColor: black.main,
@@ -33,7 +33,7 @@ export const Steps: React.FC<Props>  = ({currentPosition}) => {
     labelColor: '#000000',
     labelSize: 13,
     currentStepLabelColor: black.B006,
-    finishedLabelColor: white.main
+    finishedLabelColor: white.main,
   };
 
   return (
@@ -42,10 +42,10 @@ export const Steps: React.FC<Props>  = ({currentPosition}) => {
         customStyles={stepIndicatorStyles}
         currentPosition={currentPosition}
         stepCount={4}
-        renderStepIndicator={(params) =>{ console.log(params);
+        renderStepIndicator={(params) =>{
          return(
             <View style={[styles.stepIndicator, params.stepStatus === 'current' && styles.currentStep]}>
-            {params.stepStatus === 'finished' ? <Icon color = {white.main} size = {25}name = 'check' style={styles.currentStepLabel}/> : <Text style={[styles.stepLabel, params.stepStatus === 'current' && styles.currentStepLabel, params.stepStatus === 'finished' && {color: white.main}]}>
+            {params.stepStatus === 'finished' ? <Icon color = {white.main} size = {20}name = 'check' style={styles.currentStepLabel}/> : <Text style={[styles.stepLabel, params.stepStatus === 'current' && styles.currentStepLabel, params.stepStatus === 'finished' && {color: white.main}]}>
                 {labels[params.position]}
               </Text>}
             
