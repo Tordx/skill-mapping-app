@@ -72,3 +72,18 @@ export const TextButton: React.FC<Props> = ({onPress, text1, text2,}) => {
   )
 
 }
+
+export const GoBack: React.FC<Props> = ({onPress}) => {
+
+  return (
+    
+    <Pressable onPress = {onPress} style = {{position: 'absolute', flexDirection: 'row', top: 25, left: 10, justifyContent: 'center', alignItems: 'center',}}  >
+      <Icon
+        name = 'chevron-left'
+        size = {35}
+        color = {black.main}
+      />
+      <Text style = {{fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 25}}>Back</Text>
+    </Pressable>
+  )
+}
