@@ -21,7 +21,7 @@ const Splash = (props: Props) => {
                 
                 setTimeout(async() => {
                     if(state.isConnected) {
-                        const authCredentials = await AsyncStorage.getItem('loginauth')
+                        const authCredentials = await AsyncStorage.getItem('login')
                         if(authCredentials !== null){
                             const loginAuth = JSON.parse(authCredentials)
                             const email = loginAuth.email
@@ -29,7 +29,7 @@ const Splash = (props: Props) => {
                             await firebase.auth().signInWithEmailAndPassword(email, password)
                             .then(() => {
                                 ToastAndroid.show("Auto-login success", ToastAndroid.BOTTOM)
-                                navigation.navigate('Tab' as never)
+                                navigation.navigate('Tabs' as never)
                             })
                         } else {
                             navigation.navigate('Joinas' as never)
