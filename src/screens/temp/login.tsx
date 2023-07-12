@@ -2,7 +2,7 @@ import { View, Text, Pressable, Image } from 'react-native'
 import React, {useState} from 'react'
 import {firebase} from '@react-native-firebase/auth';
 import { styles } from '../../styles';
-import { DefautField } from '../../global/partials/fields';
+import { DefaultField } from '../../global/partials/fields';
 import { black, theme } from '../../assets/colors';
 import { LogButton, TextButton } from '../../global/partials/buttons';
 
@@ -25,7 +25,7 @@ const Login: React.FC = (props: Props) => {
       <Image source={logo} resizeMode='contain' style = {{width: '50%', height: 200}}  />
       <Text style = {[styles.h1, {fontSize: 35, textAlign: 'center'}]}>Welcome Back</Text>
       <Text style = {[styles.h4, {marginBottom: 75}]}>Sign in to access your account</Text>
-      <DefautField
+      <DefaultField
         onFocus={() => setfocus('email')}
         onBlur = {() => setfocus('')}
         placeholder = 'Username'
@@ -34,7 +34,7 @@ const Login: React.FC = (props: Props) => {
           name = 'account-outline'
           size={30}
       />
-      <DefautField
+      <DefaultField
         onFocus={() => setfocus('password')}
         onBlur = {() => setfocus('')}
         placeholder = 'Password'
@@ -42,6 +42,7 @@ const Login: React.FC = (props: Props) => {
         style = {{borderColor: focus === 'password' ? theme.accentd : black.B005, backgroundColor: focus === 'password' ? theme.accentc : theme.light}}
         name = 'lock-outline'
         size={30}
+        secureTextEntry
         
       />
       <View style = {{marginTop: 150, width: '100%', justifyContent: 'center', alignItems: 'center',}}>

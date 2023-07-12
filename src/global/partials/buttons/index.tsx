@@ -66,7 +66,7 @@ export const TextButton: React.FC<Props> = ({onPress, text1, text2,}) => {
   
   return (
     <Pressable onPress={onPress}  style = {[styles.createaccount]}>
-      <Text style = {{fontSize: 17, fontFamily: 'Montserrat-Regular', color: black.main, textShadowColor: white.W004, textShadowRadius: .5,}}>{text1}<Text style = {{color: theme.primary}}>{text2}</Text></Text>
+      <Text style = {{fontSize: 15, fontFamily: 'Montserrat-Regular', color: black.main, textShadowColor: white.W004, textShadowRadius: .5,}}>{text1}<Text style = {{color: theme.primary}}>{text2}</Text></Text>
       
     </Pressable>
   )

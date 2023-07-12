@@ -85,7 +85,7 @@ const colors: PaletteOptions = {
         dark: '#111138',
         light: '#ffffff',
         primary: '#6fe662',
-        secondary: '##3fdd2e',
+        secondary: '#3fdd2e',
         accenta: '#2dc11d',
         accentb: '#b9f3b3',
         accentc: '#f8fbea',

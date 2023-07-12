@@ -17,16 +17,18 @@ type Props = {
     style?: ViewStyle,
     placeholder?: string,
     placeholderTextColor?: string,
+    secureTextEntry?: boolean,
 
 }
 
-export const DefautField: React.FC<Props> = ({onChangeText, value , onFocus, name, size, color, editable, style, onBlur, placeholder, placeholderTextColor}) => {
+export const DefaultField: React.FC<Props> = ({onChangeText, value , onFocus, name, size, color, editable, style, onBlur, placeholder, placeholderTextColor, secureTextEntry}) => {
 
     
 
   return (
     <View style = {[styles.inputcontainer,  style]}>
       <TextInput
+        secureTextEntry = {secureTextEntry}
         editable = {editable}
         style = {styles.inputfield}
         onChangeText={onChangeText}
