@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { black, theme, white } from "../assets/colors";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 export const styles = StyleSheet.create({
     container:{
@@ -123,5 +124,12 @@ export const styles = StyleSheet.create({
       scrollview: {
         width: '100%',
         height: '100%',
+      },
+      hoverbutton: {
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 7,
+        fontSize: 20,
+        fontFamily: 'Montserrat-Medium'
       }
 })

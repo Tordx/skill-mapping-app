@@ -7,7 +7,7 @@ import { black, theme } from '../../assets/colors';
 import { ForgotButton, LogButton, TextButton } from '../../global/partials/buttons';
 import { useNavigation } from '@react-navigation/native';
 import { getloginauth, loginauth } from '../../firebase';
-import { data } from '../contents/signup';
+import { data } from '../../library/constants';
 
 type Props = {}
 
@@ -77,12 +77,10 @@ const signIn = async () => {
               settitle('Username not found');
               setalert(true);
             } else if (error.code === 'auth/wrong-password') {
-              settitle('Username and password did not match');
-              setalert(true);
+              ToastAndroid.show('Username and password did not match', ToastAndroid.BOTTOM);
             } else {
               console.error(error);
-              settitle('Something went wrong, please try again');
-              setalert(true);
+              ToastAndroid.show('Something went wrong, please try again', ToastAndroid.BOTTOM);
             }
             setloading(false);
           }
