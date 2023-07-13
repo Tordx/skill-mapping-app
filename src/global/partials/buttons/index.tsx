@@ -1,4 +1,4 @@
-import { View, Text, TextInput, ViewStyle, Pressable } from 'react-native'
+import { View, Text, TextStyle, ViewStyle, Pressable } from 'react-native'
 import React from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { styles } from '../../../styles'
@@ -18,6 +18,7 @@ type Props = {
     placeholder?: string,
     placeholderColor?: string,
     style?: ViewStyle,
+    textStyle?: TextStyle,
     title?: string,
     status?: string,
     uncheckcolor?: string,
@@ -97,4 +98,15 @@ export const GoBack: React.FC<Props> = ({onPress}) => {
       <Text style = {{fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 25}}>Back</Text>
     </Pressable>
   )
+}
+
+export const HoverButton: React.FC<Props> = ({title, onPress, textStyle}) => {
+  
+  return (
+    <Pressable onPress={onPress}>
+      <Text style = {[styles.hoverbutton, textStyle]}>{title}</Text>
+    </Pressable>
+  )
+
+
 }
