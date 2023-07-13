@@ -13,36 +13,6 @@ type Props = {
   setposition: (position: number) => void;
 };
 
-export interface data {
-  firstname: string; 
-  middlename: string; 
-  lastname: string 
-  suffix: string;
-  dob: string;
-  gender: string;
-  nationality: string;
-  jobTitle: string;
-  highesteduc: string;
-  ProfLi: string;
-  Cert: string;
-  CSE: string;
-  SpeSkills: string;
-  Province: string,
-  City: string,
-  Barangay: string,
-  Street: string,
-  ContactNumber: string,
-  email: string,
-  emergencycontactname: string,
-  readonlyelationship: string,
-  emergencycontactnum: string,
-  address: string,
-  username: string,
-  fullname: string,
-  contactNumber: string,
-  website: string,
-
-}
   export interface signupinfo {
     firstname: string; 
     middlename: string; 
@@ -136,6 +106,7 @@ export interface data {
                   }
               ],
               usertype: 'freelance',
+              photoURL: 'https://www.pngkey.com/png/full/202-2024792_user-profile-icon-png-download-fa-user-circle.png',
               email: email,
               dob: dob,
               gender: gender,
@@ -506,6 +477,7 @@ export interface data {
             firestore().collection('user').doc().set({
               fullname: fullname,
               username: username,
+              photoURL: 'https://www.pngkey.com/png/full/202-2024792_user-profile-icon-png-download-fa-user-circle.png',
               contactnumber: contactnumber,
               website: website,
               usertype: 'employer',
