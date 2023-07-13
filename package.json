@@ -21,6 +21,7 @@
     "@react-navigation/bottom-tabs": "^6.5.8",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/stack": "^6.3.17",
+    "@reduxjs/toolkit": "^1.9.5",
     "@types/react-native-vector-icons": "^6.4.13",
     "moments": "^0.0.2",
     "react": "18.2.0",
@@ -31,7 +32,9 @@
     "react-native-screens": "^3.22.1",
     "react-native-step-indicator": "^1.0.3",
     "react-native-timeago": "Tordx/react-native-timeago",
-    "react-native-vector-icons": "^9.2.0"
+    "react-native-vector-icons": "^9.2.0",
+    "react-redux": "^8.1.1",
+    "redux-thunk": "^2.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
