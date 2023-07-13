@@ -4,7 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 import { useEffect, useState } from 'react';
 import { Platform, ToastAndroid } from 'react-native';
 import storage from '@react-native-firebase/storage';
-import { data } from '../screens/contents/signup';
+import { data, jobdata } from '../library/constants';
 
 export const loginauth = async(email: string, password: string, navigation: any)  => {
     try {
@@ -48,3 +48,37 @@ export const getloginauth = async (datapull: string, dataparameter: string, para
     }
     };
     
+    export const getAllData = async (toretrieve: string): Promise<jobdata[]> => {
+      try {
+        const collectionRef = firestore().collection(toretrieve);
+        const querySnapshot = await collectionRef.get();
+    
+        const data: jobdata[] = [];
+        querySnapshot.forEach((documentSnapshot) => {
+          const docData = documentSnapshot.data() as jobdata;
+          data.push(docData);
+        });
+        return data;
+      } catch (error) {
+        console.log('Error retrieving data:', error);
+        throw error;
+      }
+    };
+
+    export const getSpecificData = async (datapull: string, dataparameter: string, parameter: string,): Promise<jobdata[]> => {
+      try {
+        const collectionRef = firestore().collection(datapull);
+        const querySnapshot = await collectionRef.where(dataparameter, '==', parameter).where('status', '==', true).get();
+    
+        const data: jobdata[] = [];
+        querySnapshot.forEach((documentSnapshot) => {
+          const docData = documentSnapshot.data() as jobdata;
+          data.push(docData);
+        });
+    
+        return data;
+      } catch (error) {
+        console.log('Error retrieving data:', error);
+        return [];
+      }
+    };
