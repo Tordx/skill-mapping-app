@@ -31,6 +31,7 @@ export interface data {
 
 export interface jobdata {
     jobtitle: string;
+    joblocation: string,
     requirements: any;
     type: string;
     scope: string;
@@ -43,5 +44,18 @@ export interface jobdata {
     userid: string;
     fullname: string;
     timestamp: any,
+    formattedTime: any,
 
+}
+
+export interface notificationdata {
+  fullname: string,
+  title: string,
+  userid: string,
+  timestamp: any,
+  status: boolean,
+  photoURL: string,
+  postid: string,
+  message: string,
+  
 }
