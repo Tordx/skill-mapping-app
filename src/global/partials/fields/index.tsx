@@ -50,7 +50,7 @@ export const DefaultField: React.FC<Props> = ({onChangeText, value , onFocus, na
   )
 }
 
-export const SearchField: React.FC<Props> = ({onPress, routePress}) => {
+export const SearchField: React.FC<Props> = ({onPress}) => {
 
   const [focus, setfocus] = useState(false)
 
@@ -58,7 +58,7 @@ export const SearchField: React.FC<Props> = ({onPress, routePress}) => {
     <Pressable style = {[styles.inputcontainer, {backgroundColor: focus ? '#f8fbea' : theme.light}]}>
       <TextInput
         onBlur={() => {setfocus(false)}}
-        onFocus={() => {setfocus(true); routePress}}
+        onFocus={() => {setfocus(true)}}
         placeholder='Search...'
         placeholderTextColor={black.B005}
         style = {[styles.inputfield, {width: '85%', paddingLeft: 20}]}

@@ -18,8 +18,10 @@ const Home = (props: Props) => {
   const navigation = useNavigation()
   return (
     <View style = {styles.container}>
+      
+      <View style = {{flexDirection: 'column', marginTop: 15, top: 20, position: 'absolute', justifyContent: 'center', alignItems: 'center', width: '100%'}}>
       <SearchField onPress={() => navigation.navigate('Search' as never)}/>
-      <View style = {{flexDirection: 'row', marginTop: 15}}>
+      <View style = {{flexDirection: 'row', marginTop: 15,}}>
         <HoverButton
           onPress={() => setfocus(0)} 
           title = 'Matched Jobs'
@@ -31,7 +33,10 @@ const Home = (props: Props) => {
           textStyle={{backgroundColor: focus  == 1 ? theme.primary : theme.light, color: focus == 1 ? white.main : black.main }}
         
         />
+        
       </View>
+      </View>
+      <View style = {{marginTop: 250, width: '100%'}}/>
       <JobsLists focus={focus} setfocus={setfocus}/>
     </View>
   )
