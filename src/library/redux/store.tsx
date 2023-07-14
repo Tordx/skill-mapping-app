@@ -9,6 +9,7 @@ export default configureStore({
     reducer: {
         _userdata : userslice,
         _jobdata: jobslice
-    }
+    },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
     
 })
