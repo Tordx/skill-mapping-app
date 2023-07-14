@@ -31,14 +31,17 @@ export interface data {
 
 export interface jobdata {
     jobtitle: string;
-    requirements: string;
+    requirements: any;
     type: string;
     scope: string;
-    budget: string;
+    budget: number;
+    pertimeframe: string,
     description: string;
     jobid: string;
     qualification: string;
+    photoURL: string,
     userid: string;
     fullname: string;
+    timestamp: any,
 
 }
