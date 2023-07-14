@@ -5,7 +5,7 @@ import { SearchField } from '../../../global/partials/fields'
 import { useNavigation } from '@react-navigation/native'
 import { HoverButton } from '../../../global/partials/buttons'
 import { black, theme, white } from '../../../assets/colors'
-import JobsLists from '../../contents/home/freelance/home'
+import JobsLists from '../../contents/home/freelance/joblist'
 
 type Props = {}
 
