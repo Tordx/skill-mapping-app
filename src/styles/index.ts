@@ -57,7 +57,7 @@ export const styles = StyleSheet.create({
         fontFamily: 'Montserrat-Regular',
     },
     inputcontainer: {
-        width: '90%',
+        width: '95%',
         height: 60,
         backgroundColor: white.main,
         marginVertical: 10,
