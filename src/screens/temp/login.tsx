@@ -6,10 +6,17 @@ import { DefaultField } from '../../global/partials/fields';
 import { black, theme } from '../../assets/colors';
 import { ForgotButton, LogButton, TextButton } from '../../global/partials/buttons';
 import { useNavigation } from '@react-navigation/native';
-import { getloginauth, loginauth } from '../../firebase';
+import { getSpecificData, getloginauth, loginauth } from '../../firebase';
 import { data } from '../../library/constants';
+import { useSelector } from 'react-redux';
 
 type Props = {}
+
+interface getdata {
+
+  _userdata: data
+
+}
 
 const Login: React.FC = (props: Props) => {
 
@@ -25,11 +32,13 @@ const Login: React.FC = (props: Props) => {
     const [loading, setloading] = useState(false);
     const [data, setdata] = useState<data[]>([]);
     const navigation = useNavigation();
+    const [type, settype] = useState('')
 
   useEffect(() => {
     const checkemail = async () => {
     const retrievedData: data[] = await getloginauth('user', 'username', username);
-  
+    settype(retrievedData[0]?.type)
+    setdata(retrievedData)
     if (retrievedData.length > 0) {
       const firstDataItem = retrievedData[0];
       setemail(firstDataItem.email);
@@ -66,11 +75,24 @@ const signIn = async () => {
           setloading(false);
       } else {
           try {
-            await loginauth(email, password, navigation);
-            setloading(false);
-            setemail('')
-            setpassword('')
-            setusername('')
+            if(type === 'freelance') {
+               
+              await loginauth(email, password, navigation, 'Tabs', type);
+              setloading(false);
+              setemail('')
+              setpassword('')
+              setusername('')
+              
+            }
+             if (type === 'employer'){
+              
+              console.log('wtf'); 
+              await loginauth(email, password, navigation, 'EmployerTabs', type)
+              setloading(false);
+              setemail('')
+              setpassword('')
+              setusername('')
+            }
           } catch (error: any) {
             if (error.code === 'auth/invalid-email') {
               console.log('That username is invalid!');
