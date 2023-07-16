@@ -95,8 +95,10 @@ type Props = {
         await firebase.auth().createUserWithEmailAndPassword(email, password).then(async () => {
           await firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
             const user = firebase.auth().currentUser;
+            const getid = firestore().collection('user').doc();
             console.log(user);
             firestore().collection('user').doc().set({
+              uid: getid,
               fullname: [
                   {
                     firstname: firstname,

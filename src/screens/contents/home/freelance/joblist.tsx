@@ -1,6 +1,6 @@
 import { View, Text,FlatList, Pressable } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { getAllData, getSpecificData } from '../../../../firebase';
+import { getAllData, getSpecificData, getSpecificjobData } from '../../../../firebase';
 import { data, jobdata } from '../../../../library/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import TimeAgo from 'react-native-timeago';
@@ -60,7 +60,7 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
     
     const fetchData = async () => {
         try {
-            const retrievedmatchjobdata: jobdata[] = await getSpecificData('job-post','jobtitle', userdata.jobTitle);
+            const retrievedmatchjobdata: jobdata[] = await getSpecificjobData('job-post','jobtitle', userdata.jobTitle);
             setmatchdata(retrievedmatchjobdata)
             const retrievedalljobdata: jobdata[] = await getAllData('job-post');
             setalldata(retrievedalljobdata)

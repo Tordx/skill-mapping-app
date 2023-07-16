@@ -55,6 +55,7 @@ interface PaletteOptions {
         G005: string,
         G006: string,
         G007: string,
+        G008: string,
         
     },
     transparent: {
@@ -133,6 +134,7 @@ const colors: PaletteOptions = {
         G005: '#3DED97',
         G006: '#99EDC3',
         G007: '#4ab515',
+        G008: '#F6F9E3',
         
 
     },
