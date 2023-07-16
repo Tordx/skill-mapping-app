@@ -110,3 +110,36 @@ export const HoverButton: React.FC<Props> = ({title, onPress, textStyle}) => {
 
 
 }
+
+export const NextButton: React.FC<Props> = ({onPress}) => {
+
+  return (
+    
+    <Pressable onPress = {onPress} style = {{position: 'absolute', top: 50, right: 25, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}  >
+      <Text style = {{fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 20,}}>Next</Text>
+      <Icon
+        name = 'chevron-right'
+        size = {25}
+        color = {black.main}
+      />
+      
+    </Pressable>
+  )
+}
+
+export const PrevButton: React.FC<Props> = ({onPress}) => {
+
+  return (
+    
+    <Pressable onPress = {onPress} style = {{position: 'absolute', top: 50, left: 25, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}  >
+      <Icon
+        name = 'chevron-left'
+        size = {25}
+        color = {black.main}
+      />
+      <Text style = {{fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 20,}}>Back</Text>
+      
+      
+    </Pressable>
+  )
+}
