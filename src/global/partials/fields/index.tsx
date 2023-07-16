@@ -8,6 +8,7 @@ type Props = {
     onPress?: (e: any) => void,
     routePress?: (e: any) => void,
     onChangeText?: (e: any) => void,
+    onKeyPress?: (e: any) => void,
     value?: string,
     name?: string,
     password?: string,
@@ -23,7 +24,7 @@ type Props = {
 
 }
 
-export const DefaultField: React.FC<Props> = ({onChangeText, value , onFocus, name, size, color, editable, style, onBlur, placeholder, placeholderTextColor, secureTextEntry}) => {
+export const DefaultField: React.FC<Props> = ({onKeyPress, onChangeText, value , onFocus, name, size, color, editable, style, onBlur, placeholder, placeholderTextColor, secureTextEntry}) => {
 
     
 
@@ -39,6 +40,7 @@ export const DefaultField: React.FC<Props> = ({onChangeText, value , onFocus, na
         onFocus={onFocus}
         placeholder= {placeholder}
         placeholderTextColor={placeholderTextColor}
+        onKeyPress={onKeyPress}
       />
       {name && <Icon
         name = {name || 'blank'}
@@ -49,6 +51,53 @@ export const DefaultField: React.FC<Props> = ({onChangeText, value , onFocus, na
     </View>
   )
 }
+
+export const BudgetField: React.FC<Props> = ({onKeyPress, onChangeText, value , onFocus, name, size, color, editable, style, onBlur, placeholder, placeholderTextColor, secureTextEntry}) => {
+
+    
+
+  return (
+    <View style = {[styles.inputcontainer,  style]}>
+      <TextInput
+        secureTextEntry = {secureTextEntry}
+        editable = {editable}
+        style = {styles.inputfield}
+        onChangeText={onChangeText}
+        value = {value}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        placeholder= {placeholder}
+        placeholderTextColor={placeholderTextColor}
+        onKeyPress={onKeyPress}
+      />
+    </View>
+  )
+}
+export const Multitextfield: React.FC<Props> = ({onKeyPress, onChangeText, value , onFocus, name, size, color, editable, style, onBlur, placeholder, placeholderTextColor, secureTextEntry}) => {
+
+    
+
+  return (
+    <View style = {[styles.inputcontainer,  style]}>
+      <TextInput
+        secureTextEntry = {secureTextEntry}
+        editable = {editable}
+        style = {[styles.inputfield, {width: '95%'}]}
+        onChangeText={onChangeText}
+        value = {value}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        placeholder= {placeholder}
+        placeholderTextColor={placeholderTextColor}
+        onKeyPress={onKeyPress}
+        multiline
+        maxLength={1000}
+        textAlignVertical='top'
+      />
+    </View>
+  )
+}
+
 
 export const SearchField: React.FC<Props> = ({onPress}) => {
 
