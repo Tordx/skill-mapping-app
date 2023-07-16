@@ -26,6 +26,7 @@ export interface data {
     fullname: string;
     contactNumber: string;
     website: string;
+    type: string,
   
   }
 
