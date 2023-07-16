@@ -26,10 +26,15 @@ const Splash = (props: Props) => {
                             const loginAuth = JSON.parse(authCredentials)
                             const email = loginAuth.email
                             const password = loginAuth.password
+                            const type = loginAuth.type
                             await firebase.auth().signInWithEmailAndPassword(email, password)
                             .then(() => {
                                 ToastAndroid.show("Auto-login success", ToastAndroid.BOTTOM)
-                                navigation.navigate('Tabs' as never)
+                                if (type === 'freelance') {
+                                    navigation.navigate('Tabs' as never)
+                                } else {
+                                    navigation.navigate('EmployerTabs' as never)
+                                }
                             })
                         } else {
                             navigation.navigate('Joinas' as never)
