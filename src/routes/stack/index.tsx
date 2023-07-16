@@ -2,7 +2,7 @@ import { View, Text } from 'react-native'
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { Stack, Tab } from '../../../App'
-import Tabs from '../layouts'
+import {EmployerTabs, Tabs} from '../layouts'
 import Login from '../../screens/temp/login'
 import Splash from '../../screens/temp/splash'
 import Joinas from '../../screens/temp/joinas'
@@ -44,6 +44,14 @@ const  Stacks: React.FC = () => {
             <Stack.Screen
                 name='Tabs'
                 component={Tabs}
+                options={{
+                    headerShown: false,
+                }}
+
+            />
+            <Stack.Screen
+                name='EmployerTabs'
+                component={EmployerTabs}
                 options={{
                     headerShown: false,
                 }}
