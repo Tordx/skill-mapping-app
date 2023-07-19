@@ -11,6 +11,7 @@ import Employercreate from '../../screens/temp/employercreate'
 import Verification from '../../screens/temp/verification'
 import Forgot from '../../screens/temp/forgot'
 import Forgotsent from '../../screens/temp/forgotsent'
+import AccountDetails from '../../screens/contents/home/employer/details'
 
 type Props = {}
 
@@ -92,6 +93,14 @@ const  Stacks: React.FC = () => {
              <Stack.Screen
             name='Forgotsent'
             component={Forgotsent}
+            options={{
+                headerShown: false,
+            }}
+
+             />
+            <Stack.Screen
+            name='AccountDetails'
+            component={AccountDetails}
             options={{
                 headerShown: false,
             }}

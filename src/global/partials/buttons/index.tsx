@@ -9,11 +9,14 @@ type Props = {
     onChangeText?: (e: any) => void,
     value?: string,
     name?: string,
+    name2?: string,
     password?: string,
     onPress?:  (e: any) => void,
     press?: (e: any) => void,
     size?: number,
+    size2?: number,
     color?: string,
+    color2?: string,
     editable?: boolean,
     placeholder?: string,
     placeholderColor?: string,
@@ -53,12 +56,38 @@ export const JoinasButton: React.FC<Props> = ({onChangeText, value , onPress, na
   )
 }
 
-export const LogButton: React.FC<Props> = ({onPress, name, title}) => {
+export const AccountEditButton: React.FC<Props> = ({name2, size2, color2, onChangeText, value , onPress, name, size, color, editable, placeholder, style, title, status, uncheckcolor, radiocolor,press}) => {
+  return (
+    <View style = {[styles.inputcontainer, style]}>
+        
+      {name && <Icon
+        name = {name || 'blank'}
+        size = {size}
+        color = {color}
+        style = {{marginHorizontal: 10}}
+      />
+      }
+      <Pressable onPress={onPress} style = {styles.joinasfield}>
+        <Text style = {[styles.joinastext, {fontFamily: 'Montserrat-SemiBold'}]}>{title}</Text>
+      </Pressable>
+      {name2 && <Icon
+        name = {name2 || 'blank'}
+        size = {size2}
+        color = {color2}
+        
+      />
+      }
+    </View>
+  )
+}
+
+
+export const LogButton: React.FC<Props> = ({onPress, name, title, style, size, textStyle}) => {
   
   return (
-    <Pressable onPress={onPress}  style = {[styles.createaccount, {backgroundColor: '#6fe662'}]}>
-      <Text style = {{fontSize: 25, fontFamily: 'Montserrat-SemiBold', color: white.main}}>{title}</Text>
-      {name && <Icon name = {name || 'blank'} size={35} color={white.main} />}
+    <Pressable onPress={onPress}  style = {[styles.createaccount, {backgroundColor: '#6fe662'}, style]}>
+      <Text style = {[{fontSize: 25, fontFamily: 'Montserrat-SemiBold', color: white.main}, textStyle]}>{title}</Text>
+      {name && <Icon name = {name || 'blank'} size={size || 35 } color={white.main} />}
     </Pressable>
   )
 
@@ -115,7 +144,7 @@ export const NextButton: React.FC<Props> = ({onPress}) => {
 
   return (
     
-    <Pressable onPress = {onPress} style = {{position: 'absolute', top: 50, right: 25, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}  >
+    <Pressable onPress = {onPress} style = {{marginTop: 20, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}  >
       <Text style = {{fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 20,}}>Next</Text>
       <Icon
         name = 'chevron-right'
@@ -131,7 +160,7 @@ export const PrevButton: React.FC<Props> = ({onPress}) => {
 
   return (
     
-    <Pressable onPress = {onPress} style = {{position: 'absolute', top: 50, left: 25, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}  >
+    <Pressable onPress = {onPress} style = {{marginTop: 20, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}  >
       <Icon
         name = 'chevron-left'
         size = {25}

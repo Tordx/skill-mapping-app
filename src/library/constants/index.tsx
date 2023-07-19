@@ -1,4 +1,5 @@
 export interface data {
+    userid: string,
     firstname: string; 
     middlename: string; 
     lastname: string 
@@ -16,17 +17,19 @@ export interface data {
     City: string;
     Barangay: string;
     Street: string;
-    ContactNumber: string;
+    contactnumber: string;
     email: string;
     emergencycontactname: string;
     readonlyelationship: string;
     emergencycontactnum: string;
-    address: string;
+    address: any;
     username: string;
     fullname: string;
     contactNumber: string;
     website: string;
-    type: string,
+    type: string;
+    _userdata: any;
+    company: string,
   
   }
 
@@ -46,6 +49,8 @@ export interface jobdata {
     fullname: string;
     timestamp: any,
     formattedTime: any,
+    status: boolean,
+    _jobdata: any
 
 }
 

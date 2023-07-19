@@ -4,11 +4,11 @@ export const JobSlice = createSlice({
 
     name: 'jobdata',
     initialState: {
-        jobdata: [],
+        JobData: [],
     },
     reducers: {
         setjobdata: (state, action) => {
-            state.jobdata = action.payload
+            state.JobData = action.payload
             console.log(action)
         },
     }
