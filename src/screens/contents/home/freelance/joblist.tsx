@@ -30,7 +30,7 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
 
     const [alldata, setalldata] = useState<jobdata[]>([]);
     const [matchdata, setmatchdata] = useState<jobdata[]>([]);
-    const userdata = useSelector((action: getdata) => action._userdata)
+    const userdata = useSelector((action: data) => action._userdata)
     const [data, setdata] = useState<jobdata[]>([]);
     const [openmodal, setopenmodal] = useState(false);
     const dispatch = useDispatch()
