@@ -3,6 +3,7 @@ import React,{useState, useEffect} from 'react'
 import { styles } from '../../../styles'
 import Createjobs from '../../contents/home/employer/createjobs'
 import { black } from '../../../assets/colors'
+import { ScrollView } from 'react-native-gesture-handler'
 
 type Props = {}
 
@@ -38,12 +39,13 @@ const Addjobs = (props: Props) => {
 
   return (
     <View style = {styles.container}>
-      <View style = {[styles.h1container, {alignItems: 'flex-start', justifyContent: 'flex-start', flexDirection:'row', width:'95%', marginBottom: 50}]}>
-      <Text style = {{alignSelf: 'flex-start', fontFamily: 'Montserrat-Regular', fontSize: 16, color: black.main, marginRight: 5}}>{position}/7</Text>
+      <ScrollView style = {{width: '95%', height: '100%',paddingTop: 0, marginBottom: 75}}>
+      <View style = {[styles.h1container, {alignItems: 'flex-start', justifyContent: 'flex-start', flexDirection:'row', width:'95%', marginTop: 50}]}>
+      {position < 8 && <Text style = {{alignSelf: 'flex-start', fontFamily: 'Montserrat-Regular', fontSize: 16, color: black.main, marginRight: 5}}>{position}/7</Text>}
       <Text style = {{alignSelf: 'flex-start', fontFamily: 'Montserrat-Bold', fontSize: 16, color: black.main}}>{title}</Text>
-      
       </View>
         <Createjobs position={position} setposition={setposition} />
+        </ScrollView>
     </View>
   )
 }
