@@ -6,6 +6,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { firebase } from '@react-native-firebase/auth';
 import { ToastAndroid } from 'react-native';
 import {useNavigation} from '@react-navigation/native'
+import { getSpecificData, getloginauth } from '../../firebase';
+import { useDispatch } from 'react-redux';
+import { setuserdata } from '../../library/redux/userslice';
+import { data } from '../../library/constants';
 
 type Props = {}
 
@@ -13,6 +17,7 @@ const Splash = (props: Props) => {
 
     const logo = require('../../assets/images/PgOLyqd.png')
     const navigation = useNavigation()
+    const dispatch = useDispatch()
 
     useEffect(() => {
 
@@ -28,7 +33,12 @@ const Splash = (props: Props) => {
                             const password = loginAuth.password
                             const type = loginAuth.type
                             await firebase.auth().signInWithEmailAndPassword(email, password)
-                            .then(() => {
+                           
+                            .then(async() => {
+                                    const data: data[] = await getloginauth('user', 'email', email)
+                                    console.log(data[0]);
+                                    
+                                    dispatch(setuserdata(data))
                                 ToastAndroid.show("Auto-login success", ToastAndroid.BOTTOM)
                                 if (type === 'freelance') {
                                     navigation.navigate('Tabs' as never)

@@ -8,7 +8,8 @@ import { ForgotButton, LogButton, TextButton } from '../../global/partials/butto
 import { useNavigation } from '@react-navigation/native';
 import { getSpecificData, getloginauth, loginauth } from '../../firebase';
 import { data } from '../../library/constants';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setuserdata } from '../../library/redux/userslice';
 
 type Props = {}
 
@@ -23,6 +24,7 @@ const Login: React.FC = (props: Props) => {
   const logo = require('../../assets/images/PgOLyqd.png')
   const [focus, setfocus] = useState('');
 
+    const dispatch = useDispatch();
     const [email, setemail] = useState('');
     const [show, setshow] = useState(true);
     const [username, setusername] = useState('');
@@ -42,6 +44,7 @@ const Login: React.FC = (props: Props) => {
     if (retrievedData.length > 0) {
       const firstDataItem = retrievedData[0];
       setemail(firstDataItem.email);
+    
       console.log(email, password);
 
       await new Promise((resolve: any) => {
@@ -78,6 +81,7 @@ const signIn = async () => {
             if(type === 'freelance') {
                
               await loginauth(email, password, navigation, 'Tabs', type);
+              
               setloading(false);
               setemail('')
               setpassword('')
@@ -93,6 +97,7 @@ const signIn = async () => {
               setpassword('')
               setusername('')
             }
+            dispatch(setuserdata(data))
           } catch (error: any) {
             if (error.code === 'auth/invalid-email') {
               console.log('That username is invalid!');
