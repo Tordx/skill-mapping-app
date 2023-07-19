@@ -93,10 +93,12 @@ type Props = {
     const handleSave = async () => {
       try {
         await firebase.auth().createUserWithEmailAndPassword(email, password).then(async () => {
-          await firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
-            const user = firebase.auth().currentUser;
+          await firebase.auth().signInWithEmailAndPassword(email, password).then(async() => {
+            await firebase.auth().currentUser?.updateProfile({
+              photoURL: 'https://i.imgur.com/AivI1mB.png',
+              displayName: username,
+            })
             const getid = firestore().collection('user').doc();
-            console.log(user);
             firestore().collection('user').doc().set({
               uid: getid,
               fullname: [
@@ -108,7 +110,7 @@ type Props = {
                   }
               ],
               usertype: 'freelance',
-              photoURL: 'https://www.pngkey.com/png/full/202-2024792_user-profile-icon-png-download-fa-user-circle.png',
+              photoURL: 'https://i.imgur.com/AivI1mB.png',
               email: email,
               dob: dob,
               gender: gender,
@@ -121,9 +123,8 @@ type Props = {
               SpeSkills: SpeSkills,
               emergencycontactname: emergencycontactname,
               emergencycontactnum: emergencycontactnum,
-              address: address,
               readonlyelationship: readonlyelationship,
-              Address: [
+              address: [
                 {
                   Province: Province,
                   City: City,
@@ -475,16 +476,20 @@ type Props = {
     const handleSave = async () => {
       try {
         await firebase.auth().createUserWithEmailAndPassword(email, password).then(async () => {
-          await firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
-            firestore().collection('user').doc().set({
+          await firebase.auth().signInWithEmailAndPassword(email, password).then(async() => {
+            await firebase.auth().currentUser?.updateProfile({
+              photoURL: 'https://i.imgur.com/AivI1mB.png',
+              displayName: username,
+            })
+            await firestore().collection('user').doc().set({
               fullname: fullname,
               username: username,
-              photoURL: 'https://www.pngkey.com/png/full/202-2024792_user-profile-icon-png-download-fa-user-circle.png',
+              photoURL: 'https://i.imgur.com/AivI1mB.png',
               contactnumber: contactnumber,
               website: website,
-              usertype: 'employer',
+              type: 'employer',
               email: email,
-              Address: [
+              address: [
                 {
                   Province: Province,
                   City: City,
@@ -495,7 +500,7 @@ type Props = {
             });
           }).then(async(response) => {
             const user = firebase.auth().currentUser
-            user?.sendEmailVerification().then(() => {
+           await  user?.sendEmailVerification().then(() => {
               navigation.navigate('Verification' as never)
             })
           });
