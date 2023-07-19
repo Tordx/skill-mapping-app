@@ -18,7 +18,6 @@ export const loginauth = async(email: string, password: string, navigation: any,
             return userCredential.user
 
         } else {
-            
             ToastAndroid.show('Email Verification is needed', ToastAndroid.BOTTOM);
           navigation.navigate('Verification' as never)
         }
@@ -80,11 +79,46 @@ export const getloginauth = async (datapull: string, dataparameter: string, para
         return [];
       }
     };
+    export const getActiveJobData = async (datapull: string, dataparameter: string, parameter: string,): Promise<jobdata[]> => {
+      try {
+        const collectionRef = firestore().collection(datapull);
+        const querySnapshot = await collectionRef.where(dataparameter, '==', parameter).get();
+    
+        const data: jobdata[] = [];
+        querySnapshot.forEach((documentSnapshot) => {
+          const docData = documentSnapshot.data() as jobdata;
+          data.push(docData);
+        });
+    
+        return data;
+      } catch (error) {
+        console.log('Error retrieving data:', error);
+        return [];
+      }
+    };
+    export const getInactiveJobData = async (datapull: string, dataparameter: string, parameter: string,): Promise<jobdata[]> => {
+      try {
+        const collectionRef = firestore().collection(datapull);
+        const querySnapshot = await collectionRef.where(dataparameter, '==', parameter).get();
+    
+        const data: jobdata[] = [];
+        querySnapshot.forEach((documentSnapshot) => {
+          const docData = documentSnapshot.data() as jobdata;
+          data.push(docData);
+        });
+    
+        return data;
+      } catch (error) {
+        console.log('Error retrieving data:', error);
+        return [];
+      }
+    };
+
 
     export const getSpecificData = async (datapull: string, dataparameter: string, parameter: string,): Promise<data[]> => {
       try {
         const collectionRef = firestore().collection(datapull);
-        const querySnapshot = await collectionRef.where(dataparameter, '==', parameter).where('status', '==', true).get();
+        const querySnapshot = await collectionRef.where(dataparameter, '==', parameter).get();
     
         const data: data[] = [];
         querySnapshot.forEach((documentSnapshot) => {
