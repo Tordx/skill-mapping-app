@@ -132,3 +132,35 @@ export const getloginauth = async (datapull: string, dataparameter: string, para
         return [];
       }
     };
+
+    export const edit = async(image: any, description: string) => {
+
+      const user = firebase.auth().currentUser
+      const time = firebase.firestore.FieldValue.serverTimestamp();
+      const id = firebase.firestore().collection('users').id
+      try {
+        firestore()
+        .collection('community-posts')
+        .doc()
+        .set({
+          postid: id,
+          photoURL: user?.photoURL,
+          displayName: user?.displayName,
+          image: image,
+          description: description,
+          comment: '0',
+          likes: '0',
+          shares: '0',
+          time: time,
+  
+        })
+        .then(() => {
+          ToastAndroid.show('Created post successfully', ToastAndroid.BOTTOM)
+        });
+  
+      } catch(error: any){
+        throw error;
+      }
+  
+    }
+  
