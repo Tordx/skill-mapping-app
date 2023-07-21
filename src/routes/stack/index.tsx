@@ -12,6 +12,9 @@ import Verification from '../../screens/temp/verification'
 import Forgot from '../../screens/temp/forgot'
 import Forgotsent from '../../screens/temp/forgotsent'
 import AccountDetails from '../../screens/contents/home/employer/details'
+import { AdditionalInfo, PasswordChange, PersonalInfo } from '../../screens/contents/home/employer/editinfo'
+import About from '../../screens/contents/home/employer/about'
+import { EditPost } from '../../screens/contents/home/employer/editpost'
 
 type Props = {}
 
@@ -106,7 +109,42 @@ const  Stacks: React.FC = () => {
             }}
 
              />
-            
+            <Stack.Screen
+                name='PersonalInfo'
+                component={PersonalInfo}
+                options={{
+                    headerShown: false,
+                }}
+
+             />
+            <Tab.Screen
+                name='AdditionalInfo'   
+                component={AdditionalInfo}
+                options = {{
+                headerShown: false,
+                }}
+            />
+            <Tab.Screen
+                name='PasswordChange'   
+                component={PasswordChange}
+                options = {{
+                headerShown: false,
+                }}
+            />
+            <Tab.Screen
+                name='About'   
+                component={About}
+                options = {{
+                headerShown: false,
+                }}
+            />
+            <Tab.Screen
+                name='EditPost'   
+                component={EditPost}
+                options = {{
+                headerShown: false,
+                }}
+            />
         </Stack.Navigator>
     </NavigationContainer>
   )

@@ -1,5 +1,5 @@
 export interface data {
-    userid: string,
+    uid: string,
     firstname: string; 
     middlename: string; 
     lastname: string 
@@ -22,7 +22,12 @@ export interface data {
     emergencycontactname: string;
     readonlyelationship: string;
     emergencycontactnum: string;
-    address: any;
+    address: [
+      {Province: string,},
+      {City: string,},
+      {Barangay: string},
+      {Street: string},
+    ];
     username: string;
     fullname: string;
     contactNumber: string;
@@ -30,6 +35,8 @@ export interface data {
     type: string;
     _userdata: any;
     company: string,
+    businesshours: string,
+    description: string,
   
   }
 

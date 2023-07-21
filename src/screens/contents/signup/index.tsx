@@ -98,10 +98,10 @@ type Props = {
               photoURL: 'https://i.imgur.com/AivI1mB.png',
               displayName: username,
             })
-            const getid = firestore().collection('user').doc();
+            const getid = firebase.auth().currentUser?.uid
             firestore().collection('user').doc().set({
               uid: getid,
-              fullname: [
+              v: [
                   {
                     firstname: firstname,
                     middlename: middlename,
@@ -124,14 +124,21 @@ type Props = {
               emergencycontactname: emergencycontactname,
               emergencycontactnum: emergencycontactnum,
               readonlyelationship: readonlyelationship,
+              contactnumber: ContactNumber,
               address: [
                 {
                   Province: Province,
-                  City: City,
-                  Barangay: Barangay,
-                  Street: Street,
-                  ContactNumber: ContactNumber,
                 },
+                 { 
+                  City: City,
+                },
+                { 
+                  Barangay: Barangay,
+                },
+                {
+                  Street: Street,
+                },
+              
               ],
             });
           }).then(async(response) => {
@@ -481,21 +488,31 @@ type Props = {
               photoURL: 'https://i.imgur.com/AivI1mB.png',
               displayName: username,
             })
+            const getid = firebase.auth().currentUser?.uid
             await firestore().collection('user').doc().set({
+              uid: getid,
               fullname: fullname,
               username: username,
               photoURL: 'https://i.imgur.com/AivI1mB.png',
               contactnumber: contactnumber,
               website: website,
-              type: 'employer',
+              businesshours: 'enter business hours',
+              usertype: 'employer',
               email: email,
               address: [
                 {
                   Province: Province,
+                },
+                 { 
                   City: City,
+                },
+                { 
                   Barangay: Barangay,
+                },
+                {
                   Street: Street,
                 },
+              
               ],
             });
           }).then(async(response) => {

@@ -1,4 +1,4 @@
-import { View, Text, Button, ScrollView, Image } from 'react-native'
+import { View, Text, Button, ScrollView, Image, Pressable } from 'react-native'
 import React from 'react'
 import { styles } from '../../../styles'
 import { useNavigation } from '@react-navigation/native'
@@ -27,7 +27,7 @@ const Employeraccount = (props: Props) => {
     <View style = {styles.container}>
     <ScrollView style = {styles.scrollview}>
       <View style = {styles.container}>
-        <View style = {{marginBottom: 20,flexDirection: 'row',backgroundColor: theme.light, elevation: 7, width: '95%', height: 100, marginTop: 50, borderRadius: 10, shadowColor: '#505050', justifyContent: 'flex-start', alignItems: 'center'}}>
+        <Pressable onPress={() => navigation.navigate('AccountDetails' as never)} style = {{marginBottom: 20,flexDirection: 'row',backgroundColor: theme.light, elevation: 7, width: '95%', height: 100, marginTop: 50, borderRadius: 10, shadowColor: '#505050', justifyContent: 'flex-start', alignItems: 'center'}}>
           <View style = {{width: 60, height: 60, borderColor: theme.primary, borderWidth: 3, borderRadius: 500, justifyContent: 'center', alignItems: 'center', marginLeft: 25}}>
             <Image source={{uri: user?.photoURL || 'https://i.imgur.com/AivI1mB.png'}} resizeMode='cover' style = {{width: '90%', height: '90%', borderRadius: 500}}/>
           </View>
@@ -39,7 +39,7 @@ const Employeraccount = (props: Props) => {
               {userdata[0].company}
             </Text>
           </View>
-        </View>
+        </Pressable>
         <Text style = {{width: '100%', alignSelf: 'flex-start', fontFamily: 'Montserrat-Regular', marginLeft: 10, color: black.B001,  fontSize: 16, marginBottom: 10}}>Manage</Text>
         <AccountEditButton 
           name = 'account-circle-outline' 
@@ -48,7 +48,8 @@ const Employeraccount = (props: Props) => {
           title = 'Account Information' 
           color = {theme.primary} 
           size = {30} 
-          onPress={() => navigation.navigate('AccountDetails' as never)}
+          onPress={() => navigation.navigate('PersonalInfo' as never)}
+          
         />
         <AccountEditButton 
           name = 'account-outline' 
@@ -57,6 +58,7 @@ const Employeraccount = (props: Props) => {
           title = 'Additional Information' 
           color = {theme.primary} 
           size = {30} 
+          onPress={() => navigation.navigate('AdditionalInfo' as never)}
         />
         <AccountEditButton 
           name = 'account-outline' 
@@ -64,6 +66,7 @@ const Employeraccount = (props: Props) => {
           size2={30}
           title = 'Account Credentials' 
           color = {theme.primary} 
+          onPress={() => navigation.navigate('PasswordChange' as never)}
           size = {30} 
         />
         <AccountEditButton 
@@ -73,6 +76,7 @@ const Employeraccount = (props: Props) => {
           title = 'About App' 
           color = {theme.primary} 
           size = {30} 
+          onPress={() => navigation.navigate('About' as never)}
         />
 
         <LogButton title='Log out' onPress={logout} style = {{backgroundColor: black.B004, marginTop: 25}} name='logout' size={25} textStyle={{marginRight: 10}}/>

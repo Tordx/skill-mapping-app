@@ -1,4 +1,4 @@
-import { View, Text, ToastAndroid } from 'react-native'
+import { View, Text, ToastAndroid, Alert } from 'react-native'
 import React, {useState} from 'react'
 import { BudgetField, DefaultField, Multitextfield } from '../../../../global/partials/fields';
 import { styles } from '../../../../styles';
@@ -59,7 +59,7 @@ const Createjobs: React.FC<Props> = ({position, setposition}) => {
     
     const submit = () => {
       if(position === 8) {
-        handleSave()
+        confirm()
       } if (position === 7){
         if(!qualification) {
           ToastAndroid.show('Some fields might be blank', ToastAndroid.LONG)
@@ -105,11 +105,37 @@ const Createjobs: React.FC<Props> = ({position, setposition}) => {
       }
     }
 
+    const confirm = async () => {
+    
+      Alert.alert(
+        'Confirmation',
+        'Are you sure you want to post this job?',
+        [
+          {
+            text: 'No',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          {
+            text: 'Yes',
+            onPress: async() => {
+  
+              handleSave()
+  
+              console.log('Post archived/deleted');
+            },
+            style: 'destructive',
+          },
+        ],
+        { cancelable: false }
+      );
+    };
+
     const handleSave = async() => {
       try {
             const timestamp = firebase.firestore.FieldValue.serverTimestamp()
             const user = firebase.auth().currentUser;
-            const getid = firestore().collection('job-post').doc();
+            const getid = firestore().collection('job-post').doc().id;
             console.log(user);
             await firestore().collection('job-post').doc().set({
               jobtitle: jobtitle,

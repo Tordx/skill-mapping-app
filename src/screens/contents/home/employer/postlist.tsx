@@ -1,4 +1,4 @@
-import { View, Text,FlatList, Pressable, RefreshControl } from 'react-native'
+import { View, Text,FlatList, Pressable, RefreshControl, Alert } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { getActiveJobData, getAllData, getInactiveJobData, getSpecificData, getSpecificjobData } from '../../../../firebase';
 import { data, jobdata } from '../../../../library/constants';
@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import { setjobdata } from '../../../../library/redux/jobslice';
 import { JobInfoModal } from '../../../../global/partials/modals';
 import { firebase } from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore'
 
 type Props = {
 
@@ -57,7 +58,6 @@ const PostList: React.FC<Props> = ({focus, setfocus}) => {
         
         fetchData()
         setfocus(focus = 0)
-
     },[])
     
     const handleRefresh = () => {
@@ -74,7 +74,7 @@ const PostList: React.FC<Props> = ({focus, setfocus}) => {
     
     const fetchData = async () => {
         try {
-            const retrieveActiveJob: jobdata[] = await getActiveJobData('job-post','userid',userdata[0].userid);
+            const retrieveActiveJob: jobdata[] = await getActiveJobData('job-post','userid',userdata[0].uid);
             const active = retrieveActiveJob.filter((job) => job.status === true);
             setactivejob(active);
             const inactive = retrieveActiveJob.filter((job) => job.status === false);
@@ -85,6 +85,37 @@ const PostList: React.FC<Props> = ({focus, setfocus}) => {
           throw error;
         }
       }
+
+      const deletejob = async (item: any) => {
+        console.log(item);
+        
+        Alert.alert(
+          'Confirmation',
+          'Are you sure you want to archive this post?',
+          [
+            {
+              text: 'No',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {
+              text: 'Yes',
+              onPress: async() => {
+
+                const jobId = item.jobid.trim(); // Remove the leading space from the jobid
+          
+                await firestore().collection('job-post').doc(jobId).update({
+                  status: false,
+                });
+
+                console.log('Post archived/deleted');
+              },
+              style: 'destructive',
+            },
+          ],
+          { cancelable: false }
+        );
+      };
 
       const viewjob = (item: any) => {
         const { timestamp, ...restOfTheItem } = item;
@@ -110,7 +141,7 @@ const PostList: React.FC<Props> = ({focus, setfocus}) => {
         const formattedTime = date
     
         return(
-            <Pressable onPress = {() => viewjob(item)}  style = {{width: '100%', justifyContent: 'center', alignItems: 'center'}}>
+            <Pressable onLongPress={() =>deletejob(item)} onPress = {() => viewjob(item)}  style = {{width: '100%', justifyContent: 'center', alignItems: 'center'}}>
               <View style = {{borderBottomWidth: .5,width: '90%', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
                 <View style = {{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 20}}>
                   <Image source={{uri: item.photoURL}} resizeMode='cover' style = {{width: 50, height: 50, borderRadius: 5, marginRight: 10}}/>
@@ -134,6 +165,9 @@ const PostList: React.FC<Props> = ({focus, setfocus}) => {
                   <TimeAgo time={formattedTime} textStyle={{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}/>
                 </View>
               </View>
+              <Pressable style = {{position: 'absolute', top: 20, right: 20}}>
+                    <Icon name  ='download-box-outline' size={25} color={black.main} />
+              </Pressable>
             </Pressable>
         )
       }
@@ -149,7 +183,12 @@ const PostList: React.FC<Props> = ({focus, setfocus}) => {
             refreshControl={<RefreshControl refreshing = {refresh} onRefresh={handleRefresh} />}
         /> 
         : <Text style = {{color: black.main}}>There's nothing to show</Text> }
-        <JobInfoModal onRequestClose = {() => setopenmodal(false)}  visible = {openmodal}/>
+        <JobInfoModal  
+          title = 'Update Details' 
+          onRequestClose = {() => setopenmodal(false)}  
+          visible = {openmodal}
+          onPress={() => {setopenmodal(false); navigation.navigate('EditPost' as never)}}
+        />
     </View>
   )
 }
