@@ -4,7 +4,7 @@ import { data, jobdata } from '../../../library/constants'
 import { useSelector } from 'react-redux';
 import { black, theme, transparent, white } from '../../../assets/colors';
 import { styles } from '../../../styles';
-import { Chip } from 'react-native-paper';
+import { ActivityIndicator, Chip } from 'react-native-paper';
 import  Icon  from 'react-native-vector-icons/MaterialCommunityIcons';
 import TimeAgo from 'react-native-timeago';
 import { LogButton } from '../buttons';
@@ -14,13 +14,14 @@ type Props = {
     onPress?: (e: any) => void;
     visible?: boolean,
     onRequestClose: (e: any) => void;
+    title?: string,
 
     
 
 }
 
 
-export const JobInfoModal: React.FC<Props> = ({onPress, visible, onRequestClose}) => {
+export const JobInfoModal: React.FC<Props> = ({onPress, visible, onRequestClose, title}) => {
 
   const {JobData} = useSelector((action: jobdata) => action._jobdata);
   console.log(JobData);
@@ -82,11 +83,25 @@ export const JobInfoModal: React.FC<Props> = ({onPress, visible, onRequestClose}
                   ))}
                 </View>
                 <View style = {{justifyContent: 'center', alignItems: 'center', alignSelf: 'center', width: '105%', marginVertical: 20}}>
-                <LogButton title='Apply now' onPress={onPress} />
+                <LogButton title= {title || ''} onPress={onPress} />
                 </View>
                 </ScrollView>
               </View>
            
+      </View>
+    </Modal>
+  )
+}
+
+export const Loadingmodal: React.FC<Props> = ({onRequestClose, visible}) => {
+
+  return (
+    <Modal visible = {visible} onRequestClose={onRequestClose}>
+      <View style = {[styles.container, {backgroundColor: transparent.level03}]}>
+        <ActivityIndicator color= {theme.primary} size={50}/>
+        <Text style = {{fontFamily: 'Montserrat-Regular', color: white.main, fontSize: 30}}>
+          Please wait, while we update your profile...
+        </Text>
       </View>
     </Modal>
   )
