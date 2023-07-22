@@ -164,3 +164,40 @@ export const getloginauth = async (datapull: string, dataparameter: string, para
   
     }
   
+export const deletearchive = async(docid: string) => {
+  try {
+    await firestore()
+      .collection('job-post')
+      .doc(docid)
+      .delete()
+
+  } catch(error){
+    throw error;
+  }
+  
+}
+
+export const uploadImage = async (imageUri: any, setTransferred: any) => {
+
+  try {
+    const uri = imageUri;
+    console.log(imageUri);
+
+    const filename = uri.substring(uri.lastIndexOf('/') + 1);
+    const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+    setTransferred(0);
+    const task = storage().ref(filename).putFile(uploadUri);
+    task.on('state_changed', snapshot => {
+      setTransferred(
+        Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
+      );
+    });
+    return await task.then(async () => {
+      const firebasedata = await storage().ref(filename).getDownloadURL();
+      return firebasedata;
+    });
+  } catch (error) {
+    console.log('Error uploading image:', error);
+    throw error;
+  }
+};
