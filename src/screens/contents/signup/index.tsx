@@ -7,6 +7,8 @@ import firestore from '@react-native-firebase/firestore'
 import { firebase } from '@react-native-firebase/auth'
 import { LogButton, TextButton } from '../../../global/partials/buttons'
 import { useNavigation } from '@react-navigation/native'
+import { Loadingmodal } from '../../../global/partials/modals'
+import { idgen } from '../../../global/functions'
 
 type Props = {
   position: number;
@@ -87,10 +89,13 @@ type Props = {
     const [username,setusername] = useState('')
     const [password,setpassword] = useState('')
     const [cpassword,setcpassword] = useState('')
+    const [loading, setloading] = useState(false)
 
     const navigation = useNavigation();
 
     const handleSave = async () => {
+      setloading(true)
+      const getid = firebase.auth().currentUser?.uid
       try {
         await firebase.auth().createUserWithEmailAndPassword(email, password).then(async () => {
           await firebase.auth().signInWithEmailAndPassword(email, password).then(async() => {
@@ -98,10 +103,10 @@ type Props = {
               photoURL: 'https://i.imgur.com/AivI1mB.png',
               displayName: username,
             })
-            const getid = firebase.auth().currentUser?.uid
-            firestore().collection('user').doc().set({
+            firestore().collection('user').doc(getid).set({
               uid: getid,
-              v: [
+              username: username,
+              fullname: [
                   {
                     firstname: firstname,
                     middlename: middlename,
@@ -144,12 +149,14 @@ type Props = {
           }).then(async(response) => {
             const user = firebase.auth().currentUser
             user?.sendEmailVerification().then(() => {
+              setloading(false)
               navigation.navigate('Verification' as never)
             })
           });
         });
       } catch (error) {
         console.log(`error: ${error}`);
+        setloading(false)
       }
     };
   
@@ -460,6 +467,7 @@ type Props = {
             onPress={() => navigation.navigate('Login' as never)}
             
           />
+          <Loadingmodal visible = {loading} onRequestClose={() => {}} />
           </>
           
       );
@@ -481,6 +489,7 @@ type Props = {
     const [cpassword, setcpassword] = useState('');
 
     const handleSave = async () => {
+      const id = idgen()
       try {
         await firebase.auth().createUserWithEmailAndPassword(email, password).then(async () => {
           await firebase.auth().signInWithEmailAndPassword(email, password).then(async() => {
@@ -489,7 +498,7 @@ type Props = {
               displayName: username,
             })
             const getid = firebase.auth().currentUser?.uid
-            await firestore().collection('user').doc().set({
+            await firestore().collection('user').doc(getid).set({
               uid: getid,
               fullname: fullname,
               username: username,
@@ -515,12 +524,11 @@ type Props = {
               
               ],
             });
-          }).then(async(response) => {
-            const user = firebase.auth().currentUser
-           await  user?.sendEmailVerification().then(() => {
-              navigation.navigate('Verification' as never)
-            })
-          });
+          })
+          const user = firebase.auth().currentUser
+          await  user?.sendEmailVerification().then(() => {
+             navigation.navigate('Verification' as never)
+           })
         });
       } catch (error) {
         console.log(`error: ${error}`);
