@@ -57,3 +57,16 @@ export const Steps: React.FC<Props>  = ({currentPosition, stepCount}) => {
     </View>
   );
 };
+
+
+export const idgen = () => {
+
+  const script = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789';
+  let random = '';
+  for (let i = 0; i < 20; i++){
+      const randomindex = Math.floor(Math.random() * script.length)
+      random += script[randomindex]
+  }
+
+  return random
+}
