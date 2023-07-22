@@ -33,6 +33,7 @@ export interface data {
     contactNumber: string;
     website: string;
     type: string;
+    usertype: string;
     _userdata: any;
     company: string,
     businesshours: string,
@@ -58,6 +59,12 @@ export interface jobdata {
     formattedTime: any,
     status: boolean,
     _jobdata: any
+
+}
+
+export interface jobid {
+  jobid: string,
+  userid: string,
 
 }
 

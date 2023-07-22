@@ -11,10 +11,11 @@ import Employercreate from '../../screens/temp/employercreate'
 import Verification from '../../screens/temp/verification'
 import Forgot from '../../screens/temp/forgot'
 import Forgotsent from '../../screens/temp/forgotsent'
-import AccountDetails from '../../screens/contents/home/employer/details'
-import { AdditionalInfo, PasswordChange, PersonalInfo } from '../../screens/contents/home/employer/editinfo'
-import About from '../../screens/contents/home/employer/about'
-import { EditPost } from '../../screens/contents/home/employer/editpost'
+import AccountDetails from '../../screens/contents/home/employer/account/details'
+import { AdditionalInfo, PasswordChange, PersonalInfo } from '../../screens/contents/home/employer/account/editinfo'
+import About from '../../screens/contents/home/employer/account/about'
+import { EditPost } from '../../screens/contents/home/employer/posts/editpost'
+import PhotoURLchange from '../../screens/contents/home/employer/account/photoedit'
 
 type Props = {}
 
@@ -117,30 +118,37 @@ const  Stacks: React.FC = () => {
                 }}
 
              />
-            <Tab.Screen
+            <Stack.Screen
                 name='AdditionalInfo'   
                 component={AdditionalInfo}
                 options = {{
                 headerShown: false,
                 }}
             />
-            <Tab.Screen
+            <Stack.Screen
                 name='PasswordChange'   
                 component={PasswordChange}
                 options = {{
                 headerShown: false,
                 }}
             />
-            <Tab.Screen
+            <Stack.Screen
                 name='About'   
                 component={About}
                 options = {{
                 headerShown: false,
                 }}
             />
-            <Tab.Screen
+            <Stack.Screen
                 name='EditPost'   
                 component={EditPost}
+                options = {{
+                headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name='PhotoURLchange'   
+                component={PhotoURLchange}
                 options = {{
                 headerShown: false,
                 }}

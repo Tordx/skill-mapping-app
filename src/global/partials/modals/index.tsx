@@ -96,10 +96,10 @@ export const JobInfoModal: React.FC<Props> = ({onPress, visible, onRequestClose,
 export const Loadingmodal: React.FC<Props> = ({onRequestClose, visible}) => {
 
   return (
-    <Modal visible = {visible} onRequestClose={onRequestClose}>
-      <View style = {[styles.container, {backgroundColor: transparent.level03}]}>
+    <Modal statusBarTranslucent transparent visible = {visible} onRequestClose={onRequestClose}>
+      <View style = {[styles.container, {backgroundColor: transparent.level05,}]}>
         <ActivityIndicator color= {theme.primary} size={50}/>
-        <Text style = {{fontFamily: 'Montserrat-Regular', color: white.main, fontSize: 30}}>
+        <Text style = {{fontFamily: 'Montserrat-Regular', color: white.main, fontSize: 30, textAlign: 'center'}}>
           Please wait, while we update your profile...
         </Text>
       </View>

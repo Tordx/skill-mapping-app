@@ -10,10 +10,10 @@ import  Icon  from 'react-native-vector-icons/MaterialCommunityIcons'
 import { black, theme, transparent } from '../../assets/colors'
 import Employerhome from '../../screens/home/employer/home'
 import EmployerNotification from '../../screens/home/employer/notification'
-import EmployerSaved from '../../screens/home/employer/saved'
 import Employeraccount from '../../screens/home/employer/account'
 import Addjobs from '../../screens/home/employer/add'
-import { AdditionalInfo } from '../../screens/contents/home/employer/editinfo'
+import { AdditionalInfo } from '../../screens/contents/home/employer/account/editinfo'
+import EmployerArchived from '../../screens/home/employer/archived'
 
 
 export const Tabs: React.FC = () => {
@@ -189,8 +189,8 @@ export const EmployerTabs: React.FC = () => {
         }}
       />
       <Tab.Screen
-        name='Employersave'
-        component={EmployerSaved}
+        name='EmployerArchived'
+        component={EmployerArchived}
         options = {{
           headerShown: false,
           tabBarIcon: ({focused}) => (

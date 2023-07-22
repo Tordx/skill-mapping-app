@@ -1,7 +1,7 @@
 import { View, Text, KeyboardAvoidingViewComponent } from 'react-native'
 import React,{useState, useEffect} from 'react'
 import { styles } from '../../../styles'
-import Createjobs from '../../contents/home/employer/createjobs'
+import Createjobs from '../../contents/home/employer/add/createjobs'
 import { black } from '../../../assets/colors'
 import { ScrollView } from 'react-native-gesture-handler'
 

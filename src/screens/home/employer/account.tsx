@@ -1,4 +1,4 @@
-import { View, Text, Button, ScrollView, Image, Pressable } from 'react-native'
+import { View, Text, ToastAndroid, ScrollView, Image, Pressable } from 'react-native'
 import React from 'react'
 import { styles } from '../../../styles'
 import { useNavigation } from '@react-navigation/native'
@@ -18,6 +18,7 @@ const Employeraccount = (props: Props) => {
   const logout = async() => {
     await firebase.auth().signOut().then(() =>{
       AsyncStorage.removeItem('login')
+      ToastAndroid.show("Sign out successfully", ToastAndroid.LONG)
       navigation.navigate('Joinas' as never)
     })
   }
@@ -28,9 +29,9 @@ const Employeraccount = (props: Props) => {
     <ScrollView style = {styles.scrollview}>
       <View style = {styles.container}>
         <Pressable onPress={() => navigation.navigate('AccountDetails' as never)} style = {{marginBottom: 20,flexDirection: 'row',backgroundColor: theme.light, elevation: 7, width: '95%', height: 100, marginTop: 50, borderRadius: 10, shadowColor: '#505050', justifyContent: 'flex-start', alignItems: 'center'}}>
-          <View style = {{width: 60, height: 60, borderColor: theme.primary, borderWidth: 3, borderRadius: 500, justifyContent: 'center', alignItems: 'center', marginLeft: 25}}>
+          <Pressable onPress={() => navigation.navigate('PhotoURLchange' as never)} style = {{width: 60, height: 60, borderColor: theme.primary, borderWidth: 3, borderRadius: 500, justifyContent: 'center', alignItems: 'center', marginLeft: 25}}>
             <Image source={{uri: user?.photoURL || 'https://i.imgur.com/AivI1mB.png'}} resizeMode='cover' style = {{width: '90%', height: '90%', borderRadius: 500}}/>
-          </View>
+          </Pressable>
           <View style = {{marginLeft: 10, flexDirection: 'column'}}>
             <Text style = {{fontFamily: 'Montserrat-Bold', fontSize: 15, color: black.main}}>
               {userdata[0].fullname}
