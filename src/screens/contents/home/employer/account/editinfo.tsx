@@ -1,15 +1,15 @@
 import { View, Text, ToastAndroid } from 'react-native'
 import React, { useState } from 'react'
-import { styles } from '../../../../styles'
+import { styles } from '../../../../../styles'
 import { ScrollView } from 'react-native-gesture-handler'
-import { DefaultField, Multitextfield } from '../../../../global/partials/fields'
-import { black, theme } from '../../../../assets/colors'
+import { DefaultField, Multitextfield } from '../../../../../global/partials/fields'
+import { black, theme } from '../../../../../assets/colors'
 import { useSelector } from 'react-redux'
-import { data } from '../../../../library/constants'
-import { GoBack, LogButton } from '../../../../global/partials/buttons'
+import { data } from '../../../../../library/constants'
+import { GoBack, LogButton } from '../../../../../global/partials/buttons'
 import { useNavigation } from '@react-navigation/native'
 import firestore from '@react-native-firebase/firestore'
-import { Loadingmodal } from '../../../../global/partials/modals'
+import { Loadingmodal } from '../../../../../global/partials/modals'
 import { firebase } from '@react-native-firebase/auth'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
@@ -36,8 +36,6 @@ export const PersonalInfo = (props: Props) => {
         await firestore().collection('user').doc(userdata[0].uid).update({
           fullname: fullname,
           contactnumber: contactnumber,
-          usertype: 'employer',
-          email: email,
           address: [
             {
               Province: province,
@@ -249,7 +247,6 @@ export const PasswordChange: React.FC <Props> = () => {
       ToastAndroid.show('Error New password and confirm password do not match.', ToastAndroid.BOTTOM);
       return;
     }
-
     const credential = firebase.auth.EmailAuthProvider.credential(user?.email || '', password);
 
     user?.reauthenticateWithCredential(credential)
@@ -288,14 +285,17 @@ export const PasswordChange: React.FC <Props> = () => {
       placeholderTextColor={black.B005}
       name="briefcase-outline"
       size={25}
+      secureTextEntry = {true}
       color={black.B004}
       value = {password}
       onChangeText={(e) => setpassword(e)}/>
+      
        <DefaultField
       placeholder="New Password"
       placeholderTextColor={black.B005}
       name="briefcase-outline"
       size={25}
+      secureTextEntry = {true}
       color={black.B004}
       value = {newpassword}
       onChangeText={(e) => setnewpassword(e)}/>
@@ -304,6 +304,7 @@ export const PasswordChange: React.FC <Props> = () => {
       placeholderTextColor={black.B005}
       name="briefcase-outline"
       size={25}
+      secureTextEntry = {true}
       color={black.B004}
       value = {confirmpassword}
       onChangeText={(e) => setconfirmpassword(e)}/>

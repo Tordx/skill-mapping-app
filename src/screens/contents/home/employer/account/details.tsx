@@ -1,12 +1,12 @@
 import { View, Text, Image } from 'react-native'
-import React from 'react'
-import { styles } from '../../../../styles'
+import React, {useEffect, useState} from 'react'
+import { styles } from '../../../../../styles'
 import { ScrollView } from 'react-native-gesture-handler'
-import { DefaultField } from '../../../../global/partials/fields'
-import { black, theme } from '../../../../assets/colors'
+import { DefaultField } from '../../../../../global/partials/fields'
+import { black, theme } from '../../../../../assets/colors'
 import { useSelector } from 'react-redux'
-import { data } from '../../../../library/constants'
-import { GoBack } from '../../../../global/partials/buttons'
+import { data } from '../../../../../library/constants'
+import { GoBack } from '../../../../../global/partials/buttons'
 import { useNavigation } from '@react-navigation/native'
 
 type Props = {}
@@ -14,8 +14,25 @@ type Props = {}
 const AccountDetails = (props: Props) => {
 
     const {userdata} = useSelector((action: data) => action._userdata)
-    const address = userdata[0]?.address?.map((datas: string) => datas)
+    const [detailaddress, setdetailedaddress] = useState('')
+    const address = userdata[0]?.address;
     const navigation = useNavigation()
+    
+    useEffect(() => {
+      // Combine the data into a single string
+      const combinedString = address
+        .map((item: any) => {
+          const key = Object.keys(item)[0];
+          const value = item[key];
+          return ` ${value}`;
+        })
+        .join(" ");
+  
+      // Save the combined string in the state
+      setdetailedaddress(combinedString);
+    }, []);
+    console.log(address[0]);
+    
     
 
   return (
@@ -65,7 +82,7 @@ const AccountDetails = (props: Props) => {
               name="map-marker-outline"
               size={25}
               color={black.B004}
-              value = {address.join(" ").toString()}
+              value = {detailaddress}
               editable = {false}
           />
             <Text style = {{alignSelf: 'flex-start', marginLeft: 15, fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 15}}>Address</Text>

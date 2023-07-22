@@ -1,17 +1,17 @@
 import { View, Text, ToastAndroid, Alert } from 'react-native'
 import React, {useState, useEffect} from 'react'
-import { styles } from '../../../../styles'
+import { styles } from '../../../../../styles'
 import { useNavigation } from '@react-navigation/native';
 import { firebase } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore'
-import { BudgetField, DefaultField, Multitextfield } from '../../../../global/partials/fields';
-import { black, success, theme } from '../../../../assets/colors';
-import { JoinasButton, LogButton, NextButton, PrevButton } from '../../../../global/partials/buttons';
+import { BudgetField, DefaultField, Multitextfield } from '../../../../../global/partials/fields';
+import { black, success, theme } from '../../../../../assets/colors';
+import { JoinasButton, LogButton, NextButton, PrevButton } from '../../../../../global/partials/buttons';
 import { Chip, RadioButton } from 'react-native-paper';
 import { useSelector } from 'react-redux';
-import { jobdata } from '../../../../library/constants';
+import { jobdata } from '../../../../../library/constants';
 import { ScrollView } from 'react-native-gesture-handler';
-import Createjobs from './createjobs';
+import Createjobs from '../add/createjobs';
 type Props = {
 
   position: number,

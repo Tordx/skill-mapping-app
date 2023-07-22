@@ -1,15 +1,16 @@
 import { View, Text, ToastAndroid, Alert } from 'react-native'
 import React, {useState} from 'react'
-import { BudgetField, DefaultField, Multitextfield } from '../../../../global/partials/fields';
-import { styles } from '../../../../styles';
-import { black, success, theme, white } from '../../../../assets/colors';
-import { GoBack, JoinasButton, LogButton, NextButton, PrevButton } from '../../../../global/partials/buttons';
+import { BudgetField, DefaultField, Multitextfield } from '../../../../../global/partials/fields';
+import { styles } from '../../../../../styles';
+import { black, success, theme, white } from '../../../../../assets/colors';
+import { GoBack, JoinasButton, LogButton, NextButton, PrevButton } from '../../../../../global/partials/buttons';
 import { Chip, RadioButton } from 'react-native-paper';
 import { firebase } from '@react-native-firebase/auth';
-import { getSpecificData } from '../../../../firebase';
+import { getSpecificData } from '../../../../../firebase';
 import firestore from '@react-native-firebase/firestore'
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
+import { idgen } from '../../../../../global/functions';
 
   interface Props {
   position: number;
@@ -122,7 +123,7 @@ const Createjobs: React.FC<Props> = ({position, setposition}) => {
   
               handleSave()
   
-              console.log('Post archived/deleted');
+              console.log('Posted success');
             },
             style: 'destructive',
           },
@@ -132,12 +133,13 @@ const Createjobs: React.FC<Props> = ({position, setposition}) => {
     };
 
     const handleSave = async() => {
+      
+      const id = idgen()
       try {
             const timestamp = firebase.firestore.FieldValue.serverTimestamp()
             const user = firebase.auth().currentUser;
-            const getid = firestore().collection('job-post').doc().id;
             console.log(user);
-            await firestore().collection('job-post').doc().set({
+            await firestore().collection('job-post').doc(id).set({
               jobtitle: jobtitle,
               joblocation: joblocation,
               requirements: requirements,
@@ -146,7 +148,7 @@ const Createjobs: React.FC<Props> = ({position, setposition}) => {
               budget: budget,
               pertimeframe: pertimeframe,
               description: description,
-              jobid: getid,
+              jobid: id,
               qualification: qualification,
               photoURL: user?.photoURL,
               userid: user?.uid,
@@ -154,7 +156,17 @@ const Createjobs: React.FC<Props> = ({position, setposition}) => {
               timestamp: timestamp,
               status: true,
           }).then(async(response) => {
-              ToastAndroid.show('HELLO', ToastAndroid.LONG)
+              setjobtitle('');
+              setjoblocation('');
+              setrequirements([]);
+              setrequirementvalue('');
+              settype('');
+              setscope('');
+              setbudget(0);
+              setpertimeframe('');
+              setdescription('');
+              setqualification('');
+              ToastAndroid.show('Posted successfully', ToastAndroid.LONG)
               setposition(position = 1)
           });
       } catch (error) {
