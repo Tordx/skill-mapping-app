@@ -13,9 +13,11 @@ import Forgot from '../../screens/temp/forgot'
 import Forgotsent from '../../screens/temp/forgotsent'
 import AccountDetails from '../../screens/contents/home/employer/account/details'
 import { AdditionalInfo, PasswordChange, PersonalInfo } from '../../screens/contents/home/employer/account/editinfo'
-import About from '../../screens/contents/home/employer/account/about'
+import About from '../../screens/contents/about'
 import { EditPost } from '../../screens/contents/home/employer/posts/editpost'
 import PhotoURLchange from '../../screens/contents/home/employer/account/photoedit'
+import FPersonalInformation from '../../screens/contents/home/freelance/account/details'
+import { EditContactDetailsF, EditEducBackground, EditEmergContactDetailsF, EditPersonalInfoF, Editjobtitle } from '../../screens/contents/home/freelance/account/editinfo'
 
 type Props = {}
 
@@ -153,6 +155,49 @@ const  Stacks: React.FC = () => {
                 headerShown: false,
                 }}
             />
+            <Stack.Screen
+                name='FPersonalInformation'   
+                component={FPersonalInformation}
+                options = {{
+                headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name='EditEducBackground'   
+                component={EditEducBackground}
+                options = {{
+                headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name='Editjobtitle'   
+                component={Editjobtitle}
+                options = {{
+                headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name = 'EditPersonalInfoF'
+                component={EditPersonalInfoF}
+                options = {{
+                    headerShown: false,
+                    }}
+            />
+            <Stack.Screen
+                name = 'EditContactDetailsF'
+                component={EditContactDetailsF}
+                options = {{
+                    headerShown: false,
+                    }}
+            />
+              <Stack.Screen
+                name = 'EditEmergContactDetailsF'
+                component={EditEmergContactDetailsF}
+                options = {{
+                    headerShown: false,
+                    }}
+            />
+            
         </Stack.Navigator>
     </NavigationContainer>
   )
