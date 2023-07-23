@@ -148,9 +148,6 @@ export const getloginauth = async (datapull: string, dataparameter: string, para
           displayName: user?.displayName,
           image: image,
           description: description,
-          comment: '0',
-          likes: '0',
-          shares: '0',
           time: time,
   
         })
@@ -201,3 +198,23 @@ export const uploadImage = async (imageUri: any, setTransferred: any) => {
     throw error;
   }
 };
+
+const applicationsubmit = async(user: data, job: jobdata) => {
+
+  const time = firebase.firestore.FieldValue.serverTimestamp();
+  const id = firebase.firestore().collection('users').id
+  try {
+    await firestore().collection('save-post ').doc(id).set({
+
+      applicationid: id,
+      jobid: job.jobid,
+      uid: user.uid,
+      timestamp: time,
+
+    })
+  } catch(error) {
+    throw error;
+  }
+ 
+
+}
