@@ -156,14 +156,18 @@ type Props = {
         });
       } catch (error) {
         console.log(`error: ${error}`);
+        await firebase.auth().currentUser?.delete()
         setloading(false)
       }
     };
+
   
     
   const submit = () => {
+
+
     if(position === 3) {
-      if(!emergencycontactname && !emergencycontactnum && !address && readonlyelationship) {
+      if(!emergencycontactname && !emergencycontactnum && !address && !readonlyelationship && !username && !password && !cpassword) {
         ToastAndroid.show('Some fields might be blank', ToastAndroid.LONG)
       } else {
         handleSave()
@@ -372,6 +376,7 @@ type Props = {
               color={black.B004}
               value = {ContactNumber}
               onChangeText={(value) => setContactNumber(value)}
+              keyboardType='phone-pad'
           />
           <DefaultField
               placeholder="Email Address"
@@ -381,6 +386,7 @@ type Props = {
               color={black.B004}
               value = {email}
               onChangeText={(value) => setemail(value)}
+              keyboardType='email-address'
           />
           <View style={{ marginBottom: 50 }} />
           </>}
@@ -396,6 +402,7 @@ type Props = {
               color={black.B004}
               value = {emergencycontactname}
               onChangeText={(value) => setemergencycontactname(value)}
+             
           />
           <DefaultField
               placeholder="Relationship*"
@@ -414,6 +421,7 @@ type Props = {
               color={black.B004}
               value = {emergencycontactnum}
               onChangeText={(value) => setemergencycontactnum(value)}
+              keyboardType='phone-pad'
           />
           <DefaultField
               placeholder="Address"

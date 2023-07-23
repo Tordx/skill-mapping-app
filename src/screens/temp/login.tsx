@@ -45,7 +45,7 @@ const Login: React.FC = (props: Props) => {
     if (retrievedData.length > 0) {
       const firstDataItem = retrievedData[0];
       setemail(firstDataItem.email);
-    
+      
       console.log(email, password);
 
       await new Promise((resolve: any) => {
@@ -90,10 +90,8 @@ const signIn = async () => {
             }
              if (type === 'employer'){
               
-              console.log('wtf2'); 
               await loginauth(email, password, navigation, 'EmployerTabs', type)
               setloading(false);
-              console.log('wtf'); 
               setemail('')
               setpassword('')
               setusername('')

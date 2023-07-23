@@ -22,6 +22,7 @@ export interface data {
     emergencycontactname: string;
     readonlyelationship: string;
     emergencycontactnum: string;
+    Address: string,
     address: [
       {Province: string,},
       {City: string,},

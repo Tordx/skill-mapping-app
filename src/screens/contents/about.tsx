@@ -1,8 +1,8 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-import { styles } from '../../../../../styles'
-import { black } from '../../../../../assets/colors'
-import { GoBack } from '../../../../../global/partials/buttons'
+import { styles } from '../../styles'
+import { black } from '../../assets/colors'
+import { GoBack } from '../../global/partials/buttons'
 import { useNavigation } from '@react-navigation/native'
 
 type Props = {}

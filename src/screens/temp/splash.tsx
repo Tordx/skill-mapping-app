@@ -36,13 +36,13 @@ const Splash = (props: Props) => {
                            
                             .then(async() => {
                                     const data: data[] = await getloginauth('user', 'email', email)
-                                    console.log(data[0]);
+                                    console.log(type);
                                     
                                     dispatch(setuserdata(data))
                                 ToastAndroid.show("Auto-login success", ToastAndroid.BOTTOM)
-                                if (type === 'freelance') {
+                                if (data[0].usertype === 'freelance') {
                                     navigation.navigate('Tabs' as never)
-                                } else {
+                                } if(data[0].usertype === 'employer')  {
                                     navigation.navigate('EmployerTabs' as never)
                                 }
                             })

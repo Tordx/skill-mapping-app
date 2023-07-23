@@ -274,6 +274,7 @@ export const PasswordChange: React.FC <Props> = () => {
         ToastAndroid.show('Error Current password verification failed.', ToastAndroid.BOTTOM);
       });
   };
+  
   return (
     <View style = {styles.container}>
       <Text style={[styles.h4, { fontFamily: 'Montserrat-SemiBold', marginBottom: 10, marginTop: 0}]}>

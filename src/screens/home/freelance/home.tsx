@@ -36,7 +36,7 @@ const Home = (props: Props) => {
         
       </View>
       </View>
-      <View style = {{marginTop: 250, width: '100%'}}/>
+      <View style = {{marginTop: 200, width: '100%'}}/>
       <JobsLists focus={focus} setfocus={setfocus}/>
     </View>
   )

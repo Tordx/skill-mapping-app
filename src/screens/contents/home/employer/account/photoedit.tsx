@@ -39,10 +39,10 @@ const PhotoURLchange: React.FC = () => {
          
           await user?.updateProfile({
             photoURL: image
-          }).then(() => {
+          }).then(async() => {
             console.log(userdata);
             
-            firestore().collection('user').doc(user?.uid).update({
+            await firestore().collection('user').doc(userdata[0].uid).update({
               photoURL: image
             })
           })

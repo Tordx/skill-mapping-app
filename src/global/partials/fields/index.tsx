@@ -21,10 +21,10 @@ type Props = {
     placeholder?: string,
     placeholderTextColor?: string,
     secureTextEntry?: boolean,
-
+    keyboardType?: string,
 }
 
-export const DefaultField: React.FC<Props> = ({onKeyPress, onChangeText, value , onFocus, name, size, color, editable, style, onBlur, placeholder, placeholderTextColor, secureTextEntry}) => {
+export const DefaultField: React.FC<Props> = ({keyboardType, onKeyPress, onChangeText, value , onFocus, name, size, color, editable, style, onBlur, placeholder, placeholderTextColor, secureTextEntry}) => {
 
     
 
@@ -41,6 +41,7 @@ export const DefaultField: React.FC<Props> = ({onKeyPress, onChangeText, value ,
         placeholder= {placeholder}
         placeholderTextColor={placeholderTextColor}
         onKeyPress={onKeyPress}
+        keyboardType = {  keyboardType || 'default' }
       />
       {name && <Icon
         name = {name || 'blank'}
