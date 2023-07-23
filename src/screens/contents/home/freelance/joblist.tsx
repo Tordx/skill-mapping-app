@@ -89,14 +89,16 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
 
       const renderitem = ({item}:{item: jobdata}) => {
 
+        const MAX_REQUIREMENTS_PER_LINE = 4;
         const firstDataItem = item
         const timeInSeconds = firstDataItem.timestamp?._seconds || 0; 
         const date = new Date(timeInSeconds * 1000);
         const formattedTime = date
+        const isSaved = true
     
         return(
             <Pressable onPress = {() => viewjob(item)}  style = {{width: '100%', justifyContent: 'center', alignItems: 'center'}}>
-              <View style = {{borderBottomWidth: .5,width: '90%', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
+              <View style = {{borderBottomWidth: .5,width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
                 <View style = {{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 10}}>
                   <Image source={{uri: item.photoURL}} resizeMode='cover' style = {{width: 50, height: 50, borderRadius: 5, marginRight: 10}}/>
                   <View style = {{ flexDirection: 'column', width: '85%'}}>
@@ -106,10 +108,22 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
                     <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}>PHP {item.budget.toLocaleString()} / {item.pertimeframe}</Text>
                   </View>
                 </View>
-                <View style = {{flexDirection: 'row', marginVertical: 20}}>
-                  {item.requirements?.map((requirement: any, index: any) => (
-                    <Chip style = {{marginRight: 10, backgroundColor: white.W004}} textStyle = {{color: theme.secondary}}>{requirement}</Chip>
-                  ))}
+                <View style={{ width: '80%' }}>
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginVertical: 10 }}>
+                    {item.requirements?.map((requirement: any, index: any) => (
+                      index >= MAX_REQUIREMENTS_PER_LINE ? (
+                        <View style={{ flexDirection: 'row', alignItems: 'center', margin: 5 }}>
+                          <Chip style={{ backgroundColor: white.W004 }} textStyle={{ color: theme.secondary }}>
+                            {requirement}
+                          </Chip>
+                        </View>
+                      ) : (
+                        <Chip style={{ margin: 5, backgroundColor: white.W004 }} textStyle={{ color: theme.secondary }}>
+                          {requirement}
+                        </Chip>
+                      )
+                    ))}
+                  </View>
                 </View>
                 <View style = {{flexDirection: 'row', marginVertical: 20, justifyContent: 'center', alignContent: 'center'}}>
                   <Icon name ='clock-outline' size={20}/>
@@ -119,20 +133,23 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
                   <TimeAgo time={formattedTime} textStyle={{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}/>
                 </View>
               </View>
+              <Pressable onPress={() => {}} style = {{position: 'absolute', top: 20, right: 20, }}>
+                    <Icon name  ='archive-arrow-down-outline' size={25} color={isSaved ? theme.primary : black.B005} />
+              </Pressable>
             </Pressable>
         )
       }
       
   return (
-    <View style = {{width: '100%', height: '80%',  justifyContent: 'center', alignItems: 'center'}}>
+    <View style = {{width: '100%', marginVertical: '20%',  justifyContent: 'center', alignItems: 'center', paddingBottom: '20%' }}>
       {data ?
       
       <FlatList
             data={data}
-             style = {{width: '100%', height: '100%'}}
+             style = {{width: '100%', height: '100%',}}
             renderItem={renderitem}
         /> : <Text style = {{color: 'black'}}>No Jobs Matches your preferrence</Text> }
-        <JobInfoModal title='Apply Now' onRequestClose = {() => setopenmodal(false)}  visible = {openmodal}/>
+        <JobInfoModal onPress={() => {}} title='Apply Now' onRequestClose = {() => setopenmodal(false)}  visible = {openmodal}/>
     </View>
   )
 }
