@@ -70,7 +70,7 @@ const PhotoURLchange: React.FC = () => {
     }
      
       <LogButton title = 'update' onPress={() => uploadimage()}/>
-      <Loadingmodal visible = {loading} onRequestClose={() => {}}/>
+      <Loadingmodal title='Uploading Photo...' visible = {loading} onRequestClose={() => {}}/>
       <GoBack onPress={() => navigation.goBack()}/>
     </View>
   )

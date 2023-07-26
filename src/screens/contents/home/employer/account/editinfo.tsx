@@ -175,7 +175,7 @@ export const PersonalInfo = (props: Props) => {
           <GoBack onPress={() => navigation.goBack()}/>
         </View>
       </ScrollView>
-     <Loadingmodal visible = {loading} onRequestClose={() => {}}/>
+     <Loadingmodal title= 'Updating Details...' visible = {loading} onRequestClose={() => {}}/>
     </View>
   )
 }
@@ -226,7 +226,7 @@ export const AdditionalInfo: React.FC <Props> = () => {
           <LogButton title = 'Update' onPress={updatedata}/>
       <View style={{ marginBottom: 50 }} />
       <GoBack onPress={() => navigation.goBack()}/>
-      <Loadingmodal visible = {loading} onRequestClose={() => {}}/>
+      <Loadingmodal title='Updating Business Hours' visible = {loading} onRequestClose={() => {}}/>
     </View>
   )
 
@@ -313,7 +313,7 @@ export const PasswordChange: React.FC <Props> = () => {
           <LogButton title = 'Update' onPress={updatepassword}/>
       <View style={{ marginBottom: 50 }} />
       <GoBack onPress={() => navigation.goBack()}/>
-      <Loadingmodal title='' visible = {loading} onRequestClose={() => {}}/>
+      <Loadingmodal title='Updating Password, Please wait...' visible = {loading} onRequestClose={() => {}}/>
     </View>
   )
 

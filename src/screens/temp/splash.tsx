@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { firebase } from '@react-native-firebase/auth';
 import { ToastAndroid } from 'react-native';
 import {useNavigation} from '@react-navigation/native'
-import { getSpecificData, getloginauth } from '../../firebase';
+import { getSpecificData, getexistingdata } from '../../firebase';
 import { useDispatch } from 'react-redux';
 import { setuserdata } from '../../library/redux/userslice';
 import { data } from '../../library/constants';
@@ -35,7 +35,7 @@ const Splash = (props: Props) => {
                             await firebase.auth().signInWithEmailAndPassword(email, password)
                            
                             .then(async() => {
-                                    const data: data[] = await getloginauth('user', 'email', email)
+                                    const data: data[] = await getexistingdata('user', 'email', email)
                                     console.log(type);
                                     
                                     dispatch(setuserdata(data))

@@ -61,7 +61,7 @@ export const Editjobtitle = (props: Props) => {
                 <LogButton title = 'Update' onPress={updatedata}/>
             <View style={{ marginBottom: 50 }} />
             <GoBack onPress={() => navigation.goBack()}/>
-            <Loadingmodal visible = {loading} onRequestClose={() => {}}/>
+            <Loadingmodal title='Updating Employment details' visible = {loading} onRequestClose={() => {}}/>
           </View>
         )
       
@@ -161,7 +161,7 @@ export const EditEducBackground: React.FC = () => {
           <GoBack onPress={() => navigation.goBack()}/>
         </View>
       </ScrollView>
-     <Loadingmodal visible = {loading} onRequestClose={() => {}}/>
+     <Loadingmodal title = 'Updating Educational Attainment' visible = {loading} onRequestClose={() => {}}/>
     </View>
   )
 }
@@ -294,7 +294,7 @@ return (
         <GoBack onPress={() => navigation.goBack()}/>
       </View>
     </ScrollView>
-   <Loadingmodal visible = {loading} onRequestClose={() => {}}/>
+   <Loadingmodal title='Updating Personal Information' visible = {loading} onRequestClose={() => {}}/>
   </View>
 )
 }
@@ -423,7 +423,7 @@ export const EditContactDetailsF: React.FC = () => {
         <GoBack onPress={() => navigation.goBack()}/>
         </View>
         </ScrollView>
-        <Loadingmodal visible = {loading} onRequestClose={() => {}}/>
+        <Loadingmodal title='Updating Personal Information' visible = {loading} onRequestClose={() => {}}/>
         </View>
   )
 }
@@ -518,7 +518,7 @@ export const EditEmergContactDetailsF: React.FC = () => {
         <GoBack onPress={() => navigation.goBack()}/>
         </View>
         </ScrollView>
-        <Loadingmodal visible = {loading} onRequestClose={() => {}}/>
+        <Loadingmodal title='Updating emergency contact' visible = {loading} onRequestClose={() => {}}/>
         </View>
   )
 }

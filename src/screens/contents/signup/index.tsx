@@ -475,7 +475,7 @@ type Props = {
             onPress={() => navigation.navigate('Login' as never)}
             
           />
-          <Loadingmodal visible = {loading} onRequestClose={() => {}} />
+          <Loadingmodal title='Creating your account...' visible = {loading} onRequestClose={() => {}} />
           </>
           
       );

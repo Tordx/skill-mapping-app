@@ -6,7 +6,7 @@ import { DefaultField } from '../../global/partials/fields';
 import { black, theme } from '../../assets/colors';
 import { ForgotButton, LogButton, TextButton } from '../../global/partials/buttons';
 import { useNavigation } from '@react-navigation/native';
-import { getSpecificData, getloginauth, loginauth } from '../../firebase';
+import { getSpecificData, getexistingdata, loginauth } from '../../firebase';
 import { data } from '../../library/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { setuserdata } from '../../library/redux/userslice';
@@ -39,7 +39,7 @@ const Login: React.FC = (props: Props) => {
 
   useEffect(() => {
     const checkemail = async () => {
-    const retrievedData: data[] = await getloginauth('user', 'username', username);
+    const retrievedData: data[] = await getexistingdata('user', 'username', username);
     settype(retrievedData[0]?.usertype)
     setdata(retrievedData)
     if (retrievedData.length > 0) {
@@ -155,7 +155,7 @@ const signIn = async () => {
       />
       <TextButton text1="Don't have an account yet?" text2=' Register now!' onPress={() => navigation.navigate('Joinas' as never)}/>
       </View>
-      <Loadingmodal visible = {loading} onRequestClose={() => {}}/>
+      <Loadingmodal title='Signing in, Please wait...' visible = {loading} onRequestClose={() => {}}/>
     </View>
   )
 }
