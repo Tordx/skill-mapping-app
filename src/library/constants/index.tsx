@@ -31,7 +31,6 @@ export interface data {
     ];
     username: string;
     fullname: string;
-    contactNumber: string;
     website: string;
     type: string;
     usertype: string;
@@ -39,6 +38,7 @@ export interface data {
     company: string,
     businesshours: string,
     description: string,
+    photoURL: string,
   
   }
 
@@ -59,13 +59,33 @@ export interface jobdata {
     timestamp: any,
     formattedTime: any,
     status: boolean,
-    _jobdata: any
+    _jobdata: any,
+    uid: string
 
 }
 
 export interface jobid {
+
   jobid: string,
-  userid: string,
+  uid: string,
+  saveid: string,
+  jobtitle: string,
+  joblocation: string,
+  requirements: any;
+  type: string;
+  scope: string;
+  budget: number;
+  pertimeframe: string,
+  description: string;
+  qualification: string;
+  photoURL: string,
+  userid: string;
+  fullname: string;
+  timestamp: any,
+  formattedTime: any,
+  status: boolean,
+  _jobdata: any,
+
 
 }
 
