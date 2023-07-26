@@ -13,8 +13,8 @@ type Props = {
 
     onPress?: (e: any) => void;
     visible?: boolean,
-    onRequestClose: (e: any) => void;
-    title?: string,
+    onRequestClose?: (e: any) => void;
+    title: string,
 
     
 
@@ -29,7 +29,7 @@ export const JobInfoModal: React.FC<Props> = ({onPress, visible, onRequestClose,
 
   return (
     <Modal visible = {visible} transparent onRequestClose={onRequestClose} animationType='slide' statusBarTranslucent>
-      <View style = {[styles.container,{backgroundColor: transparent.level04}]}>
+      <View style = {[styles.container,{backgroundColor: transparent.level05}]}>
        
         <View style = {{position: 'absolute', bottom: 10, width: '95%', height: '75%', justifyContent: 'center', alignItems: 'center', backgroundColor: theme.light, borderRadius: 15}}>
         <ScrollView style = {[styles.scrollview, {width: '90%'}]} showsVerticalScrollIndicator = {false}>
@@ -93,14 +93,14 @@ export const JobInfoModal: React.FC<Props> = ({onPress, visible, onRequestClose,
   )
 }
 
-export const Loadingmodal: React.FC<Props> = ({onRequestClose, visible}) => {
+export const Loadingmodal: React.FC<Props> = ({onRequestClose, visible, title}) => {
 
   return (
     <Modal statusBarTranslucent transparent visible = {visible} onRequestClose={onRequestClose}>
       <View style = {[styles.container, {backgroundColor: transparent.level05,}]}>
         <ActivityIndicator color= {theme.primary} size={50}/>
         <Text style = {{fontFamily: 'Montserrat-Regular', color: white.main, fontSize: 30, textAlign: 'center'}}>
-          Please wait, while we update your profile...
+          {title}
         </Text>
       </View>
     </Modal>
