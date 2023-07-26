@@ -1,6 +1,6 @@
 import { View, Text,FlatList, Pressable, RefreshControl, Alert } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { deletearchive, getActiveJobData, getAllData, getInactiveJobData, getSpecificData, getSpecificjobData } from '../../../../../firebase';
+import { deletearchive, getActiveJobData, getAllData, getSpecificData, getSpecificjobData } from '../../../../../firebase';
 import { data, jobdata, jobid } from '../../../../../library/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import TimeAgo from 'react-native-timeago';
@@ -36,20 +36,40 @@ const ArchivePosts: React.FC = () => {
 
 
     const repostjob = async(item: jobdata) => {
-      
-      try {
+      Alert.alert(
+        'Confirmation',
+        'Are you sure you want to re-post this job?',
+        [
+          {
+            text: 'No',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          {
+            text: 'Yes',
+            onPress: async() => {
+
+              try {
         
-        firestore().collection('job-post').doc(item.jobid).update({
-
-          status: true,
-
-        })
-        fetchData()
-      } catch(error) {
-        console.log(error)
-      }
-
+                firestore().collection('job-post').doc(item.jobid).update({
+        
+                  status: true,
+        
+                })
+                fetchData()
+              } catch(error) {
+                console.log(error)
+              }
+        
+              console.log('Post archived/deleted');
+            },
+            style: 'destructive',
+          },
+        ],
+        { cancelable: false }
+      );
     }
+   
     
     const handleRefresh = () => {
         setrefresh(true)
