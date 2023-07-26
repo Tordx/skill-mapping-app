@@ -4,34 +4,54 @@ import firestore from '@react-native-firebase/firestore';
 import { useEffect, useState } from 'react';
 import { Platform, ToastAndroid } from 'react-native';
 import storage from '@react-native-firebase/storage';
-import { data, jobdata } from '../library/constants';
+import { data, jobdata, jobid } from '../library/constants';
+import { idgen } from '../global/functions';
 
-export const loginauth = async(email: string, password: string, navigation: any, usertype: string, credentials: string)  => {
-    try {
-        const userCredential = await auth().signInWithEmailAndPassword(email, password);
-        console.log('User account signed in!', userCredential.user);
-        const user = firebase.auth().currentUser
-        if(user?.emailVerified) {
-            ToastAndroid.show('Login Success', ToastAndroid.BOTTOM);
-            await AsyncStorage.setItem('login', JSON.stringify({email, password, credentials}))
-            navigation.navigate(usertype as never)
-            return userCredential.user
+  export const loginauth = async(email: string, password: string, navigation: any, usertype: string, credentials: string)  => {
+      try {
+          const userCredential = await auth().signInWithEmailAndPassword(email, password);
+          console.log('User account signed in!', userCredential.user);
+          const user = firebase.auth().currentUser
+          if(user?.emailVerified) {
+              ToastAndroid.show('Login Success', ToastAndroid.BOTTOM);
+              await AsyncStorage.setItem('login', JSON.stringify({email, password, credentials}))
+              navigation.navigate(usertype as never)
+              return userCredential.user
 
-        } else {
-            ToastAndroid.show('Email Verification is needed', ToastAndroid.BOTTOM);
-          navigation.navigate('Verification' as never)
+          } else {
+              ToastAndroid.show('Email Verification is needed', ToastAndroid.BOTTOM);
+            navigation.navigate('Verification' as never)
+          }
+
+        } catch (error) {
+          console.error(error);
+          throw error;
         }
-
-      } catch (error) {
-        console.error(error);
-        throw error;
       }
-    }
 
-export const getloginauth = async (datapull: string, dataparameter: string, parameter: string): Promise<data[]> => {
+  export const getexistingdata = async (datapull: string, dataparameter: string, parameter: string): Promise<data[]> => {
+      try {
+          const collectionRef = firestore().collection(datapull);
+          const querySnapshot = await collectionRef.where(dataparameter, '==', parameter).get();
+      
+          const data: data[] = [];
+          querySnapshot.forEach((documentSnapshot) => {
+          const docData = documentSnapshot.data() as data;
+          data.push(docData);
+          });
+          return data;
+      } catch (error) {
+          console.log('Error retrieving data:', error);
+          return [];
+      }
+      };
+
+
+
+  export const getspecificexistingdata = async (datapull: string, dataparameter: string, parameter: string, specificdataparam: string, specificdata: string): Promise<data[]> => {
     try {
         const collectionRef = firestore().collection(datapull);
-        const querySnapshot = await collectionRef.where(dataparameter, '==', parameter).get();
+        const querySnapshot = await collectionRef.where(dataparameter, '==', parameter).where(specificdataparam, '==', specificdata).get();
     
         const data: data[] = [];
         querySnapshot.forEach((documentSnapshot) => {
@@ -48,7 +68,7 @@ export const getloginauth = async (datapull: string, dataparameter: string, para
     export const getAllData = async (toretrieve: string): Promise<jobdata[]> => {
       try {
         const collectionRef = firestore().collection(toretrieve);
-        const querySnapshot = await collectionRef.get();
+        const querySnapshot = await collectionRef.where('status', '==', true).get();
     
         const data: jobdata[] = [];
         querySnapshot.forEach((documentSnapshot) => {
@@ -96,14 +116,14 @@ export const getloginauth = async (datapull: string, dataparameter: string, para
         return [];
       }
     };
-    export const getInactiveJobData = async (datapull: string, dataparameter: string, parameter: string,): Promise<jobdata[]> => {
+    export const getsaves = async (datapull: string, dataparameter: string, parameter: string,): Promise<jobid[]> => {
       try {
         const collectionRef = firestore().collection(datapull);
         const querySnapshot = await collectionRef.where(dataparameter, '==', parameter).get();
     
-        const data: jobdata[] = [];
+        const data: jobid[] = [];
         querySnapshot.forEach((documentSnapshot) => {
-          const docData = documentSnapshot.data() as jobdata;
+          const docData = documentSnapshot.data() as jobid;
           data.push(docData);
         });
     
@@ -174,6 +194,20 @@ export const deletearchive = async(docid: string) => {
   
 }
 
+export const deletesaves = async(docid: string) => {
+  try {
+    await firestore()
+      .collection('save-post')
+      .doc(docid)
+      .delete()
+
+  } catch(error){
+    throw error;
+  }
+  
+}
+
+
 export const uploadImage = async (imageUri: any, setTransferred: any) => {
 
   try {
@@ -198,23 +232,56 @@ export const uploadImage = async (imageUri: any, setTransferred: any) => {
     throw error;
   }
 };
+  
+export const submitapplication = async(user: data, job: jobdata) => {
+  const id = idgen()
+  const timestamp = firebase.firestore.FieldValue.serverTimestamp()
+  const retrieveddata = await getspecificexistingdata('application', 'uid', user.uid, 'jobid', job.jobid)
+  if (retrieveddata.length > 0) {
+    ToastAndroid.show('You  already submitted an application!', ToastAndroid.LONG)
+    return;
+  } else {
+    try {
+      await firestore().collection('application').doc(id).set({
+            jobid: job.jobid,
+            uid: user.uid,
+            applicationid: id,
+            jobtitle: job.jobtitle,
+            photoURL: user.photoURL,
+            fullname: user.fullname,
+            email: user.email,
+            contactnumber: user.contactnumber,
+            timestamp: timestamp,
+      })
+      ToastAndroid.show('Application submitted!', ToastAndroid.LONG)
+    } catch(error){
+      console.error(error)
+    }
+  }
 
-const applicationsubmit = async(user: data, job: jobdata) => {
+}
 
-  const time = firebase.firestore.FieldValue.serverTimestamp();
-  const id = firebase.firestore().collection('users').id
+export const createsave = async(item: jobdata, user: data, id: string, timestamp: any) => {
   try {
-    await firestore().collection('save-post ').doc(id).set({
-
-      applicationid: id,
-      jobid: job.jobid,
+    await firestore().collection('save-post').doc(id).set({
+      jobid: item.jobid,
+      saveid: id,
       uid: user.uid,
-      timestamp: time,
-
-    })
-  } catch(error) {
+      jobtitle: item.jobtitle,
+      joblocation: item.joblocation,
+      requirements: item.requirements,
+      type: item.type,
+      scope: item.scope,
+      budget: item.budget,
+      pertimeframe: item.pertimeframe,
+      description: item.description,
+      qualification: item.qualification,
+      photoURL: item.photoURL,
+      fullname: item.fullname,
+      timestamp: timestamp,
+    });
+  } 
+  catch(error){
     throw error;
   }
- 
-
 }
