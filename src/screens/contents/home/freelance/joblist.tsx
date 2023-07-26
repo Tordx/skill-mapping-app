@@ -1,7 +1,7 @@
-import { View, Text,FlatList, Pressable } from 'react-native'
+import { View, Text,FlatList, Pressable, RefreshControl, ToastAndroid, Alert } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { getAllData, getSpecificData, getSpecificjobData } from '../../../../firebase';
-import { data, jobdata } from '../../../../library/constants';
+import { createsave, getAllData, getSpecificData, getSpecificjobData, getsaves, submitapplication } from '../../../../firebase';
+import { data, jobdata, jobid } from '../../../../library/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import TimeAgo from 'react-native-timeago';
 import { Image } from 'react-native';
@@ -11,7 +11,10 @@ import { Chip } from 'react-native-paper';
 import  Icon  from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { setjobdata } from '../../../../library/redux/jobslice';
-import { JobInfoModal } from '../../../../global/partials/modals';
+import { JobInfoModal, Loadingmodal } from '../../../../global/partials/modals';
+import firestore from '@react-native-firebase/firestore'
+import { idgen } from '../../../../global/functions';
+import { firebase } from '@react-native-firebase/auth';
 
 type Props = {
 
@@ -30,18 +33,20 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
 
     const [alldata, setalldata] = useState<jobdata[]>([]);
     const [matchdata, setmatchdata] = useState<jobdata[]>([]);
-    const userdata = useSelector((action: data) => action._userdata)
+    const {userdata} = useSelector((action: data) => action._userdata)
+    const {JobData} = useSelector((action: jobdata) => action._jobdata)
+    const [save, setsave] = useState<jobid[]>([]);
     const [data, setdata] = useState<jobdata[]>([]);
     const [openmodal, setopenmodal] = useState(false);
+    const [loading, setloading] = useState(false)
+    const [refreshing, setrefreshing] = useState(false)
     const dispatch = useDispatch()
     const navigation = useNavigation()
-    console.log(userdata);
-    
+
     useEffect(() => {
         fetchData()
         toggledata()
-        console.log(alldata);
-        console.log(matchdata);
+        getsave()
     },[focus])
 
     const toggledata = () => {
@@ -56,20 +61,37 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
       }
 
     }
-
     
+    const savejob = async (item: jobdata) => {
+      const id = idgen();
+      try {
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp()
+        await createsave(item, userdata[0], id, timestamp)
+        setsave((prevSave) => [...prevSave, { jobid: item.jobid, saveid: id } as jobid]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     const fetchData = async () => {
         try {
-            const retrievedmatchjobdata: jobdata[] = await getSpecificjobData('job-post','jobtitle', userdata.jobTitle);
+            const retrievedmatchjobdata: jobdata[] = await getSpecificjobData('job-post','jobtitle', userdata[0].jobTitle);
             setmatchdata(retrievedmatchjobdata)
             const retrievedalljobdata: jobdata[] = await getAllData('job-post');
             setalldata(retrievedalljobdata)
-           
+            
           }  catch (error) {
           console.log('Error fetching data:', error);
           throw error;
         }
       }
+    
+    const getsave = async() => {
+      const savedata: jobid[] = await getsaves('save-post', 'uid', userdata[0].uid)
+      setsave(savedata)
+            
+    }
+
+
 
       const viewjob = (item: any) => {
         const { timestamp, ...restOfTheItem } = item;
@@ -86,6 +108,43 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
         dispatch(setjobdata(dataToDispatch));
         setopenmodal(true);
       };
+      
+      const refresh = () => {
+        setrefreshing(true)
+        fetchData()
+        setrefreshing(false)
+      }
+
+      
+
+      const submit = async() => {
+          
+          Alert.alert(
+            'Submit Application',
+            `You are about to submit an application for ${JobData.jobtitle} ?`,
+            [
+              {
+                text: 'No',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+              },
+              {
+                text: 'Yes',
+                onPress: async() => {
+
+                  setloading(true)
+                  await submitapplication(userdata[0], JobData).then(() => {  
+                    setloading(false)
+                  })
+                },
+                style: 'destructive',
+              },
+            ],
+            { cancelable: false }
+          );
+       
+      }
+  
 
       const renderitem = ({item}:{item: jobdata}) => {
 
@@ -94,8 +153,7 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
         const timeInSeconds = firstDataItem.timestamp?._seconds || 0; 
         const date = new Date(timeInSeconds * 1000);
         const formattedTime = date
-        const isSaved = true
-    
+        const isSaved = save.some((savedItem) => savedItem.jobid === item.jobid);
         return(
             <Pressable onPress = {() => viewjob(item)}  style = {{width: '100%', justifyContent: 'center', alignItems: 'center'}}>
               <View style = {{borderBottomWidth: .5,width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
@@ -133,8 +191,8 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
                   <TimeAgo time={formattedTime} textStyle={{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}/>
                 </View>
               </View>
-              <Pressable onPress={() => {}} style = {{position: 'absolute', top: 20, right: 20, }}>
-                    <Icon name  ='archive-arrow-down-outline' size={25} color={isSaved ? theme.primary : black.B005} />
+              <Pressable disabled = {isSaved} onPress={() => savejob(item)} style = {{position: 'absolute', top: 20, right: 20, }}>
+                    <Icon name  ={isSaved ? 'content-save': 'content-save-outline'} size={25} color={isSaved ? theme.primary : black.B005} />
               </Pressable>
             </Pressable>
         )
@@ -148,8 +206,10 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
             data={data}
              style = {{width: '100%', height: '100%',}}
             renderItem={renderitem}
+            refreshControl={<RefreshControl refreshing = {refreshing} onRefresh={refresh} />}
         /> : <Text style = {{color: 'black'}}>No Jobs Matches your preferrence</Text> }
-        <JobInfoModal onPress={() => {}} title='Apply Now' onRequestClose = {() => setopenmodal(false)}  visible = {openmodal}/>
+        <JobInfoModal onPress={submit} title='Apply Now' onRequestClose = {() => setopenmodal(false)}  visible = {openmodal}/>
+        <Loadingmodal title = 'Submitting Application, Please wait...' visible = {loading} onRequestClose={()=> {}}/>
     </View>
   )
 }
