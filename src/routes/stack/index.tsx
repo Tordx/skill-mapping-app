@@ -18,6 +18,8 @@ import { EditPost } from '../../screens/contents/home/employer/posts/editpost'
 import PhotoURLchange from '../../screens/contents/home/employer/account/photoedit'
 import FPersonalInformation from '../../screens/contents/home/freelance/account/details'
 import { EditContactDetailsF, EditEducBackground, EditEmergContactDetailsF, EditPersonalInfoF, Editjobtitle } from '../../screens/contents/home/freelance/account/editinfo'
+import Presumbit from '../../screens/contents/home/freelance/presubmit'
+import { NewApplication } from '../../screens/contents/home/employer/notification/contents'
 
 type Props = {}
 
@@ -197,7 +199,20 @@ const  Stacks: React.FC = () => {
                     headerShown: false,
                     }}
             />
-            
+            <Stack.Screen 
+                name = 'Presumbit'
+                component={Presumbit}
+                options = {{
+                    headerShown: false,
+                    }}
+            />
+            <Stack.Screen
+                name = 'NewApplication'
+                component={NewApplication}
+                options = {{
+                    headerShown: false,
+                    }}
+            />
         </Stack.Navigator>
     </NavigationContainer>
   )
