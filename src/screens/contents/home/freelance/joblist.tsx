@@ -1,6 +1,6 @@
 import { View, Text,FlatList, Pressable, RefreshControl, ToastAndroid, Alert } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { createsave, getAllData, getSpecificData, getSpecificjobData, getsaves, submitapplication } from '../../../../firebase';
+import { createsave, getAllData, getSpecificjobData, getsaves } from '../../../../firebase';
 import { data, jobdata, jobid } from '../../../../library/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import TimeAgo from 'react-native-timeago';
@@ -117,33 +117,7 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
 
       
 
-      const submit = async() => {
-          
-          Alert.alert(
-            'Submit Application',
-            `You are about to submit an application for ${JobData.jobtitle} ?`,
-            [
-              {
-                text: 'No',
-                onPress: () => console.log('Cancel Pressed'),
-                style: 'cancel',
-              },
-              {
-                text: 'Yes',
-                onPress: async() => {
-
-                  setloading(true)
-                  await submitapplication(userdata[0], JobData).then(() => {  
-                    setloading(false)
-                  })
-                },
-                style: 'destructive',
-              },
-            ],
-            { cancelable: false }
-          );
-       
-      }
+     
   
 
       const renderitem = ({item}:{item: jobdata}) => {
@@ -208,7 +182,7 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
             renderItem={renderitem}
             refreshControl={<RefreshControl refreshing = {refreshing} onRefresh={refresh} />}
         /> : <Text style = {{color: 'black'}}>No Jobs Matches your preferrence</Text> }
-        <JobInfoModal onPress={submit} title='Apply Now' onRequestClose = {() => setopenmodal(false)}  visible = {openmodal}/>
+        <JobInfoModal onPress={() => {setopenmodal(false); navigation.navigate('Presumbit' as never)}} title='Apply Now' onRequestClose = {() => setopenmodal(false)}  visible = {openmodal}/>
         <Loadingmodal title = 'Submitting Application, Please wait...' visible = {loading} onRequestClose={()=> {}}/>
     </View>
   )
