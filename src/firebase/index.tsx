@@ -4,7 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 import { useEffect, useState } from 'react';
 import { Platform, ToastAndroid } from 'react-native';
 import storage from '@react-native-firebase/storage';
-import { data, jobdata, jobid } from '../library/constants';
+import { application, data, jobdata, jobid } from '../library/constants';
 import { idgen } from '../global/functions';
 
   export const loginauth = async(email: string, password: string, navigation: any, usertype: string, credentials: string)  => {
@@ -48,7 +48,7 @@ import { idgen } from '../global/functions';
 
 
 
-  export const getspecificexistingdata = async (datapull: string, dataparameter: string, parameter: string, specificdataparam: string, specificdata: string): Promise<data[]> => {
+  export const getspecificexistingdata = async (datapull: string, dataparameter: string, parameter: string, specificdataparam: string, specificdata: any): Promise<data[]> => {
     try {
         const collectionRef = firestore().collection(datapull);
         const querySnapshot = await collectionRef.where(dataparameter, '==', parameter).where(specificdataparam, '==', specificdata).get();
@@ -135,14 +135,14 @@ import { idgen } from '../global/functions';
     };
 
 
-    export const getSpecificData = async (datapull: string, dataparameter: string, parameter: string,): Promise<data[]> => {
+    export const getNotificationData = async (datapull: string, dataparameter: string, parameter: string,): Promise<application[]> => {
       try {
         const collectionRef = firestore().collection(datapull);
         const querySnapshot = await collectionRef.where(dataparameter, '==', parameter).get();
     
-        const data: data[] = [];
+        const data: application[] = [];
         querySnapshot.forEach((documentSnapshot) => {
-          const docData = documentSnapshot.data() as data;
+          const docData = documentSnapshot.data() as application;
           data.push(docData);
         });
     
@@ -211,54 +211,130 @@ export const deletesaves = async(docid: string) => {
 export const uploadImage = async (imageUri: any, setTransferred: any) => {
 
   try {
-    const uri = imageUri;
-    console.log(imageUri);
+    const uri = imageUri
+    console.log(imageUri)
 
-    const filename = uri.substring(uri.lastIndexOf('/') + 1);
-    const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+    const filename = uri.substring(uri.lastIndexOf('/') + 1)
+    const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
     setTransferred(0);
-    const task = storage().ref(filename).putFile(uploadUri);
+    const task = storage().ref(filename).putFile(uploadUri)
     task.on('state_changed', snapshot => {
       setTransferred(
         Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
-      );
-    });
+      )
+    })
     return await task.then(async () => {
-      const firebasedata = await storage().ref(filename).getDownloadURL();
+      const firebasedata = await storage().ref(filename).getDownloadURL()
       return firebasedata;
-    });
+    })
   } catch (error) {
-    console.log('Error uploading image:', error);
-    throw error;
+    console.log('Error uploading image:', error)
+    throw error
   }
-};
+}
   
-export const submitapplication = async(user: data, job: jobdata) => {
+export const submitapplication = async(user: data, job: jobdata, fullname: string, contactnumber: string, email: string, navigation: any) => {
   const id = idgen()
   const timestamp = firebase.firestore.FieldValue.serverTimestamp()
   const retrieveddata = await getspecificexistingdata('application', 'uid', user.uid, 'jobid', job.jobid)
   if (retrieveddata.length > 0) {
-    ToastAndroid.show('You  already submitted an application!', ToastAndroid.LONG)
-    return;
+    ToastAndroid.show('Sorry, You have already applied to this job.', ToastAndroid.CENTER)
+    return
   } else {
     try {
       await firestore().collection('application').doc(id).set({
             jobid: job.jobid,
-            uid: user.uid,
             applicationid: id,
+            for: job.userid,
+            from: user.uid,
             jobtitle: job.jobtitle,
             photoURL: user.photoURL,
-            fullname: user.fullname,
-            email: user.email,
-            contactnumber: user.contactnumber,
+            jobphotoURL: job.photoURL,
+            fullname: fullname,
+            email: email,
+            contactnumber: contactnumber,
             timestamp: timestamp,
+            status: 'New Job Application',
+            notiftitle: 'New Application',
+            read: false,
+            isaccepted: false,
       })
       ToastAndroid.show('Application submitted!', ToastAndroid.LONG)
+      navigation.goBack()
     } catch(error){
       console.error(error)
     }
   }
 
+}
+
+export const acceptapplication = async(when: string, time: string, where: string, application: application, navigation: any) => {
+  const id = idgen()
+  const timestamp = firebase.firestore.FieldValue.serverTimestamp()
+  const retrieveddata = await getspecificexistingdata('application', 'applicationid', application.applicationid, 'isaccepted', true)
+  if (retrieveddata.length > 0) {
+    ToastAndroid.show('Sorry, You have already invited to the applicant.', ToastAndroid.CENTER)
+    return
+  } else {
+    try {
+      await firestore().collection('application').doc(id).set({
+            jobid: application.jobid,
+            applicationid: id,
+            for: application.for,
+            from: application.from,
+            jobtitle: application.jobtitle,
+            photoURL: application.photoURL,
+            jobphotoURL: application.jobphotoURL,
+            fullname: application.fullname,
+            email: application.email,
+            contactnumber: application.contactnumber,
+            timestamp: timestamp,
+            status: 'Inteview Invitation Accepted',
+            notiftitle: 'Interview Accepted',
+            when: when,
+            time: time,
+            where: where,
+            read: true,
+      })
+      ToastAndroid.show('Invitation sent!', ToastAndroid.LONG)
+      navigation.goBack()
+    } catch(error){
+      console.error(error)
+    }
+  }
+}
+
+export const rejectapplication = async( application: application, navigation: any) => {
+  const id = idgen()
+  const timestamp = firebase.firestore.FieldValue.serverTimestamp()
+  const retrieveddata = await getspecificexistingdata('application', 'applicationid', application.applicationid, 'isaccepted', true)
+  if (retrieveddata.length > 0) {
+    ToastAndroid.show('Sorry, You have already rejected the applicant.', ToastAndroid.CENTER)
+    return
+  } else {
+    try {
+      await firestore().collection('application').doc(id).set({
+            jobid: application.jobid,
+            applicationid: id,
+            for: application.for,
+            from: application.from,
+            jobtitle: application.jobtitle,
+            photoURL: application.photoURL,
+            jobphotoURL: application.jobphotoURL,
+            fullname: application.fullname,
+            email: application.email,
+            contactnumber: application.contactnumber,
+            timestamp: timestamp,
+            status: 'Application Rejected',
+            notiftitle: 'Interview Declined',
+            read: true,
+      })
+      ToastAndroid.show('Invitation sent!', ToastAndroid.LONG)
+      navigation.goBack()
+    } catch(error){
+      console.error(error)
+    }
+  }
 }
 
 export const createsave = async(item: jobdata, user: data, id: string, timestamp: any) => {

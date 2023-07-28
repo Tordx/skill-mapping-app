@@ -100,3 +100,26 @@ export interface notificationdata {
   message: string,
   
 }
+
+export interface application{
+  jobid: string,
+  uid: string,
+  applicationid: string,
+  jobtitle: string,
+  photoURL: string,
+  jobphotoURL: string,
+  fullname: string,
+  email: string,
+  contactnumber: string,
+  timestamp: any,
+  status: string,
+  read: boolean,
+  from: string,
+  for: string,
+  notiftitle: string,
+  _applicationdata: any,
+  when: string,
+  time: string,
+  where: string,
+  
+}
