@@ -6,7 +6,7 @@ import { DefaultField } from '../../global/partials/fields';
 import { black, theme } from '../../assets/colors';
 import { ForgotButton, LogButton, TextButton } from '../../global/partials/buttons';
 import { useNavigation } from '@react-navigation/native';
-import { getSpecificData, getexistingdata, loginauth } from '../../firebase';
+import { getexistingdata, loginauth } from '../../firebase';
 import { data } from '../../library/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { setuserdata } from '../../library/redux/userslice';

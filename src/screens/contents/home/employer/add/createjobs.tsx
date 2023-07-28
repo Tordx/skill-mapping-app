@@ -6,7 +6,6 @@ import { black, success, theme, white } from '../../../../../assets/colors';
 import { GoBack, JoinasButton, LogButton, NextButton, PrevButton } from '../../../../../global/partials/buttons';
 import { Chip, RadioButton } from 'react-native-paper';
 import { firebase } from '@react-native-firebase/auth';
-import { getSpecificData } from '../../../../../firebase';
 import firestore from '@react-native-firebase/firestore'
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';

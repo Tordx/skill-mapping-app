@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { firebase } from '@react-native-firebase/auth';
 import { ToastAndroid } from 'react-native';
 import {useNavigation} from '@react-navigation/native'
-import { getSpecificData, getexistingdata } from '../../firebase';
+import { getexistingdata } from '../../firebase';
 import { useDispatch } from 'react-redux';
 import { setuserdata } from '../../library/redux/userslice';
 import { data } from '../../library/constants';

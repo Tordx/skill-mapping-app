@@ -139,7 +139,7 @@ export const JobSave: React.FC = () => {
         )
       }
   return (
-    <View style = {{width: '100%', marginTop: 10,  marginBottom: '10%',  justifyContent: 'center', alignItems: 'center', paddingBottom: '20%' }}>
+    <View style = {{width: '100%', marginTop: 25,  marginBottom: '10%',  justifyContent: 'center', alignItems: 'center', paddingBottom: '20%' }}>
       {save ?
       
       <FlatList

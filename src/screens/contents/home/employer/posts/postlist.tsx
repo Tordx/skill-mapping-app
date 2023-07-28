@@ -1,6 +1,6 @@
 import { View, Text,FlatList, Pressable, RefreshControl, Alert,ScrollView } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { getActiveJobData, getAllData, getSpecificData, getSpecificjobData } from '../../../../../firebase';
+import { getActiveJobData } from '../../../../../firebase';
 import { data, jobdata, jobid } from '../../../../../library/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import TimeAgo from 'react-native-timeago';
@@ -22,13 +22,10 @@ type Props = {
 
 const PostList: React.FC<Props> = () => {
 
-    const [activejob, setactivejob] = useState<jobdata[]>([]);
-    const [inactivejob, setinactivejob] = useState<jobdata[]>([]);
     const [data, setdata] = useState<jobdata[]>([]);
     const {userdata} = useSelector((action: data) => action._userdata)
     const [openmodal, setopenmodal] = useState(false);
     const [refresh, setrefresh] = useState(false)
-    const [saves, setsaves] = useState<jobdata[]>([]);
     const [savedJobIds, setSavedJobIds] = useState<string[]>([]);
     const dispatch = useDispatch()
     const navigation = useNavigation()

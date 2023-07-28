@@ -114,7 +114,7 @@ export const ForgotButton: React.FC<Props> = ({onPress, text1,}) => {
 
 }
 
-export const GoBack: React.FC<Props> = ({onPress}) => {
+export const GoBack: React.FC<Props> = ({onPress, textStyle}) => {
 
   return (
     
@@ -124,7 +124,7 @@ export const GoBack: React.FC<Props> = ({onPress}) => {
         size = {35}
         color = {black.main}
       />
-      <Text style = {{fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 25}}>Back</Text>
+      <Text style = {[{fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 25}, textStyle]}>Back</Text>
     </Pressable>
   )
 }
