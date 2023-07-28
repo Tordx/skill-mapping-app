@@ -52,7 +52,7 @@ const Presumbit: React.FC= () => {
   return (
     <View style = {styles.container}>
        <Text style={[styles.h4, { fontFamily: 'Montserrat-SemiBold', marginBottom: 10, marginTop: '20%' }]}>
-        Personal Information
+        Additional Information
         </Text>
         <Text style = {{alignSelf: 'flex-start', marginLeft: 15, fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 15}}>Full Name</Text>
             <DefaultField
