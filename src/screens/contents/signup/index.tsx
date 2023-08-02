@@ -95,14 +95,18 @@ type Props = {
 
     const handleSave = async () => {
       setloading(true)
-      const getid = firebase.auth().currentUser?.uid
+     
+      console.log('hello');
       try {
+         console.log('natry');
         await firebase.auth().createUserWithEmailAndPassword(email, password).then(async () => {
           await firebase.auth().signInWithEmailAndPassword(email, password).then(async() => {
+            const getid = firebase.auth().currentUser?.uid
             await firebase.auth().currentUser?.updateProfile({
               photoURL: 'https://i.imgur.com/AivI1mB.png',
               displayName: username,
             })
+            console.log(getid);
             firestore().collection('user').doc(getid).set({
               uid: getid,
               username: username,
@@ -146,7 +150,7 @@ type Props = {
               
               ],
             });
-          }).then(async(response) => {
+          }).then(async() => {
             const user = firebase.auth().currentUser
             user?.sendEmailVerification().then(() => {
               setloading(false)
@@ -155,7 +159,7 @@ type Props = {
           });
         });
       } catch (error) {
-        console.log(`error: ${error}`);
+        console.log(error);
         await firebase.auth().currentUser?.delete()
         setloading(false)
       }
