@@ -47,7 +47,7 @@ const FPersonalInformation = (props: Props) => {
               name="account-outline"
               size={25}
               color={black.B004}
-              value = {userdata[0].fullname[0].middlename}
+              value = {userdata[0].fullname[1].middlename}
               editable = {false}
           />
            <Text style = {{alignSelf: 'flex-start', marginLeft: 15, fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 15}}>Last Name</Text>
@@ -57,7 +57,7 @@ const FPersonalInformation = (props: Props) => {
               name="account-outline"
               size={25}
               color={black.B004}
-              value = {userdata[0].fullname[0].lastname}
+              value = {userdata[0].fullname[2].lastname}
               editable = {false}
           />
            <Text style = {{alignSelf: 'flex-start', marginLeft: 15, fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 15}}>Suffix</Text>
@@ -67,7 +67,7 @@ const FPersonalInformation = (props: Props) => {
               name="account-outline"
               size={25}
               color={black.B004}
-              value = {userdata[0].fullname[0].suffix}
+              value = {userdata[0].fullname[3].suffix}
               editable = {false}
           />
         <Text style = {{alignSelf: 'flex-start', marginLeft: 15, fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 15}}>Date of Birth</Text>
