@@ -12,7 +12,7 @@ import moment from 'moment';
 import { useNavigation } from '@react-navigation/native'
 import { setjobdata } from '../../../../../library/redux/jobslice'
 import { setapplicationdata } from '../../../../../library/redux/applicationslice'
-
+import firestore from '@react-native-firebase/firestore'
 type Props = {}
 
 const Applications = (props: Props) => {
@@ -46,7 +46,7 @@ const Applications = (props: Props) => {
         setrefreshing(false)
     }
 
-		const viewnotification = (item: application) => {
+		const viewnotification = async(item: application) => {
         const { timestamp, ...restOfTheItem } = item;
         const firstDataItem = item;
         const timeInSeconds = firstDataItem?.timestamp?._seconds || 0;
@@ -58,8 +58,12 @@ const Applications = (props: Props) => {
           ...restOfTheItem,
         };
       
-        dispatch(setapplicationdata(dataToDispatch));
+         await firestore().collection('application').doc(item.applicationid).update({
+            forread: true,
+        }).then(() => {
+            dispatch(setapplicationdata(dataToDispatch));
 				navigation.navigate('NewApplication' as never)
+        })
       };
 
     const renderitem = ({item}: {item: application}) => {
@@ -71,7 +75,7 @@ const Applications = (props: Props) => {
         
         return(
 					<Pressable onPress={()=> {viewnotification(item)}} style = {{width: '100%', justifyContent: 'center', alignItems: 'center', }}>
-						<View style = {{borderTopWidth: .7, width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start', backgroundColor: item.read ? '': '#f8fbea',}}>
+						<View style = {{borderTopWidth: .7, width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start', backgroundColor: item.forread ? '#ffff': '#f8fbea',}}>
 							<View style = {{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 20}}>
 								<View style = {{width: 55, height: 55, borderColor: theme.primary, borderWidth: 3, borderRadius: 500, justifyContent: 'center', alignItems: 'center', marginRight: 10}}>
 										<Image source={{uri: item.photoURL}} resizeMode='cover' style = {{width: 45, height: 45, borderRadius: 100}}/>
