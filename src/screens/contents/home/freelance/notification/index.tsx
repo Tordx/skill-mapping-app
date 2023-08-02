@@ -5,11 +5,13 @@ import { styles } from '../../../../../styles'
 import { black, theme } from '../../../../../assets/colors'
 import TimeAgo from 'react-native-timeago'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { getNotificationData } from '../../../../../firebase'
 import { JobInfoModal } from '../../../../../global/partials/modals'
 import moment from 'moment';
-
+import { useNavigation } from '@react-navigation/native'
+import { setapplicationdata } from '../../../../../library/redux/applicationslice'
+import firestore from '@react-native-firebase/firestore'
 type Props = {}
 
 const Applicationstatus = (props: Props) => {
@@ -18,23 +20,42 @@ const Applicationstatus = (props: Props) => {
     const [data, setdata] = useState<application[]>([])
     const [loading, setloading] = useState(false)
     const [refreshing, setrefreshing] = useState(false)
-
+    const navigation = useNavigation()
+    const dispatch = useDispatch()
     useEffect(() => {
         fetchData()
-    },[])
+    },[navigation])
 
     const fetchData = async() => {
         try {
             const retreivedData: application[] =  await getNotificationData('application','from', userdata[0].uid)
-                    setdata(retreivedData)
-                    console.log('hello');
-                    console.log(retreivedData);
-                    
+                setdata(retreivedData)  
         } catch(error) {
             console.error(error);
             
         }
     }
+
+    const viewnotification = async(item: application) => {
+        const { timestamp, ...restOfTheItem } = item;
+        const firstDataItem = item;
+        const timeInSeconds = firstDataItem?.timestamp?._seconds || 0;
+        const date = new Date(timeInSeconds * 1000);
+        const formattedTime = date.toString()
+        
+        const dataToDispatch = {
+          formattedTime,
+          ...restOfTheItem,
+        };
+        await firestore().collection('application').doc(item.applicationid).update({
+            fromread: true,
+        }).then(() => {
+            dispatch(setapplicationdata(dataToDispatch));
+            navigation.navigate('CurrentApplication' as never)
+        })
+       
+       
+      };
     
 
     const refresh = async()=> {
@@ -51,8 +72,8 @@ const Applicationstatus = (props: Props) => {
         const Time = moment(date).format('HH:mm')
         
         return(
-            <Pressable style = {{width: '100%', justifyContent: 'center', alignItems: 'center', }}>
-            <View style = {{borderTopWidth: .7, width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start', backgroundColor: item.read ? '': '#f8fbea',}}>
+            <Pressable onPress={() => viewnotification(item)} style = {{width: '100%', justifyContent: 'center', alignItems: 'center', }}>
+            <View style = {{borderTopWidth: .7, width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start', backgroundColor: item.fromread ? '#FFFF': '#f8fbea',}}>
             <View style = {{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 20}}>
                 <View style = {{width: 55, height: 55, borderColor: theme.primary, borderWidth: 3, borderRadius: 500, justifyContent: 'center', alignItems: 'center', marginRight: 10}}>
                     <Image source={{uri: item.jobphotoURL}} resizeMode='cover' style = {{width: 45, height: 45, borderRadius: 100}}/>
@@ -69,7 +90,7 @@ const Applicationstatus = (props: Props) => {
             </View>
            
             </View>
-            {!item.status && 
+            {item.status === '' && 
                 <Pressable onPress={() => {}} style = {{position: 'absolute', top: 20, right: 20, }}></Pressable>
             }
         </Pressable>
@@ -86,7 +107,6 @@ const Applicationstatus = (props: Props) => {
           renderItem={renderitem}
           refreshControl={<RefreshControl refreshing = {refreshing} onRefresh={refresh} />}
       /> : <Text style = {{color: 'black'}}>No Jobs Matches your preferrence</Text> }
-      <JobInfoModal onPress={() => {}} title='Apply Now' onRequestClose = {() => setloading(false)}  visible = {loading}/>
   </View>
   )
 }
