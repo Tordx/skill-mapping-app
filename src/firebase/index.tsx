@@ -256,7 +256,6 @@ export const submitapplication = async(user: data, job: jobdata, fullname: strin
             timestamp: timestamp,
             status: 'New Job Application',
             notiftitle: 'New Application',
-            read: false,
             isaccepted: false,
       })
       ToastAndroid.show('Application submitted!', ToastAndroid.LONG)
@@ -294,7 +293,47 @@ export const acceptapplication = async(when: string, time: string, where: string
             when: when,
             time: time,
             where: where,
-            read: true,
+            isaccepted: false,
+            fromread: true,
+            forread: true,
+      })
+      ToastAndroid.show('Invitation sent!', ToastAndroid.LONG)
+      navigation.goBack()
+    } catch(error){
+      console.error(error)
+    }
+  }
+}
+
+export const confirmapplication = async( application: application, navigation: any) => {
+  const id = idgen()
+  const timestamp = firebase.firestore.FieldValue.serverTimestamp()
+  const retrieveddata = await getspecificexistingdata('application', 'applicationid', application.applicationid, 'isaccepted', true)
+  if (retrieveddata.length > 0) {
+    ToastAndroid.show('Sorry, You have already invited to the applicant.', ToastAndroid.CENTER)
+    return
+  } else {
+    try {
+      await firestore().collection('application').doc(id).set({
+            jobid: application.jobid,
+            applicationid: id,
+            for: application.for,
+            from: application.from,
+            jobtitle: application.jobtitle,
+            photoURL: application.photoURL,
+            jobphotoURL: application.jobphotoURL,
+            fullname: application.fullname,
+            email: application.email,
+            contactnumber: application.contactnumber,
+            timestamp: timestamp,
+            status: 'Interview Invitation Confirmed',
+            notiftitle: 'Interview Confirmation',
+            when: application.when,
+            time: application.time,
+            where: application.where,
+            isaccepted: false,
+            fromread: true,
+            forread: true,
       })
       ToastAndroid.show('Invitation sent!', ToastAndroid.LONG)
       navigation.goBack()
@@ -327,7 +366,8 @@ export const rejectapplication = async( application: application, navigation: an
             timestamp: timestamp,
             status: 'Application Rejected',
             notiftitle: 'Interview Declined',
-            read: true,
+            fromread: true,
+            forread: true,
       })
       ToastAndroid.show('Invitation sent!', ToastAndroid.LONG)
       navigation.goBack()
