@@ -9,6 +9,7 @@ import { DefaultField } from '../../../../../global/partials/fields'
 import { acceptapplication, rejectapplication } from '../../../../../firebase'
 import { useNavigation } from '@react-navigation/native'
 import firestore from '@react-native-firebase/firestore'
+import { Loadingmodal } from '../../../../../global/partials/modals'
 
 interface OpeningItem {
   [key: string]: string;
@@ -21,6 +22,7 @@ const [when, setwhen] = useState('');
 const [where, setwhere] = useState('');
 const [time, settime] = useState('');
 const [openmodal, setopenmodal] = useState(false)
+const [loading, setloading] = useState(false)
 const navigation = useNavigation()
 
 	useEffect(() => {
@@ -36,11 +38,14 @@ const navigation = useNavigation()
 	})
 
 	const accepted = async() => {
-		await firestore().collection('application').doc(applicationdata.applicationid).update({
-			isaccepted: true,
-		}).then(async() =>{
+		setloading(true)
 			await acceptapplication(when, time, where, applicationdata, navigation)
-			setopenmodal(false)
+			.then(async() =>{
+				await firestore().collection('application').doc(applicationdata.applicationid).update({
+				isaccepted: true,
+			})
+				setopenmodal(false)
+				setloading(false)
 		})
 	}
 
@@ -65,6 +70,9 @@ const navigation = useNavigation()
 		{
 		"Interview Declined": `Regretfully, the applicant has declined your interview invitation for the ${applicationdata.jobtitle}`
 		},
+		{
+		"Interview Confirmation": `The Applicant confirm its scheduled interview for ${applicationdata.jobtitle}`
+		}
 	]
 	const matchingOpening = opening.find((item: OpeningItem) => item[applicationdata.notiftitle]);
   return (
@@ -93,7 +101,7 @@ const navigation = useNavigation()
 											<Pressable onPress={() => {setopenmodal(true)}} style = {{marginRight: 5, backgroundColor: theme.primary, borderRadius: 5}}>
 												<Text style = {{color: white.main, padding: 7}}>Accept</Text>
 											</Pressable>
-											<Pressable onPress={() => {}} style = {{marginRight: 5, backgroundColor: black.B004, borderRadius: 5}}>
+											<Pressable onPress={reject} style = {{marginRight: 5, backgroundColor: black.B004, borderRadius: 5}}>
 												<Text style = {{color: white.main, padding: 7}}>Reject</Text>
 											</Pressable>
 										</View>
@@ -116,7 +124,17 @@ const navigation = useNavigation()
 							<Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 17, color: black.main, marginVertical: 20}}>We appreciate your understanding. We will continue evaluating other candidates and keep you updated.</Text>
 						</>
 					}
-
+					{applicationdata.notiftitle === 'Interview Confirmation' &&
+						<>
+							<Text style = {{fontFamily: 'Montserrat-Bold', fontSize: 17, color: black.main, marginVertical: 20}}>Interview Details:</Text>
+							<Text style = {{fontFamily: 'Montserrat-Bold', fontSize: 17, color: black.main, marginVertical: 5}}>Name: <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 17}}>{applicationdata.fullname}</Text></Text>
+							<Text style = {{fontFamily: 'Montserrat-Bold', fontSize: 17, color: black.main, marginVertical: 5}}>Interview Date: <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 17}}>{applicationdata.when}</Text></Text>
+							<Text style = {{fontFamily: 'Montserrat-Bold', fontSize: 17, color: black.main, marginVertical: 5}}>Interview Time: <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 17}}>{applicationdata.time}</Text></Text>
+							<Text style = {{fontFamily: 'Montserrat-Bold', fontSize: 17, color: black.main, marginVertical: 5}}>Location: <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 17}}>{applicationdata.where}</Text></Text>
+							<Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 17, color: black.main, marginVertical: 20}}>Please prepare for the interview accordingly.</Text>
+							
+						</>
+					}
 				</View>
 			</View>
 			<View style = {{position: 'absolute', top: 30}}>
@@ -125,7 +143,7 @@ const navigation = useNavigation()
 			<GoBack onPress={() => navigation.goBack()}/>
 			</View>
 			</ScrollView>
-			<Modal transparent statusBarTranslucent visible = {openmodal}>
+			<Modal transparent statusBarTranslucent visible = {openmodal} onRequestClose={() => setopenmodal(false)}>
 				<View style = {[styles.container, {backgroundColor: transparent.level05}]}>
 					<View style = {{width: '95%', justifyContent: 'center', alignItems: 'center', backgroundColor: theme.light, borderRadius: 10}}>
 							<View style = {{marginVertical: 15}}/>
@@ -158,6 +176,7 @@ const navigation = useNavigation()
 					</View>
 				</View>
 			</Modal>
+			<Loadingmodal visible = {loading} title='Loading...' />
     </View>
   )
 }
