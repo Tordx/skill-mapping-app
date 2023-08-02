@@ -121,5 +121,7 @@ export interface application{
   when: string,
   time: string,
   where: string,
+  forread: boolean,
+  fromread: boolean,
   
 }
