@@ -20,6 +20,7 @@ import FPersonalInformation from '../../screens/contents/home/freelance/account/
 import { EditContactDetailsF, EditEducBackground, EditEmergContactDetailsF, EditPersonalInfoF, Editjobtitle } from '../../screens/contents/home/freelance/account/editinfo'
 import Presumbit from '../../screens/contents/home/freelance/presubmit'
 import { NewApplication } from '../../screens/contents/home/employer/notification/contents'
+import { CurrentApplication } from '../../screens/contents/home/freelance/notification/contents'
 
 type Props = {}
 
@@ -212,6 +213,13 @@ const  Stacks: React.FC = () => {
                 options = {{
                     headerShown: false,
                     }}
+            />
+            <Stack.Screen 
+                name='CurrentApplication'
+                component={CurrentApplication}
+                options={{
+                    headerShown: false,
+                }}
             />
         </Stack.Navigator>
     </NavigationContainer>
