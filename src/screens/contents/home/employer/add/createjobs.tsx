@@ -1,4 +1,4 @@
-import { View, Text, ToastAndroid, Alert } from 'react-native'
+import { View, Text, ToastAndroid, Alert, Pressable } from 'react-native'
 import React, {useState} from 'react'
 import { BudgetField, DefaultField, Multitextfield } from '../../../../../global/partials/fields';
 import { styles } from '../../../../../styles';
@@ -10,6 +10,7 @@ import firestore from '@react-native-firebase/firestore'
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { idgen } from '../../../../../global/functions';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
   interface Props {
   position: number;
@@ -40,15 +41,9 @@ const Createjobs: React.FC<Props> = ({position, setposition}) => {
 
     const handleKeyPress = (e:any) => {
 
-      const nativeEvent = e.nativeEvent.key
-
-      console.log(nativeEvent);
-      
-      if(nativeEvent == " ") {
-        console.log('weh pressed');
         setrequirements([...requirements, requirementvalue]);
         setrequirementvalue(''); 
-      }
+
     };
 
     const prevpos = () => {
@@ -173,6 +168,7 @@ const Createjobs: React.FC<Props> = ({position, setposition}) => {
       }
     }
   
+  const columns = Math.ceil(requirements?.length / 3);
 
 
   return (
@@ -191,6 +187,7 @@ const Createjobs: React.FC<Props> = ({position, setposition}) => {
           color={black.B004}
           value = {jobtitle}
           onChangeText={(value) => setjobtitle(value)}
+          onSubmitEditing={submit}
         />
         <Text style = {{textAlign: 'left', fontSize: 17, width: '95%', fontFamily: 'Montserrat-Bold', marginTop: 50, marginBottom: 25, color: black.main}}>Example Titles</Text>
         <Text style = {{textAlign: 'left', fontSize: 12, width: '90%', fontFamily: 'Montserrat-Regular', marginBottom: 15, color: black.main}}>• Build responsive WordPress website with booking</Text>
@@ -204,6 +201,7 @@ const Createjobs: React.FC<Props> = ({position, setposition}) => {
         <Text style={[styles.h1, {width: '95%', marginBottom: 30}]}>
          What are the main skills required for your work?
         </Text>
+        <View style = {{flexDirection: 'row', width: '100%', justifyContent: 'center', alignItems: 'center',}}>
         <DefaultField
           placeholder="Write a title for your job post"
           placeholderTextColor={black.B005}
@@ -211,18 +209,37 @@ const Createjobs: React.FC<Props> = ({position, setposition}) => {
           color={black.B004}
           value = {requirementvalue}
           onChangeText={(e) => setrequirementvalue(e)}
-          onKeyPress={(e) => handleKeyPress(e)}
+          onSubmitEditing={handleKeyPress}
         />
-        <Text style = {{textAlign: 'left', fontSize: 16, width: '95%', fontFamily: 'Montserrat-Regular', marginTop: 5, color: black.main}}>For best results, add 3-5 skills</Text>
-        <View style = {{flexDirection: 'row', marginVertical: 20}}>
-                  {requirements?.map((requirement: any, index: any) => (
-                    <Chip 
-                      style = {{marginRight: 10, backgroundColor:  success.G008}} 
-                      textStyle = {{color: black.main}}
-                      onPress={() => handleDelete(index)}
-                    >{requirement}</Chip>
-                  ))}
+        {requirementvalue && <Pressable onPress={handleKeyPress} style = {{position: 'absolute', right: 25}}>
+          <Icon name = 'plus-circle-outline' size={30} color={theme.accenta} />
+        </Pressable>}
         </View>
+        <Text style = {{textAlign: 'left', fontSize: 16, width: '95%', fontFamily: 'Montserrat-Regular', marginTop: 5, color: black.main}}>For best results, add 3-5 skills</Text>
+        {[...Array(columns)].map((_, columnIndex) => (
+          <View
+            key={columnIndex}
+            style={{
+              flexDirection: 'row',
+              marginVertical: 10,
+            }}
+          >
+            {[...Array(3)].map((_, rowIndex) => {
+              const index = columnIndex * 3 + rowIndex;
+              const requirement = requirements[index];
+              return (
+                <Chip
+                  key={index}
+                  style={{ marginRight: 10, backgroundColor: success.G008 }}
+                  textStyle={{ color: black.main }}
+                  onPress={() => handleDelete(index)}
+                >
+                  {requirement}
+                </Chip>
+              );
+            })}
+          </View>
+        ))}
         <View style = {{width: '90%', flexDirection: 'row', justifyContent: 'space-between', marginTop: 25}}>
        <PrevButton onPress={prevpos}/>
        <NextButton onPress={submit}/>
@@ -279,7 +296,7 @@ const Createjobs: React.FC<Props> = ({position, setposition}) => {
           color={black.B004}
           value = {joblocation}
           onChangeText={(e) => setjoblocation(e)}
-          onKeyPress={(e) => handleKeyPress(e)}
+          onSubmitEditing={submit}
         />
         <View style = {{width: '90%', flexDirection: 'row', justifyContent: 'space-between', marginTop: 25}}>
        <PrevButton onPress={prevpos}/>
