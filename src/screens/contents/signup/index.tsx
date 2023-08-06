@@ -95,10 +95,8 @@ type Props = {
 
     const handleSave = async () => {
       setloading(true)
-     
-      console.log('hello');
+      // firestore().collection('user').doc().get('username', '==', username).where()
       try {
-         console.log('natry');
         await firebase.auth().createUserWithEmailAndPassword(email, password).then(async () => {
           await firebase.auth().signInWithEmailAndPassword(email, password).then(async() => {
             const getid = firebase.auth().currentUser?.uid
@@ -113,10 +111,16 @@ type Props = {
               fullname: [
                   {
                     firstname: firstname,
-                    middlename: middlename,
-                    lastname: lastname,
+                  },
+                  {
+                     middlename: middlename,
+                  },
+                  {
+                     lastname: lastname,
+                  },
+                  {
                     suffix: suffix,
-                  }
+                  },
               ],
               usertype: 'freelance',
               photoURL: 'https://i.imgur.com/AivI1mB.png',

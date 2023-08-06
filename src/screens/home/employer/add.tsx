@@ -32,7 +32,7 @@ const Addjobs = (props: Props) => {
       settitle('Description')
     }
     if (position  == 7){
-      settitle('Qualification')
+      settitle('Confirm Information')
     }
 
     }, [position])

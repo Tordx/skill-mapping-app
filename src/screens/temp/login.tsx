@@ -75,7 +75,7 @@ const signIn = async () => {
         ToastAndroid.show('There is an empty field!', ToastAndroid.BOTTOM);
         setloading(false);
       } else if (!email) {
-          ToastAndroid.show('Email does not exist', ToastAndroid.BOTTOM);
+          ToastAndroid.show('User does not exist', ToastAndroid.BOTTOM);
           setloading(false);
       } else {
           try {
