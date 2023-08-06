@@ -69,7 +69,7 @@ const navigation = useNavigation()
 
 	const opening: OpeningItem[] = [
 		{
-		"New Application": `You have received a new job application for the ${applicationdata.jobtitle}`
+		"New Application": `You have recently applied for the ${applicationdata.jobtitle} role`
 		},
 		{
 		"Interview Accepted": `Good news! The employer has accepted your job application for ${applicationdata.jobtitle} role`
@@ -96,13 +96,13 @@ const navigation = useNavigation()
 					)}
 					{applicationdata.notiftitle === 'New Application' &&
 						<>
-							<Text style = {{fontFamily: 'Montserrat-Bold', fontSize: 17, color: black.main, marginVertical: 20}}>Applicant Details:</Text>
+							<Text style = {{fontFamily: 'Montserrat-Bold', fontSize: 17, color: black.main, marginVertical: 20}}>Your Details:</Text>
 							<Text style = {{fontFamily: 'Montserrat-Bold', fontSize: 17, color: black.main, marginVertical: 5}}>Name: <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 17}}>{applicationdata.fullname}</Text></Text>
 							<Text style = {{fontFamily: 'Montserrat-Bold', fontSize: 17, color: black.main, marginVertical: 5}}>Email: <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 17}}>{applicationdata.email}</Text></Text>
 							<Text style = {{fontFamily: 'Montserrat-Bold', fontSize: 17, color: black.main, marginVertical: 5}}>Phone: <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 17}}>{applicationdata.contactnumber}</Text></Text>
 							<Text style = {{fontFamily: 'Montserrat-Bold', fontSize: 17, color: black.main, marginVertical: 5}}>Applied on: <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 17}}>{formatteddate}</Text></Text>
-							<Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 17, color: black.main, marginVertical: 20}}>Please review the attached application documents</Text>
-							<Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 17, color: black.main, marginVertical: 20}}>Take time to evaluate the applicant's qualification, experience, and suitability for the position. Consider scheduling an interview or discussin gnext steps with the candidate.</Text>
+							<Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 17, color: black.main, marginVertical: 20}}>You may apply to different job posting while waiting for the employer's response</Text>
+							<Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 17, color: black.main, marginVertical: 20}}>Best wishes to your wonderful career ahead!</Text>
 							<Text style = {{fontFamily: 'Montserrat-Italic', fontSize: 17, color: black.main, marginVertical: 20}}>Thank you for your attention to this matter.</Text>
 							
 						</>
