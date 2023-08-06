@@ -22,9 +22,10 @@ type Props = {
     placeholderTextColor?: string,
     secureTextEntry?: boolean,
     keyboardType?: string,
+    onSubmitEditing?: (e: any) => void,
 }
 
-export const DefaultField: React.FC<Props> = ({keyboardType, onKeyPress, onChangeText, value , onFocus, name, size, color, editable, style, onBlur, placeholder, placeholderTextColor, secureTextEntry}) => {
+export const DefaultField: React.FC<Props> = ({onSubmitEditing,keyboardType, onKeyPress, onChangeText, value , onFocus, name, size, color, editable, style, onBlur, placeholder, placeholderTextColor, secureTextEntry}) => {
 
     
 
@@ -42,6 +43,9 @@ export const DefaultField: React.FC<Props> = ({keyboardType, onKeyPress, onChang
         placeholderTextColor={placeholderTextColor}
         onKeyPress={onKeyPress}
         keyboardType = {  keyboardType || 'default' }
+        autoComplete='off'
+        autoCorrect = {false}
+        onSubmitEditing={onSubmitEditing}
       />
       {name && <Icon
         name = {name || 'blank'}
