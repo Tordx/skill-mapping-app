@@ -34,7 +34,7 @@
     "react-native-screens": "^3.22.1",
     "react-native-step-indicator": "^1.0.3",
     "react-native-timeago": "Tordx/react-native-timeago",
-    "react-native-vector-icons": "^9.2.0",
+    "react-native-vector-icons": "^10.0.0",
     "react-redux": "^8.1.1",
     "redux-thunk": "^2.4.2"
   },
@@ -60,7 +60,7 @@
     "node": ">=16"
   },
   "description": "Dev mode",
-  "main": "index.ts",
+  "main": "index.js",
   "repository": "https://github.com/n/a",
   "author": "vidarsson",
   "license": "General License"
