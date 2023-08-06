@@ -9,6 +9,7 @@ import { LogButton, TextButton } from '../../../global/partials/buttons'
 import { useNavigation } from '@react-navigation/native'
 import { Loadingmodal } from '../../../global/partials/modals'
 import { idgen } from '../../../global/functions'
+import { getexistingdata } from '../../../firebase'
 
 type Props = {
   position: number;
@@ -95,7 +96,9 @@ type Props = {
 
     const handleSave = async () => {
       setloading(true)
-      // firestore().collection('user').doc().get('username', '==', username).where()
+      const checkusername = await getexistingdata('user', 'username', username)
+      if(checkusername.length == 0){
+        if (password == cpassword) {
       try {
         await firebase.auth().createUserWithEmailAndPassword(email, password).then(async () => {
           await firebase.auth().signInWithEmailAndPassword(email, password).then(async() => {
@@ -164,7 +167,22 @@ type Props = {
         });
       } catch (error) {
         console.log(error);
+        if(error == 'auth/email-already-in-use'){
+          ToastAndroid.show('email address already exists', ToastAndroid.LONG)
+           setloading(false)
+        } else {
+          ToastAndroid.show('Something went wrong or email already exists', ToastAndroid.LONG)
+          setloading(false)
+        }
         await firebase.auth().currentUser?.delete()
+        setloading(false)
+      }
+      } else {
+        ToastAndroid.show('please confirm your password', ToastAndroid.LONG)
+        setloading(false)
+      }
+      } else {
+        ToastAndroid.show('username already exists', ToastAndroid.LONG)
         setloading(false)
       }
     };
@@ -460,6 +478,7 @@ type Props = {
               color={black.B004}
               value = {password}
               onChangeText={(value) => setpassword(value)}
+              secureTextEntry = {true}
           />
            <DefaultField
               placeholder="Confirm Password"
@@ -469,6 +488,7 @@ type Props = {
               color={black.B004}
               value = {cpassword}
               onChangeText={(value) => setcpassword(value)}
+              secureTextEntry = {true}
           />
           <View style={{ marginBottom: 50 }} />
           </>}
@@ -503,51 +523,60 @@ type Props = {
     const [username, setusername] = useState('');
     const [password, setpassword] = useState('');
     const [cpassword, setcpassword] = useState('');
+    const [loading, setloading] = useState(false)
 
     const handleSave = async () => {
-      const id = idgen()
-      try {
-        await firebase.auth().createUserWithEmailAndPassword(email, password).then(async () => {
-          await firebase.auth().signInWithEmailAndPassword(email, password).then(async() => {
-            await firebase.auth().currentUser?.updateProfile({
-              photoURL: 'https://i.imgur.com/AivI1mB.png',
-              displayName: username,
-            })
-            const getid = firebase.auth().currentUser?.uid
-            await firestore().collection('user').doc(getid).set({
-              uid: getid,
-              fullname: fullname,
-              username: username,
-              photoURL: 'https://i.imgur.com/AivI1mB.png',
-              contactnumber: contactnumber,
-              website: website,
-              businesshours: 'enter business hours',
-              usertype: 'employer',
-              email: email,
-              address: [
-                {
-                  Province: Province,
-                },
-                 { 
-                  City: City,
-                },
-                { 
-                  Barangay: Barangay,
-                },
-                {
-                  Street: Street,
-                },
-              
-              ],
+      const checkusername = await getexistingdata('user', 'username', username)
+      if (checkusername.length == 0){ 
+        if(password == cpassword){
+          try {
+            await firebase.auth().createUserWithEmailAndPassword(email, password).then(async () => {
+              await firebase.auth().signInWithEmailAndPassword(email, password).then(async() => {
+                await firebase.auth().currentUser?.updateProfile({
+                  photoURL: 'https://i.imgur.com/AivI1mB.png',
+                  displayName: username,
+                })
+                const getid = firebase.auth().currentUser?.uid
+                await firestore().collection('user').doc(getid).set({
+                  uid: getid,
+                  fullname: fullname,
+                  username: username,
+                  photoURL: 'https://i.imgur.com/AivI1mB.png',
+                  contactnumber: contactnumber,
+                  website: website,
+                  businesshours: 'enter business hours',
+                  usertype: 'employer',
+                  email: email,
+                  address: [
+                    {
+                      Province: Province,
+                    },{ 
+                      City: City,
+                    },{ 
+                      Barangay: Barangay,
+                    },{
+                      Street: Street,
+                    },
+                  ],
+                });
+              })
+              const user = firebase.auth().currentUser
+              await  user?.sendEmailVerification().then(() => {
+                navigation.navigate('Verification' as never)
+              })
             });
-          })
-          const user = firebase.auth().currentUser
-          await  user?.sendEmailVerification().then(() => {
-             navigation.navigate('Verification' as never)
-           })
-        });
-      } catch (error) {
-        console.log(`error: ${error}`);
+          } catch (error) {
+            console.log(`error: ${error}`);
+            ToastAndroid.show('Something went wrong or email already exists', ToastAndroid.LONG)
+            setloading(false)
+          }
+        } else {
+          ToastAndroid.show('Please confirm your password', ToastAndroid.LONG)
+          setloading(false)
+        }
+      } else {
+        ToastAndroid.show('username already exists', ToastAndroid.LONG)
+        setloading(false)
       }
     };
 
@@ -694,6 +723,7 @@ type Props = {
           onPress={() => navigation.navigate('Login' as never)}
           
         />
+        <Loadingmodal title='Creating your account...' visible = {loading} onRequestClose={() => {}} />
         </>
         
     );
