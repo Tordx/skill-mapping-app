@@ -4,7 +4,7 @@ import { styles } from '../../../../../styles'
 import { ScrollView } from 'react-native-gesture-handler'
 import { DefaultField, Multitextfield } from '../../../../../global/partials/fields'
 import { black, theme } from '../../../../../assets/colors'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { data } from '../../../../../library/constants'
 import { GoBack, LogButton } from '../../../../../global/partials/buttons'
 import { useNavigation } from '@react-navigation/native'
@@ -12,6 +12,8 @@ import firestore from '@react-native-firebase/firestore'
 import { Loadingmodal } from '../../../../../global/partials/modals'
 import { firebase } from '@react-native-firebase/auth'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { getexistingdata } from '../../../../../firebase'
+import { setuserdata } from '../../../../../library/redux/userslice'
 
 type Props = {}
 
@@ -23,10 +25,11 @@ export const PersonalInfo = (props: Props) => {
     const [email, setemail] = useState(userdata[0].email);
     const [description, setdescription] = useState(userdata[0].description);
     const [province, setprovince] = useState(userdata[0].address[0]?.Province);
-    const [city, setcity] = useState(userdata[0].address[0]?.City);
-    const [barangay, setbarangay] = useState(userdata[0].address[0]?.Barangay);
-    const [street, setstreet] = useState(userdata[0].address[0]?.Street);
+    const [city, setcity] = useState(userdata[0].address[1]?.City);
+    const [barangay, setbarangay] = useState(userdata[0].address[2]?.Barangay);
+    const [street, setstreet] = useState(userdata[0].address[3]?.Street);
     const [company, setcompany] = useState(userdata[0].company)
+    const dispatch = useDispatch()
     const navigation = useNavigation()
     const [loading, setloading] = useState(false)
     
@@ -53,12 +56,17 @@ export const PersonalInfo = (props: Props) => {
           ],
           description: description,
           company: company,
-        }).then(() => {
-          ToastAndroid.show('Succesfully updated business hours, re-login to see changes', ToastAndroid.BOTTOM)
+        }).then(async() => {
+          ToastAndroid.show('Succesfully updated your information', ToastAndroid.BOTTOM)
+           const data: data[] = await getexistingdata('user', 'uid', userdata[0].uid)
+            console.log('here');
+           console.log(data);
+           dispatch(setuserdata(data))
           navigation.goBack();
           setloading(false)
         })
       } catch (error) {
+        console.error(error);
         ToastAndroid.show('Something went wrong, please try again', ToastAndroid.BOTTOM)
         setloading(false)
       }
@@ -186,6 +194,7 @@ export const AdditionalInfo: React.FC <Props> = () => {
   const [businesshours, setbusinesshours] = useState(userdata[0].businesshours)
   const [loading, setloading] = useState(false)
   const navigation = useNavigation()
+  const dispatch = useDispatch()
 
   const updatedata = async() => {
 
@@ -194,8 +203,10 @@ export const AdditionalInfo: React.FC <Props> = () => {
     try {
       await firestore().collection('user').doc(userdata[0].uid).update({
         businesshours: businesshours
-      }).then(() =>{
+      }).then(async() =>{
         ToastAndroid.show('Succesfully updated business hours, re-login to see changes', ToastAndroid.BOTTOM)
+          const data: data[] = await getexistingdata('user', 'uid', userdata[0].uid)
+           dispatch(setuserdata(data))
         navigation.goBack();
         setloading(false)
       })

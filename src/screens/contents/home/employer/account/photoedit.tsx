@@ -4,27 +4,28 @@ import { styles } from '../../../../../styles'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { black, theme, white } from '../../../../../assets/colors'
 import { launchImageLibrary } from 'react-native-image-picker'
-import { uploadImage } from '../../../../../firebase'
+import { getexistingdata, uploadImage } from '../../../../../firebase'
 import { firebase } from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 import { GoBack, LogButton } from '../../../../../global/partials/buttons'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { data } from '../../../../../library/constants'
 import { Loadingmodal } from '../../../../../global/partials/modals'
 import { useNavigation } from '@react-navigation/native'
+import { setuserdata } from '../../../../../library/redux/userslice'
 const PhotoURLchange: React.FC = () => {
 
   const [image, setimage] = useState('');
   const [transfer, setTransferred] = useState(0)
   const {userdata} = useSelector((action: data) => action._userdata)
   const [loading, setloading] = useState(false);
+  const dispatch = useDispatch()
   const navigation = useNavigation()
 
   const getImage = async() => {
     launchImageLibrary({mediaType: 'photo', maxWidth: 400, maxHeight: 750, },(response: any) => {
     }).then(async (image: any) => {
       setimage(image.assets[0].uri);
-    
     });
   }
 
@@ -45,6 +46,11 @@ const PhotoURLchange: React.FC = () => {
             await firestore().collection('user').doc(userdata[0].uid).update({
               photoURL: image
             })
+           const data: data[] = await getexistingdata('user', 'uid', userdata[0].uid)
+            console.log('here');
+           console.log(data);
+           dispatch(setuserdata(data))
+           
           })
           ToastAndroid.show('Successfully upload image', ToastAndroid.LONG)
           setloading(false)

@@ -4,7 +4,7 @@ import { styles } from '../../../../../styles'
 import { ScrollView } from 'react-native-gesture-handler'
 import { DefaultField, Multitextfield } from '../../../../../global/partials/fields'
 import { black, theme } from '../../../../../assets/colors'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { data } from '../../../../../library/constants'
 import { GoBack, LogButton } from '../../../../../global/partials/buttons'
 import { useNavigation } from '@react-navigation/native'
@@ -12,6 +12,8 @@ import firestore from '@react-native-firebase/firestore'
 import { Loadingmodal } from '../../../../../global/partials/modals'
 import { firebase } from '@react-native-firebase/auth'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { getexistingdata } from '../../../../../firebase'
+import { setuserdata } from '../../../../../library/redux/userslice'
 
 type Props = {}
 
@@ -20,6 +22,7 @@ export const Editjobtitle = (props: Props) => {
         const {userdata} = useSelector((action: data) => action._userdata)
         const [jobtitle, setjobtitle] = useState(userdata[0].jobTitle)
         const [loading, setloading] = useState(false)
+        const dispatch = useDispatch()
         const navigation = useNavigation()
       
         const updatedata = async() => {
@@ -29,8 +32,12 @@ export const Editjobtitle = (props: Props) => {
           try {
             await firestore().collection('user').doc(userdata[0].uid).update({
               jobTitle: jobtitle
-            }).then(() =>{
+            }).then(async() =>{
               ToastAndroid.show('Succesfully updated Employment Details, re-login to see changes', ToastAndroid.BOTTOM)
+              const data: data[] = await getexistingdata('user', 'uid', userdata[0].uid)
+              console.log('here');
+              console.log(data);
+              dispatch(setuserdata(data))
               navigation.goBack();
               setloading(false)
             })
@@ -76,6 +83,7 @@ export const EditEducBackground: React.FC = () => {
     const [Cert, setCert] = useState(userdata[0].Cert);
     const [CSE, setCSE] = useState(userdata[0].CSE);
     const [SpeSkills, setSpeSkills] = useState(userdata[0].SpeSkills);
+    const dispatch = useDispatch()
     const navigation = useNavigation()
     const [loading, setloading] = useState(false)
     
@@ -90,8 +98,10 @@ export const EditEducBackground: React.FC = () => {
           CSE: CSE,
           SpeSkills: SpeSkills,
          
-        }).then(() => {
+        }).then(async() => {
           ToastAndroid.show('Succesfully updated Educational Information, re-login to see changes', ToastAndroid.BOTTOM)
+          const data: data[] = await getexistingdata('user', 'uid', userdata[0].uid)
+           dispatch(setuserdata(data))
           navigation.goBack();
           setloading(false)
         })
@@ -180,6 +190,7 @@ export const EditPersonalInfoF:React.FC = () => {
   const [barangay, setbarangay] = useState(userdata[0].address[2]?.Barangay);
   const [street, setstreet] = useState(userdata[0].address[3]?.Street);
   const [gender, setgender] = useState(userdata[0].gender)
+  const dispatch = useDispatch()
   const navigation = useNavigation()
   const [loading, setloading] = useState(false)
   
@@ -197,8 +208,10 @@ export const EditPersonalInfoF:React.FC = () => {
         dob: dob,
         gender: gender,
         nationality: nationality,
-      }).then(() => {
+      }).then(async() => {
         ToastAndroid.show('Succesfully updated personal information, re-login to see changes', ToastAndroid.BOTTOM)
+        const data: data[] = await getexistingdata('user', 'uid', userdata[0].uid)
+           dispatch(setuserdata(data))
         navigation.goBack();
         setloading(false)
       })
@@ -309,6 +322,7 @@ export const EditContactDetailsF: React.FC = () => {
   const [street, setstreet] = useState(userdata[0].address[3]?.Street);
   const [contactnumber, setcontactnumber] = useState(userdata[0].contactnumber)
   const [email, setemail] = useState(userdata[0].email)
+  const dispatch = useDispatch()
   const navigation = useNavigation()
 
   const updatedata = async() => {
@@ -334,8 +348,10 @@ export const EditContactDetailsF: React.FC = () => {
         ],
         contactnumber: contactnumber,
         email: email,
-      }).then(() => {
+      }).then(async() => {
         ToastAndroid.show('Succesfully updated Contact Information, re-login to see changes', ToastAndroid.BOTTOM)
+        const data: data[] = await getexistingdata('user', 'uid', userdata[0].uid)
+        dispatch(setuserdata(data))
         navigation.goBack();
         setloading(false)
       })
@@ -436,6 +452,7 @@ export const EditEmergContactDetailsF: React.FC = () => {
   const [emergencycontactname, setemergencycontactname] = useState(userdata[0].emergencycontactname)
   const [emergencycontactnum, setemergencycontactnum] = useState(userdata[0].emergencycontactnum)
   const [Address, setAddress] = useState(userdata[0].Address)
+  const dispatch = useDispatch()
   const [email, setemail] = useState(userdata[0].email)
   const navigation = useNavigation()
 
@@ -451,8 +468,10 @@ export const EditEmergContactDetailsF: React.FC = () => {
         readonlyelationship: readonlyelationship,
         emergencycontactnum: emergencycontactnum,
         Address: Address,
-      }).then(() => {
+      }).then(async() => {
         ToastAndroid.show('Succesfully updated Contact Information, re-login to see changes', ToastAndroid.BOTTOM)
+        const data: data[] = await getexistingdata('user', 'uid', userdata[0].uid)
+           dispatch(setuserdata(data))
         navigation.goBack();
         setloading(false)
       })

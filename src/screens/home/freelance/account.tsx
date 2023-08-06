@@ -13,7 +13,6 @@ const Account: React.FC = () => {
 
  
   const navigation = useNavigation();
-  const user = firebase.auth().currentUser
   const {userdata} =  useSelector((action: data) => action._userdata)
   const [detailfullname, setdetailedfullname] = useState('');
   const fullname = userdata[0]?.fullname;
@@ -46,7 +45,7 @@ const Account: React.FC = () => {
       <View style = {styles.container}>
         <Pressable onPress={() => navigation.navigate('FPersonalInformation' as never)} style = {{marginBottom: 20,flexDirection: 'row',backgroundColor: theme.light, elevation: 7, width: '95%', height: 100, marginTop: 25, borderRadius: 10, shadowColor: '#505050', justifyContent: 'flex-start', alignItems: 'center'}}>
           <Pressable onPress={() => navigation.navigate('PhotoURLchange' as never)} style = {{width: 60, height: 60, borderColor: theme.primary, borderWidth: 3, borderRadius: 500, justifyContent: 'center', alignItems: 'center', marginLeft: 25}}>
-            <Image source={{uri: user?.photoURL || 'https://i.imgur.com/AivI1mB.png'}} resizeMode='cover' style = {{width: '90%', height: '90%', borderRadius: 500}}/>
+            <Image source={{uri: userdata[0].photoURL || 'https://i.imgur.com/AivI1mB.png'}} resizeMode='cover' style = {{width: '90%', height: '90%', borderRadius: 500}}/>
           </Pressable>
           <View style = {{marginLeft: 10, flexDirection: 'column'}}>
             <Text style = {{fontFamily: 'Montserrat-Bold', fontSize: 15, color: black.main}}>
