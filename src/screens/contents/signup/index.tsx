@@ -530,6 +530,7 @@ type Props = {
       if (checkusername.length == 0){ 
         if(password == cpassword){
           try {
+            setloading(true)
             await firebase.auth().createUserWithEmailAndPassword(email, password).then(async () => {
               await firebase.auth().signInWithEmailAndPassword(email, password).then(async() => {
                 await firebase.auth().currentUser?.updateProfile({

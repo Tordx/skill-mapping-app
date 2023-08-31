@@ -205,8 +205,8 @@ export const AdditionalInfo: React.FC <Props> = () => {
         businesshours: businesshours
       }).then(async() =>{
         ToastAndroid.show('Succesfully updated business hours, re-login to see changes', ToastAndroid.BOTTOM)
-          const data: data[] = await getexistingdata('user', 'uid', userdata[0].uid)
-           dispatch(setuserdata(data))
+            const data: data[] = await getexistingdata('user', 'uid', userdata[0].uid)
+            dispatch(setuserdata(data))
         navigation.goBack();
         setloading(false)
       })
