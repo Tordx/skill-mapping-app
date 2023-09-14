@@ -21,6 +21,8 @@ import { EditContactDetailsF, EditEducBackground, EditEmergContactDetailsF, Edit
 import Presumbit from '../../screens/contents/home/freelance/presubmit'
 import { NewApplication } from '../../screens/contents/home/employer/notification/contents'
 import { CurrentApplication } from '../../screens/contents/home/freelance/notification/contents'
+import Search from '../../screens/contents/home/freelance/search'
+import { CardStyleInterpolators } from '@react-navigation/stack'
 
 type Props = {}
 
@@ -72,6 +74,15 @@ const  Stacks: React.FC = () => {
                 component={UserCreate}
                 options={{
                     headerShown: false,
+                }}
+
+            />
+            <Stack.Screen
+                name='Search'
+                component={Search}
+                options={{
+                    headerShown: false,
+                    cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
                 }}
 
             />

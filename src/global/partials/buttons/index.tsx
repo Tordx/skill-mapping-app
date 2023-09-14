@@ -1,5 +1,5 @@
-import { View, Text, TextStyle, ViewStyle, Pressable } from 'react-native'
-import React from 'react'
+import { View, Text, TextStyle, ViewStyle, Pressable, TextInput } from 'react-native'
+import React, {useState} from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { styles } from '../../../styles'
 import { RadioButton } from 'react-native-paper'
@@ -171,4 +171,25 @@ export const PrevButton: React.FC<Props> = ({onPress}) => {
       
     </Pressable>
   )
+}
+
+export const SearchButton: React.FC<Props> = ({onPress}) => {
+
+  const [focus, setfocus] = useState(false)
+
+  return (
+    <Pressable onPress = {onPress} style = {[styles.inputcontainer, {backgroundColor: focus ? '#f8fbea' : theme.light}]}>
+      <TextInput
+        onBlur={() => {setfocus(false)}}
+        onFocus={onPress}
+        placeholder='Search...'
+        placeholderTextColor={black.B005}
+        style = {[styles.inputfield, {width: '85%', paddingLeft: 20}]}
+      />
+      <Pressable onPress = {onPress} style = {{borderTopRightRadius: 10, borderBottomRightRadius: 10,  backgroundColor: black.B004, height: '105%', justifyContent: 'center', alignItems: 'center', width: '16%'}}>
+        <Icon size={25} name = 'text-box-search-outline' color={white.main}/>
+      </Pressable>
+    </Pressable>
+  )
+
 }

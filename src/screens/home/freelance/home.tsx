@@ -3,9 +3,10 @@ import React, { useState } from 'react'
 import { styles } from '../../../styles'
 import { SearchField } from '../../../global/partials/fields'
 import { useNavigation } from '@react-navigation/native'
-import { HoverButton } from '../../../global/partials/buttons'
+import { HoverButton, SearchButton } from '../../../global/partials/buttons'
 import { black, theme, white } from '../../../assets/colors'
 import JobsLists from '../../contents/home/freelance/joblist'
+import { HiredModal } from '../../../global/partials/modals'
 
 type Props = {}
 
@@ -20,7 +21,7 @@ const Home = (props: Props) => {
     <View style = {styles.container}>
       
       <View style = {{flexDirection: 'column', marginTop: 15, top: 20, position: 'absolute', justifyContent: 'center', alignItems: 'center', width: '100%'}}>
-      <SearchField onPress={() => navigation.navigate('Search' as never)}/>
+      <SearchButton onPress={() => navigation.navigate('Search' as never)}/>
       <View style = {{flexDirection: 'row', marginTop: 15,}}>
         <HoverButton
           onPress={() => setfocus(0)} 
@@ -38,6 +39,7 @@ const Home = (props: Props) => {
       </View>
       <View style = {{marginTop: 200, width: '100%'}}/>
       <JobsLists focus={focus} setfocus={setfocus}/>
+      
     </View>
   )
 }

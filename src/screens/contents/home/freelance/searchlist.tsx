@@ -19,7 +19,8 @@ import { firebase } from '@react-native-firebase/auth';
 type Props = {
 
     focus: number,
-    setfocus: (e: number) => void
+    setfocus: (e: number) => void,
+    searchdata: string,
 
 }
 
@@ -29,7 +30,7 @@ interface getdata {
 
 }
 
-const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
+const SearchList: React.FC<Props> = ({focus, setfocus, searchdata}) => {
 
     const [alldata, setalldata] = useState<jobdata[]>([]);
     const [matchdata, setmatchdata] = useState<jobdata[]>([]);
@@ -49,7 +50,6 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
     useEffect(() => {
         fetchData()
         toggledata()
-        fetchhirestatus()
         getsave()
     },[focus])
 
@@ -78,8 +78,6 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
     };
     const fetchData = async () => {
         try {
-            const retrievedmatchjobdata: jobdata[] = await getSpecificjobData('job-post','jobtitle', userdata[0].jobTitle);
-            setmatchdata(retrievedmatchjobdata)
             const retrievedalljobdata: jobdata[] = await getAllData('job-post');
             setalldata(retrievedalljobdata)
             
@@ -94,70 +92,6 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
       setsave(savedata)
             
     }
-  const fetchhirestatus = async () => {
-    try {
-        const retreivedstatus: hirestatus[] = await gethireddata(userdata[0].uid);
-        const timestamp = firebase.firestore.FieldValue.serverTimestamp()
-        sethired(retreivedstatus)
-        console.log(hire)
-        if(retreivedstatus != null){
-            const firestoreTimestamp = retreivedstatus[0].timestamp.toDate();
-            const currentDate = new Date();
-            const differenceInMilliseconds = currentDate.getTime() - firestoreTimestamp.getTime();
-            const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
-            if(retreivedstatus[0].employment === false){
-              if (differenceInDays > 5) {
-                  setishired(true)
-                  sethired(retreivedstatus)
-                  settitle('Already hired?')
-              } else {
-                  return false;
-              }
-            } else if(retreivedstatus[0].employment === true) {
-                if (differenceInDays > 30) {
-                  setishired(true)
-                  sethired(retreivedstatus)
-                  settitle('Are you currently employed?')
-                  
-              } else {
-                  return false;
-              }
-            }
-        } else {
-          setishired(true)
-        }
-    } catch (error) {
-        console.log('Error fetching data:', error);
-        throw error;
-    }
-  }
-
-  const hirestatusupdate = async(status: boolean) => {
-    const timestamp = firebase.firestore.FieldValue.serverTimestamp()
-    try {
-      if(hire != null){
-        await firestore().collection('hirestatus').doc(userdata[0].uid).update({
-            uid: userdata[0].uid,
-            employment: status,
-            timestamp: timestamp,
-          }).then(() => {
-            setishired(false)
-          })
-      } else {
-         await firestore().collection('hirestatus').doc(userdata[0].uid).set({
-            uid: userdata[0].uid,
-            employment: status,
-            timestamp: timestamp,
-          }).then(() =>{
-             setishired(false)
-          })
-      }
-    } catch(error) {
-      console.error(error)
-    }
-     
-  }
-
 
   const viewjob = (item: any) => {
     const { timestamp, ...restOfTheItem } = item;
@@ -246,9 +180,8 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
         /> : <Text style = {{color: 'black'}}>No Jobs Matches your preferrence</Text> }
         <JobInfoModal onPress={() => {setopenmodal(false); navigation.navigate('Presumbit' as never)}} title='Apply Now' onRequestClose = {() => setopenmodal(false)}  visible = {openmodal}/>
         <Loadingmodal title = 'Submitting Application, Please wait...' visible = {loading} onRequestClose={()=> {}}/>
-        <HiredModal title = 'Already hired?' onRequestClose = {() => {}} visible = {ishired} yes={()=> hirestatusupdate(true)} no = {()=> hirestatusupdate(false)} />
     </View>
   )
 }
 
-export default JobsLists
+export default SearchList

@@ -1,4 +1,4 @@
-import { View, Text, Modal, Image, ScrollView } from 'react-native'
+import { View, Text, Modal, Image, ScrollView,Pressable } from 'react-native'
 import React from 'react'
 import { data, jobdata } from '../../../library/constants'
 import { useSelector } from 'react-redux';
@@ -12,6 +12,8 @@ import { LogButton } from '../buttons';
 type Props = {
 
     onPress?: (e: any) => void;
+    yes?: (e: any) => void,
+    no?: (e: any) => void,
     visible?: boolean,
     onRequestClose?: (e: any) => void;
     title: string,
@@ -102,6 +104,30 @@ export const Loadingmodal: React.FC<Props> = ({onRequestClose, visible, title}) 
         <Text style = {{fontFamily: 'Montserrat-Regular', color: white.main, fontSize: 30, textAlign: 'center'}}>
           {title}
         </Text>
+      </View>
+    </Modal>
+  )
+}
+
+export const HiredModal: React.FC<Props> = ({onRequestClose, visible, title, yes, no}) => {
+  return (
+    <Modal transparent visible = {visible} onRequestClose={onRequestClose}>
+      <View style = {{backgroundColor: '#00000050', width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center',}}>
+        <View style = {{backgroundColor: '#fff', width: '80%', height: '25%', justifyContent: 'center', alignItems: 'center', borderRadius: 15, flexDirection: 'column'}}>
+          <Text style = {{fontFamily: 'Montserrat-Bold', fontSize: 30, color: black.main, marginBottom: 20}}>{title}</Text>
+          <View style = {{justifyContent: 'space-between', width: '60%', alignItems: 'center', flexDirection: 'row'}}>
+            <Pressable onPress={yes}>
+              <Text style = {{textAlign: 'center',fontSize: 30, paddingHorizontal: 20, paddingVertical: 10,   backgroundColor: theme.primary, color: white.main, fontFamily: 'Montserrat-Regular', borderRadius: 5}}>
+                Yes
+              </Text>
+            </Pressable>
+            <Pressable onPress={no}>
+              <Text style = {{textAlign: 'center', fontSize: 30, paddingHorizontal: 20, paddingVertical: 10, backgroundColor: black.B004, color: white.main, fontFamily: 'Montserrat-Regular', borderRadius: 5}}>
+                Not
+              </Text>
+            </Pressable>
+          </View>
+        </View>
       </View>
     </Modal>
   )

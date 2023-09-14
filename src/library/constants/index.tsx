@@ -125,3 +125,9 @@ export interface application{
   fromread: boolean,
   
 }
+
+export interface hirestatus {
+  employment: boolean,
+  timestamp: any,
+  uid: string
+}

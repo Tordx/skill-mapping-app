@@ -4,7 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 import { useEffect, useState } from 'react';
 import { Platform, ToastAndroid } from 'react-native';
 import storage from '@react-native-firebase/storage';
-import { application, data, jobdata, jobid } from '../library/constants';
+import { application, data, hirestatus, jobdata, jobid } from '../library/constants';
 import { idgen } from '../global/functions';
 
   export const loginauth = async(email: string, password: string, navigation: any, usertype: string, credentials: string)  => {
@@ -90,6 +90,24 @@ import { idgen } from '../global/functions';
         const data: jobdata[] = [];
         querySnapshot.forEach((documentSnapshot) => {
           const docData = documentSnapshot.data() as jobdata;
+          data.push(docData);
+        });
+    
+        return data;
+      } catch (error) {
+        console.log('Error retrieving data:', error);
+        return [];
+      }
+    };
+
+    export const gethireddata = async (id: string): Promise<hirestatus[]> => {
+      try {
+        const collectionRef = firestore().collection('hirestatus');
+        const querySnapshot = await collectionRef.where('uid', '==', id).get();
+    
+        const data: hirestatus[] = [];
+        querySnapshot.forEach((documentSnapshot) => {
+          const docData = documentSnapshot.data() as hirestatus;
           data.push(docData);
         });
     

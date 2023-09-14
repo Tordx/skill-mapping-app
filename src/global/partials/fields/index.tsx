@@ -104,18 +104,20 @@ export const Multitextfield: React.FC<Props> = ({onKeyPress, onChangeText, value
 }
 
 
-export const SearchField: React.FC<Props> = ({onPress}) => {
+export const SearchField: React.FC<Props> = ({onPress, onChangeText, value}) => {
 
   const [focus, setfocus] = useState(false)
 
   return (
-    <Pressable style = {[styles.inputcontainer, {backgroundColor: focus ? '#f8fbea' : theme.light}]}>
+    <Pressable onPress = {onPress} style = {[styles.inputcontainer, {backgroundColor: focus ? '#f8fbea' : theme.light}]}>
       <TextInput
         onBlur={() => {setfocus(false)}}
         onFocus={() => {setfocus(true)}}
         placeholder='Search...'
         placeholderTextColor={black.B005}
         style = {[styles.inputfield, {width: '85%', paddingLeft: 20}]}
+        onChangeText={onChangeText}
+        value = {value}
       />
       <Pressable onPress = {onPress} style = {{borderTopRightRadius: 10, borderBottomRightRadius: 10,  backgroundColor: black.B004, height: '105%', justifyContent: 'center', alignItems: 'center', width: '16%'}}>
         <Icon size={25} name = 'text-box-search-outline' color={white.main}/>
