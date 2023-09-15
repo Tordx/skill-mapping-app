@@ -97,7 +97,6 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
   const fetchhirestatus = async () => {
     try {
         const retreivedstatus: hirestatus[] = await gethireddata(userdata[0].uid);
-        const timestamp = firebase.firestore.FieldValue.serverTimestamp()
         sethired(retreivedstatus)
         console.log(hire)
         if(retreivedstatus != null){
@@ -246,7 +245,7 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
         /> : <Text style = {{color: 'black'}}>No Jobs Matches your preferrence</Text> }
         <JobInfoModal onPress={() => {setopenmodal(false); navigation.navigate('Presumbit' as never)}} title='Apply Now' onRequestClose = {() => setopenmodal(false)}  visible = {openmodal}/>
         <Loadingmodal title = 'Submitting Application, Please wait...' visible = {loading} onRequestClose={()=> {}}/>
-        <HiredModal title = 'Already hired?' onRequestClose = {() => {}} visible = {ishired} yes={()=> hirestatusupdate(true)} no = {()=> hirestatusupdate(false)} />
+        <HiredModal title = {title} onRequestClose = {() => {}} visible = {ishired} yes={()=> hirestatusupdate(true)} no = {()=> hirestatusupdate(false)} />
     </View>
   )
 }

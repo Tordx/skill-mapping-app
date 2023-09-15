@@ -15,6 +15,7 @@ import { HiredModal, JobInfoModal, Loadingmodal } from '../../../../global/parti
 import firestore from '@react-native-firebase/firestore'
 import { idgen } from '../../../../global/functions';
 import { firebase } from '@react-native-firebase/auth';
+import { SearchField } from '../../../../global/partials/fields';
 
 type Props = {
 
@@ -30,11 +31,11 @@ interface getdata {
 
 }
 
-const SearchList: React.FC<Props> = ({focus, setfocus, searchdata}) => {
+const SearchList: React.FC<Props> = ({focus, setfocus}) => {
 
     const [alldata, setalldata] = useState<jobdata[]>([]);
     const [matchdata, setmatchdata] = useState<jobdata[]>([]);
-    const [hire, sethired] = useState<hirestatus[]>([])
+    const [search, setsearch] = useState('')
     const [title, settitle] = useState('')
     const [ishired, setishired] = useState(false)
     const {userdata} = useSelector((action: data) => action._userdata)
@@ -52,6 +53,13 @@ const SearchList: React.FC<Props> = ({focus, setfocus, searchdata}) => {
         toggledata()
         getsave()
     },[focus])
+
+
+    useEffect(() => {
+      if(search == '') {
+        fetchData()
+      }
+    },[search])
 
     const toggledata = () => {
 
@@ -91,6 +99,15 @@ const SearchList: React.FC<Props> = ({focus, setfocus, searchdata}) => {
       const savedata: jobid[] = await getsaves('save-post', 'uid', userdata[0].uid)
       setsave(savedata)
             
+    }
+
+    const filterddata = () => {
+
+      const modifiedArr = alldata.filter((item) => {
+        return item  &&  (new RegExp(search, 'i').test(item.jobtitle))
+      });
+      setalldata(modifiedArr)
+
     }
 
   const viewjob = (item: any) => {
@@ -169,11 +186,12 @@ const SearchList: React.FC<Props> = ({focus, setfocus, searchdata}) => {
   }
       
   return (
-    <View style = {{width: '100%', marginVertical: '20%',  justifyContent: 'center', alignItems: 'center', paddingBottom: '20%' }}>
-      {data ?
+    <View style = {{width: '100%',  height: '100%',marginVertical: '20%',  justifyContent: 'center', alignItems: 'center', paddingBottom: '20%' }}>
+      {alldata ?
       
       <FlatList
-            data={data}
+            ListHeaderComponent={<View style = {{justifyContent: 'center', alignItems: 'center',}}><SearchField  onChangeText={(e) => setsearch(e)} value = {search} onPress={filterddata} /></View>}
+            data={alldata}
              style = {{width: '100%', height: '100%',}}
             renderItem={renderitem}
             refreshControl={<RefreshControl refreshing = {refreshing} onRefresh={refresh} />}

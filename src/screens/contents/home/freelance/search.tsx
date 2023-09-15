@@ -12,7 +12,6 @@ const Search = (props: Props) => {
   const [search, setsearch] = useState('')
   return (
     <View style = {styles.container}>
-      <SearchField />
       <SearchList focus={focus} setfocus={setfocus} searchdata= {search}  />
     </View>
   )

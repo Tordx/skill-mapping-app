@@ -109,7 +109,7 @@ export const SearchField: React.FC<Props> = ({onPress, onChangeText, value}) => 
   const [focus, setfocus] = useState(false)
 
   return (
-    <Pressable onPress = {onPress} style = {[styles.inputcontainer, {backgroundColor: focus ? '#f8fbea' : theme.light}]}>
+    <Pressable style = {[styles.inputcontainer, {backgroundColor: focus ? '#f8fbea' : theme.light}]}>
       <TextInput
         onBlur={() => {setfocus(false)}}
         onFocus={() => {setfocus(true)}}

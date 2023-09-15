@@ -114,7 +114,7 @@ export const HiredModal: React.FC<Props> = ({onRequestClose, visible, title, yes
     <Modal transparent visible = {visible} onRequestClose={onRequestClose}>
       <View style = {{backgroundColor: '#00000050', width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center',}}>
         <View style = {{backgroundColor: '#fff', width: '80%', height: '25%', justifyContent: 'center', alignItems: 'center', borderRadius: 15, flexDirection: 'column'}}>
-          <Text style = {{fontFamily: 'Montserrat-Bold', fontSize: 30, color: black.main, marginBottom: 20}}>{title}</Text>
+          <Text style = {{fontFamily: 'Montserrat-Bold', fontSize: 20, color: black.main, marginBottom: 20}}>{title}</Text>
           <View style = {{justifyContent: 'space-between', width: '60%', alignItems: 'center', flexDirection: 'row'}}>
             <Pressable onPress={yes}>
               <Text style = {{textAlign: 'center',fontSize: 30, paddingHorizontal: 20, paddingVertical: 10,   backgroundColor: theme.primary, color: white.main, fontFamily: 'Montserrat-Regular', borderRadius: 5}}>
