@@ -251,10 +251,12 @@ export const uploadImage = async (imageUri: any, setTransferred: any) => {
   }
 }
   
-export const submitapplication = async(user: data, job: jobdata, fullname: string, contactnumber: string, email: string, navigation: any) => {
+export const submitapplication = async(file: string, user: data, job: jobdata, fullname: string, contactnumber: string, email: string, navigation: any) => {
   const id = idgen()
   const timestamp = firebase.firestore.FieldValue.serverTimestamp()
-  const retrieveddata = await getspecificexistingdata('application', 'uid', user.uid, 'jobid', job.jobid)
+  const retrieveddata: application[] = await getApplicationData('application', 'from', user.uid, 'jobid', job.jobid);
+  console.log('here')
+  console.log(retrieveddata)
   if (retrieveddata.length > 0) {
     ToastAndroid.show('Sorry, You have already applied to this job.', ToastAndroid.CENTER)
     return
@@ -275,6 +277,7 @@ export const submitapplication = async(user: data, job: jobdata, fullname: strin
             status: 'New Job Application',
             notiftitle: 'New Application',
             isaccepted: false,
+            file: file,
       })
       ToastAndroid.show('Application submitted!', ToastAndroid.LONG)
       navigation.goBack()
@@ -394,6 +397,22 @@ export const rejectapplication = async( application: application, navigation: an
     }
   }
 }
+export const getApplicationData = async (datapull: string, dataparameter: string, parameter: string, specificdataparam: string, specificdata: any): Promise<application[]> => {
+  try {
+      const collectionRef = firestore().collection(datapull);
+      const querySnapshot = await collectionRef.where(dataparameter, '==', parameter).where(specificdataparam, '==', specificdata).get();
+  
+      const data: application[] = [];
+      querySnapshot.forEach((documentSnapshot) => {
+      const docData = documentSnapshot.data() as application;
+      data.push(docData);
+      });
+      return data;
+  } catch (error) {
+      console.log('Error retrieving data:', error);
+      return [];
+  }
+  };
 
 export const createsave = async(item: jobdata, user: data, id: string, timestamp: any) => {
   try {
