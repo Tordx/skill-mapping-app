@@ -125,7 +125,7 @@ const Account: React.FC = () => {
           onPress={() => navigation.navigate('About' as never)}
         />
 
-        <LogButton title='Log out' onPress={logout} style = {{backgroundColor: black.B004, marginTop: 25}} name='logout' size={25} textStyle={{marginRight: 10}}/>
+        <LogButton title='Log out' onPress={logout} style = {{backgroundColor: black.B004, marginTop: 25, marginBottom: 30}} name='logout' size={25} textStyle={{marginRight: 10}}/>
     <View style = {{paddingBottom: 50}}/>
     </View>
     </ScrollView>

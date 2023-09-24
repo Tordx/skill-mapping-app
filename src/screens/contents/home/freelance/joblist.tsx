@@ -159,18 +159,7 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
 
 
   const viewjob = (item: any) => {
-    const { timestamp, ...restOfTheItem } = item;
-    const firstDataItem = item;
-    const timeInSeconds = firstDataItem?.timestamp?._seconds || 0;
-    const date = new Date(timeInSeconds * 1000);
-    const formattedTime = date.toLocaleDateString()
-    
-    const dataToDispatch = {
-      formattedTime,
-      timestamp: timeInSeconds,
-      ...restOfTheItem,
-    };
-    dispatch(setjobdata(dataToDispatch));
+    dispatch(setjobdata(item));
     setopenmodal(true);
   };
   
@@ -191,7 +180,7 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
     const isSaved = save.some((savedItem) => savedItem.jobid === item.jobid);
     return(
         <Pressable onPress = {() => viewjob(item)}  style = {{width: '100%', justifyContent: 'center', alignItems: 'center'}}>
-          <View style = {{borderBottomWidth: .5,width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
+          <View style = {{borderBottomWidth: .5,width: '95  %', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
             <View style = {{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 10}}>
               <Image source={{uri: item.photoURL}} resizeMode='cover' style = {{width: 50, height: 50, borderRadius: 5, marginRight: 10}}/>
               <View style = {{ flexDirection: 'column', width: '85%'}}>
@@ -239,6 +228,7 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
       
       <FlatList
             data={data}
+            keyExtractor={item => item.jobid}
              style = {{width: '100%', height: '100%',}}
             renderItem={renderitem}
             refreshControl={<RefreshControl refreshing = {refreshing} onRefresh={refresh} />}

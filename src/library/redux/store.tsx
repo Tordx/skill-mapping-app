@@ -12,6 +12,9 @@ export default configureStore({
         _jobdata: jobslice,
         _applicationdata: applicationslice
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+    middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
     
 })
