@@ -54,7 +54,7 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
     },[focus])
 
     const toggledata = () => {
-
+      fetchData()
       if(focus == 0) {
         
         setdata(matchdata)
@@ -82,7 +82,10 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
             setmatchdata(retrievedmatchjobdata)
             const retrievedalljobdata: jobdata[] = await getAllData('job-post');
             setalldata(retrievedalljobdata)
-            
+              const modifiedArr = retrievedalljobdata.filter((item) => {
+                return item  &&  (new RegExp(userdata[0].jobTitle, 'i').test(item.jobtitle))
+              });
+              setmatchdata(modifiedArr)
           }  catch (error) {
           console.log('Error fetching data:', error);
           throw error;

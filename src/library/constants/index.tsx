@@ -123,6 +123,7 @@ export interface application{
   where: string,
   forread: boolean,
   fromread: boolean,
+  file: string,
   
 }
 

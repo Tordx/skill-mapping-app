@@ -196,8 +196,8 @@ export const SearchButton: React.FC<Props> = ({onPress}) => {
 
 export const UploadFile: React.FC<Props> = ({onPress, name, size, textStyle, style, title}) => {
   return (
-    <Pressable onPress={onPress}  style = {[styles.createaccount, {backgroundColor: '#0808080', width: '40%'}, style]}>
-      <Text style = {[{fontSize: 20, fontFamily: 'Montserrat-SemiBold', color: white.main}, textStyle]}>{title}</Text>
+    <Pressable onPress={onPress}  style = {[styles.createaccount, {backgroundColor: '#0000000009', width: '40%'}, style]}>
+      <Text style = {[{fontSize: 20, fontFamily: 'Montserrat-SemiBold', color: black.main}, textStyle]}>{title}</Text>
       {name && <Icon name = {name || 'blank'} size={size || 35 } color={white.main} />}
     </Pressable>
   )

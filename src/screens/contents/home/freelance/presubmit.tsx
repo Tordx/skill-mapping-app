@@ -1,4 +1,4 @@
-import { View, Text, Alert } from 'react-native'
+import { View, Text, Alert, Platform, PermissionsAndroid, ToastAndroid } from 'react-native'
 import React, { useState } from 'react'
 import { styles } from '../../../../styles'
 import { data, jobdata, jobid } from '../../../../library/constants'
@@ -10,9 +10,10 @@ import { DefaultField } from '../../../../global/partials/fields'
 import { black } from '../../../../assets/colors'
 import { GoBack, LogButton, UploadFile } from '../../../../global/partials/buttons'
 import { useNavigation } from '@react-navigation/native'
-import { Loadingmodal } from '../../../../global/partials/modals'
-import DocumentPicker from 'react-native-document-picker'
-
+import { Loadingmodal } from '../../../../global/partials/modals';
+import storage from '@react-native-firebase/storage';
+import RNFS from 'react-native-fs'
+import FilePickerManager, { FilePickerResult } from 'react-native-file-picker'
 const Presumbit: React.FC= () => {
 
     const navigation = useNavigation()
@@ -24,33 +25,38 @@ const Presumbit: React.FC= () => {
     const [email, setemail] = useState(userdata[0].email)
     const [file, setfile] = useState('')
 
-    const uploadFile = async () => {
+
+    const uploadFile = async() => {
+      console.log('here')
       try {
-        const result = await DocumentPicker.pick({
-          type: [DocumentPicker.types.pdf, DocumentPicker.types.docx],
+        FilePickerManager.showFilePicker( async(response: FilePickerResult) => {
+          if (response.didCancel) {
+            ToastAndroid.show('User did not pick', ToastAndroid.BOTTOM)
+            return
+          } else if(response.error) {
+            ToastAndroid.show('something went wrong', ToastAndroid.BOTTOM)
+          } else {
+            if (response != null) {
+              const fileContent = await RNFS.readFile(response.uri, 'base64');
+  
+              // Create a Blob from the base64 content
+              const blob = new Blob([fileContent]);
+  
+              // Upload the Blob to Firebase Storage
+              const reference = storage().ref(response.fileName);
+              await reference.put(blob);
+  
+              // Get the download URL
+              const downloadURL = await reference.getDownloadURL();
+              setfile(downloadURL);
+              console.log('Download URL:', downloadURL);
+            }
+          }
         });
-        const file = result[0]
-        // Get the file details.
-        const { uri, type, name, size } = file;
-    
-        const storageRef = firebase.storage().ref().child(`uploads/${name}`);
-    
-        const uploadTask = storageRef.putFile(uri);
-    
-        uploadTask.on('state_changed', (snapshot) => {
-          console.log(snapshot)
-        });
-        await uploadTask;
-    
-        const downloadURL = await storageRef.getDownloadURL();
-        setfile(downloadURL)
-    
-        Alert.alert('Success', 'File uploaded successfully.');
-      } catch (error) {
-        console.error('Error uploading file: ', error);
-        Alert.alert('Error', 'Failed to upload file.');
+      } catch (err) {
+          throw err;
       }
-    };
+    }
     
 
     const submit = async() => {
@@ -117,8 +123,8 @@ const Presumbit: React.FC= () => {
             onChangeText={(e) => setcontactnumber(e)}
             
             />
-        <UploadFile onPress={uploadFile} title='select file'/>
-        <LogButton title='Save' onPress={() => submit()} style={{marginTop: 50}} />
+        <UploadFile onPress={uploadFile} title='upload resume'/>
+        <LogButton title='Check' onPress={() => submit()} style={{marginTop: 50}} />
         <GoBack onPress={() => navigation.goBack()} />
         <Loadingmodal visible = {loading} title='Submitting Application, Please wait...'  />
     </View>

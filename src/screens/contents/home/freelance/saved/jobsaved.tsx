@@ -45,18 +45,8 @@ export const JobSave: React.FC = () => {
       }
   
       const viewjob = (item: any) => {
-        const { timestamp, ...restOfTheItem } = item;
-        const firstDataItem = item;
-        const timeInSeconds = firstDataItem?.timestamp?._seconds || 0;
-        const date = new Date(timeInSeconds * 1000);
-        const formattedTime = date.toLocaleDateString()
-        
-        const dataToDispatch = {
-          formattedTime,
-          ...restOfTheItem,
-        };
       
-        dispatch(setjobdata(dataToDispatch));
+        dispatch(setjobdata(item));
         setopenmodal(true);
       };
 

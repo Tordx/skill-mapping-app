@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Pressable, Modal } from 'react-native'
+import { View, Text, ScrollView, Pressable, Modal, ToastAndroid, PermissionsAndroid, Linking } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { application } from '../../../../../library/constants'
@@ -10,13 +10,15 @@ import { acceptapplication, rejectapplication } from '../../../../../firebase'
 import { useNavigation } from '@react-navigation/native'
 import firestore from '@react-native-firebase/firestore'
 import { Loadingmodal } from '../../../../../global/partials/modals'
-
+import RNFS from 'react-native-fs'
+import { idgen } from '../../../../../global/functions'
 interface OpeningItem {
   [key: string]: string;
 }
 export const NewApplication: React.FC = () => {
 
 const {applicationdata} = useSelector((action: application) => action._applicationdata)
+console.log(applicationdata.file)
 const [formatteddate, setformatteddate] = useState('');
 const [when, setwhen] = useState('');
 const [where, setwhere] = useState('');
@@ -36,6 +38,11 @@ const navigation = useNavigation()
     };
 		timeagocheck()
 	})
+
+const downloadFile = async () => {
+	await Linking.openURL(applicationdata.file)
+};
+
 
 	const accepted = async() => {
 		setloading(true)
@@ -94,6 +101,11 @@ const navigation = useNavigation()
 							<Text style = {{fontFamily: 'Montserrat-Bold', fontSize: 17, color: black.main, marginVertical: 5}}>Email: <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 17}}>{applicationdata.email}</Text></Text>
 							<Text style = {{fontFamily: 'Montserrat-Bold', fontSize: 17, color: black.main, marginVertical: 5}}>Phone: <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 17}}>{applicationdata.contactnumber}</Text></Text>
 							<Text style = {{fontFamily: 'Montserrat-Bold', fontSize: 17, color: black.main, marginVertical: 5}}>Applied on: <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 17}}>{formatteddate}</Text></Text>
+							<Pressable onPress={downloadFile} style = {{justifyContent: 'center', alignItems: 'center', width: '100%'}} >
+									<Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 17, color: black.main, marginVertical: 15, textAlign: 'center'}}>
+										download resume
+									</Text>
+								</Pressable>
 							<Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 17, color: black.main, marginVertical: 20}}>Please review the attached application documents</Text>
 							<Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 17, color: black.main, marginVertical: 20}}>Take time to evaluate the applicant's qualification, experience, and suitability for the position. Consider scheduling an interview or discussin gnext steps with the candidate.</Text>
 							<Text style = {{fontFamily: 'Montserrat-Italic', fontSize: 17, color: black.main, marginVertical: 20}}>Thank you for your attention to this matter.</Text>

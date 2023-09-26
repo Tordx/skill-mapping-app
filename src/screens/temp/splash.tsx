@@ -1,4 +1,4 @@
-import { View, Image } from 'react-native'
+import { View, Image, PermissionsAndroid } from 'react-native'
 import React, { useEffect } from 'react'
 import { styles } from '../../styles'
 import NetInfo from "@react-native-community/netinfo";
@@ -23,7 +23,11 @@ const Splash = (props: Props) => {
 
         const unsubscribe = NetInfo.addEventListener(async (state) =>{
             try {
-                
+                      const granted = await requestCameraPermission()
+
+                      if (granted) {
+                        // Permission granted, you can now access the storage.
+                    
                 setTimeout(async() => {
                     if(state.isConnected) {
                         const authCredentials = await AsyncStorage.getItem('login')
@@ -53,7 +57,10 @@ const Splash = (props: Props) => {
                         ToastAndroid.show("You are not connected to the internet", ToastAndroid.BOTTOM)
                         return
                     }
-                }, 2000);       
+                }, 2000);
+                    } else {
+                        ToastAndroid.show('Please allow permission', ToastAndroid.BOTTOM)
+                    }      
             } catch(error){
                 ToastAndroid.show("Please check your internet connection", ToastAndroid.BOTTOM)
             }
@@ -62,6 +69,31 @@ const Splash = (props: Props) => {
         return unsubscribe;
 
     },[])
+
+    const requestCameraPermission = async () => {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+            {
+              title: 'Cool Photo App Camera Permission',
+              message:
+                'Cool Photo App needs access to your camera ' +
+                'so you can take awesome pictures.',
+              buttonNeutral: 'Ask Me Later',
+              buttonNegative: 'Cancel',
+              buttonPositive: 'OK',
+            },
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            return true
+          } else {
+            console.log('Camera permission denied');
+          }
+        } catch (err) {
+          console.warn(err);
+        }
+      };
+      
 
   return (
     <View style = {styles.container}>

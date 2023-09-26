@@ -178,6 +178,7 @@ const PostList: React.FC<Props> = () => {
       
       <FlatList
             data={data}
+            keyExtractor={(item) => item.jobid}
              style = {{width: '100%', height: '100%', marginBottom: 50}}
             renderItem={renderitem}
             refreshControl={<RefreshControl refreshing = {refresh} onRefresh={handleRefresh} />}

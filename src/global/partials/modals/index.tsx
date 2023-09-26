@@ -50,7 +50,7 @@ export const JobInfoModal: React.FC<Props> = ({onPress, visible, onRequestClose,
                   <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}>
                     {' posted '}
                 </Text>
-                <TimeAgo time={JobData.formattedTime} textStyle={{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}/>
+                <TimeAgo time={JobData.timestamp} textStyle={{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}/>
               </View>
               <View style = {{flexDirection: 'row', marginVertical: 5, justifyContent: 'center', alignContent: 'center'}}>
                 <Icon name ='map-marker-outline' size={20}/>
