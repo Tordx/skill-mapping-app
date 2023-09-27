@@ -1,4 +1,4 @@
-import { View, Image, PermissionsAndroid } from 'react-native'
+import { View, Image, PermissionsAndroid, Platform } from 'react-native'
 import React, { useEffect } from 'react'
 import { styles } from '../../styles'
 import NetInfo from "@react-native-community/netinfo";
@@ -10,6 +10,7 @@ import { getexistingdata } from '../../firebase';
 import { useDispatch } from 'react-redux';
 import { setuserdata } from '../../library/redux/userslice';
 import { data } from '../../library/constants';
+import DeviceInfo from 'react-native-device-info';
 
 type Props = {}
 
@@ -23,9 +24,10 @@ const Splash = (props: Props) => {
 
         const unsubscribe = NetInfo.addEventListener(async (state) =>{
             try {
-                      const granted = await requestCameraPermission()
-
-                      if (granted) {
+                      const granted = await requestPermission()
+                      const androidVersion = await DeviceInfo.getApiLevel()
+                      console.log(androidVersion)
+                      if (granted || androidVersion > 31) {
                         // Permission granted, you can now access the storage.
                     
                 setTimeout(async() => {
@@ -70,16 +72,15 @@ const Splash = (props: Props) => {
 
     },[])
 
-    const requestCameraPermission = async () => {
+    const requestPermission = async () => {
         try {
           const granted = await PermissionsAndroid.request(
             PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
             {
-              title: 'Cool Photo App Camera Permission',
+              title: 'Storage Permission',
               message:
-                'Cool Photo App needs access to your camera ' +
-                'so you can take awesome pictures.',
-              buttonNeutral: 'Ask Me Later',
+                'Skills Mapping needs access to your storage ' +
+                'so you can upload your resume.',
               buttonNegative: 'Cancel',
               buttonPositive: 'OK',
             },
@@ -87,7 +88,7 @@ const Splash = (props: Props) => {
           if (granted === PermissionsAndroid.RESULTS.GRANTED) {
             return true
           } else {
-            console.log('Camera permission denied');
+            console.log(' permission denied');
           }
         } catch (err) {
           console.warn(err);
