@@ -77,21 +77,27 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
       }
     };
     const fetchData = async () => {
-        try {
-            const retrievedmatchjobdata: jobdata[] = await getSpecificjobData('job-post','jobtitle', userdata[0].jobTitle);
-            setmatchdata(retrievedmatchjobdata)
-            const retrievedalljobdata: jobdata[] = await getAllData('job-post');
-            setalldata(retrievedalljobdata)
-              const modifiedArr = retrievedalljobdata.filter((item) => {
-                return item  &&  (new RegExp(userdata[0].jobTitle, 'i').test(item.jobtitle))
-              });
-              setmatchdata(modifiedArr)
-          }  catch (error) {
+      try {
+          const retrievedalljobdata: jobdata[] = await getAllData('job-post');
+          setalldata(retrievedalljobdata);
+          
+          const filteredJobData = retrievedalljobdata.filter((item) => {
+            if (item) {
+                const jobTitle = item.jobtitle.toLowerCase(); // Convert to lowercase for case-insensitive comparison
+                return userdata[0].skills.some((skill: string) => {
+                    const regex = new RegExp(skill, 'i');
+                    return regex.test(jobTitle);
+                });
+            }
+            return false;
+        });
+        
+        setmatchdata(filteredJobData);
+      }  catch (error) {
           console.log('Error fetching data:', error);
           throw error;
-        }
       }
-    
+  }
     const getsave = async() => {
       const savedata: jobid[] = await getsaves('save-post', 'uid', userdata[0].uid)
       setsave(savedata)
@@ -183,9 +189,9 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
     const isSaved = save.some((savedItem) => savedItem.jobid === item.jobid);
     return(
         <Pressable onPress = {() => viewjob(item)}  style = {{width: '100%', justifyContent: 'center', alignItems: 'center'}}>
-          <View style = {{borderBottomWidth: .5,width: '95  %', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
+          <View style = {{backgroundColor: '#ececec', width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start', marginVertical: 10}}>
+            <View style = {{justifyContent:'center', padding: 15, alignItems:'center'}}>
             <View style = {{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 10}}>
-              <Image source={{uri: item.photoURL}} resizeMode='cover' style = {{width: 50, height: 50, borderRadius: 5, marginRight: 10}}/>
               <View style = {{ flexDirection: 'column', width: '85%'}}>
                 <Text style = {[styles.h1, {fontSize: 20, color: theme.primary}]}>
                     {item.jobtitle}
@@ -193,29 +199,31 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
                 <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}>PHP {item.budget.toLocaleString()} / {item.pertimeframe}</Text>
               </View>
             </View>
-            <View style={{ width: '80%' }}>
+            <View style={{ width: '90%', justifyContent: 'flex-start', alignSelf: 'flex-start', }}>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginVertical: 10 }}>
-                {item.requirements?.map((requirement: any, index: any) => (
+                {item?.requirements?.map((requirement: any, index: any) => (
                   index >= MAX_REQUIREMENTS_PER_LINE ? (
-                    <View style={{ flexDirection: 'row', alignItems: 'center', margin: 5 }}>
-                      <Chip style={{ backgroundColor: white.W004 }} textStyle={{ color: theme.secondary }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', margin: 0 }}>
+                      <Chip style={{ backgroundColor: '#F8FBEA' }} textStyle={{ color: theme.secondary }}>
                         {requirement}
                       </Chip>
                     </View>
                   ) : (
-                    <Chip style={{ margin: 5, backgroundColor: white.W004 }} textStyle={{ color: theme.secondary }}>
+                    <Chip style={{ margin: 5, backgroundColor: '#F8FBEA' }} textStyle={{ color: theme.secondary }}>
                       {requirement}
                     </Chip>
                   )
                 ))}
               </View>
+              
             </View>
-            <View style = {{flexDirection: 'row', marginVertical: 20, justifyContent: 'center', alignContent: 'center'}}>
+            <View style = {{flexDirection: 'row', marginVertical: 20, justifyContent: 'flex-start', alignSelf: 'flex-start'}}>
               <Icon name ='clock-outline' size={20}/>
               <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}>
                 {' posted '}
               </Text>
               <TimeAgo time={formattedTime} textStyle={{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}/>
+            </View>
             </View>
           </View>
           <Pressable disabled = {isSaved} onPress={() => savejob(item)} style = {{position: 'absolute', top: 20, right: 20, }}>

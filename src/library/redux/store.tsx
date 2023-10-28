@@ -3,6 +3,7 @@ import {configureStore} from '@reduxjs/toolkit';
 import userslice from './userslice';
 import jobslice from './jobslice';
 import applicationslice from './applicationslice';
+import idslice from './idslice';
 
 
 export default configureStore({
@@ -10,7 +11,8 @@ export default configureStore({
     reducer: {
         _userdata : userslice,
         _jobdata: jobslice,
-        _applicationdata: applicationslice
+        _applicationdata: applicationslice,
+        _profileuiddata: idslice,
     },
     middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

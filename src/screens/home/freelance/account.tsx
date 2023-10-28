@@ -67,20 +67,11 @@ const Account: React.FC = () => {
           onPress={() => navigation.navigate('EditPersonalInfoF' as never)}
           
         />
-        <AccountEditButton 
-          name = 'briefcase-outline' 
-          name2 = 'chevron-right'
-          size2={30}
-          title = 'Employment Details' 
-          color = {theme.primary} 
-          size = {30} 
-          onPress={() => navigation.navigate('Editjobtitle' as never)}
-        />
         <AccountEditButton
-          name = 'school-outline' 
+          name = 'hammer-wrench' 
           name2 = 'chevron-right'
           size2={30}
-          title = 'Educational Background' 
+          title = 'Skills and Competencies' 
           color = {theme.primary} 
           size = {30} 
           onPress={() => navigation.navigate('EditEducBackground' as never)}
@@ -94,16 +85,6 @@ const Account: React.FC = () => {
           color = {theme.primary} 
           onPress={() => navigation.navigate('EditContactDetailsF' as never)}
           size = {30} 
-        />
-        <AccountEditButton
-          name = 'card-account-details-outline' 
-          name2 = 'chevron-right'
-          size2={30}
-          title = 'Emergency Contact Info.' 
-          color = {theme.primary} 
-          size = {30} 
-          onPress={() => navigation.navigate('EditEmergContactDetailsF' as never)}
-          
         />
         <AccountEditButton
           name = 'account-circle-outline' 

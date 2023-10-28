@@ -23,6 +23,7 @@ import { NewApplication } from '../../screens/contents/home/employer/notificatio
 import { CurrentApplication } from '../../screens/contents/home/freelance/notification/contents'
 import Search from '../../screens/contents/home/freelance/search'
 import { CardStyleInterpolators } from '@react-navigation/stack'
+import ViewProfile from '../../screens/temp/viewprofile'
 
 type Props = {}
 
@@ -228,6 +229,13 @@ const  Stacks: React.FC = () => {
             <Stack.Screen 
                 name='CurrentApplication'
                 component={CurrentApplication}
+                options={{
+                    headerShown: false,
+                }}
+            />
+             <Stack.Screen 
+                name='ViewProfile'
+                component={ViewProfile}
                 options={{
                     headerShown: false,
                 }}

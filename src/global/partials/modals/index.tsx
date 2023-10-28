@@ -36,7 +36,6 @@ export const JobInfoModal: React.FC<Props> = ({onPress, visible, onRequestClose,
         <View style = {{position: 'absolute', bottom: 10, width: '95%', height: '75%', justifyContent: 'center', alignItems: 'center', backgroundColor: theme.light, borderRadius: 15}}>
         <ScrollView style = {[styles.scrollview, {width: '90%'}]} showsVerticalScrollIndicator = {false}>
             <View style = {{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginVertical: 20, marginTop: 30}}>
-              <Image source={{uri: JobData.photoURL}} resizeMode='cover' style = {{width: 50, height: 50, borderRadius: 5, marginRight: 10}}/>
               <View style = {{ flexDirection: 'column', width: '85%'}}>
                 <Text style = {[styles.h1, {fontSize: 20, color: theme.primary}]}>
                     {JobData.jobtitle}
@@ -71,17 +70,16 @@ export const JobInfoModal: React.FC<Props> = ({onPress, visible, onRequestClose,
                   {JobData.description}
                 </Text>
                 </View>
-                <View style = {{flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', width: '95%', marginVertical: 10}}>
-            <Text style = {[styles.h1, {fontSize: 14, color: black.main, fontFamily: 'Montserrat-Bold',marginVertical: 5}]}>Qualifications</Text>
-            <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}>
-                  {JobData.qualification}
-                </Text>
-                </View>
-                
             <Text style = {[styles.h1, {fontSize: 14, color: black.main, fontFamily: 'Montserrat-Bold',marginTop: 10}]}>Skills and Expertise needed</Text>
             <View style = {{flexDirection: 'row', marginVertical: 20}}>
                   {JobData.requirements?.map((requirement: any, index: any) => (
-                    <Chip style = {{marginRight: 10, backgroundColor: white.W004}} textStyle = {{color: theme.secondary}}>{requirement}</Chip>
+                    <Chip style = {{marginRight: 10, backgroundColor: '#F8FBEA'}} textStyle = {{color: theme.secondary}}>{requirement}</Chip>
+                  ))}
+                </View>
+                <Text style = {[styles.h1, {fontSize: 14, color: black.main, fontFamily: 'Montserrat-Bold',marginTop: 10}]}>Competencies</Text>
+            <View style = {{flexDirection: 'row', marginVertical: 20}}>
+                  {JobData.competencies?.map((requirement: any, index: any) => (
+                    <Chip style = {{marginRight: 10, backgroundColor: '#F8FBEA'}} textStyle = {{color: theme.secondary}}>{requirement}</Chip>
                   ))}
                 </View>
                 <View style = {{justifyContent: 'center', alignItems: 'center', alignSelf: 'center', width: '105%', marginVertical: 20}}>

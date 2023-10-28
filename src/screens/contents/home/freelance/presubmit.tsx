@@ -23,40 +23,7 @@ const Presumbit: React.FC= () => {
     const [fullname, setfullname] = useState(userdata[0]?.fullname[0]?.firstname + ' ' + userdata[0]?.fullname[1]?.middlename + ' ' + userdata[0]?.fullname[2]?.lastname + ' ' +  userdata[0]?.fullname[3]?.suffix)
     const [contactnumber, setcontactnumber] = useState(userdata[0]?.contactnumber);
     const [email, setemail] = useState(userdata[0].email)
-    const [file, setfile] = useState('')
 
-
-    const uploadFile = async() => {
-      console.log('here')
-      try {
-        FilePickerManager.showFilePicker( async(response: FilePickerResult) => {
-          if (response.didCancel) {
-            ToastAndroid.show('User did not pick', ToastAndroid.BOTTOM)
-            return
-          } else if(response.error) {
-            ToastAndroid.show('something went wrong', ToastAndroid.BOTTOM)
-          } else {
-            if (response != null) {
-              const fileContent = await RNFS.readFile(response.uri, 'base64');
-  
-              // Create a Blob from the base64 content
-              const blob = new Blob([fileContent]);
-  
-              // Upload the Blob to Firebase Storage
-              const reference = storage().ref(response.fileName);
-              await reference.put(blob);
-  
-              // Get the download URL
-              const downloadURL = await reference.getDownloadURL();
-              setfile(downloadURL);
-              console.log('Download URL:', downloadURL);
-            }
-          }
-        });
-      } catch (err) {
-          throw err;
-      }
-    }
     
 
     const submit = async() => {
@@ -75,7 +42,7 @@ const Presumbit: React.FC= () => {
               onPress: async() => {
 
                 setloading(true)
-                await submitapplication(file, userdata[0], JobData, fullname, contactnumber, email, navigation).then(() => {  
+                await submitapplication(userdata[0], JobData, fullname, contactnumber, email, navigation).then(() => {  
                   setloading(false)
                 })
               },
@@ -123,7 +90,6 @@ const Presumbit: React.FC= () => {
             onChangeText={(e) => setcontactnumber(e)}
             
             />
-        <UploadFile onPress={uploadFile} title='upload resume'/>
         <LogButton title='Check' onPress={() => submit()} style={{marginTop: 50}} />
         <GoBack onPress={() => navigation.goBack()} />
         <Loadingmodal visible = {loading} title='Submitting Application, Please wait...'  />

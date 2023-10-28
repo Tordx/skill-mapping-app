@@ -251,7 +251,7 @@ export const uploadImage = async (imageUri: any, setTransferred: any) => {
   }
 }
   
-export const submitapplication = async(file: string, user: data, job: jobdata, fullname: string, contactnumber: string, email: string, navigation: any) => {
+export const submitapplication = async( user: data, job: jobdata, fullname: string, contactnumber: string, email: string, navigation: any) => {
   const id = idgen()
   const timestamp = firebase.firestore.FieldValue.serverTimestamp()
   const retrieveddata: application[] = await getApplicationData('application', 'from', user.uid, 'jobid', job.jobid);
@@ -277,7 +277,6 @@ export const submitapplication = async(file: string, user: data, job: jobdata, f
             status: 'New Job Application',
             notiftitle: 'New Application',
             isaccepted: false,
-            file: file,
       })
       ToastAndroid.show('Application submitted!', ToastAndroid.LONG)
       navigation.goBack()

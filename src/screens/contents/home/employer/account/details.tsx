@@ -19,9 +19,8 @@ const AccountDetails = (props: Props) => {
     const navigation = useNavigation()
     
     useEffect(() => {
-      // Combine the data into a single string
-      const combinedString = address
-        .map((item: any) => {
+      if(address > 0){
+      const combinedString = address.map((item: any) => {
           const key = Object.keys(item)[0];
           const value = item[key];
           return ` ${value}`;
@@ -29,9 +28,8 @@ const AccountDetails = (props: Props) => {
         .join(" ");
   
       // Save the combined string in the state
-      setdetailedaddress(combinedString);
+      setdetailedaddress(combinedString);}
     }, []);
-    console.log(address[0]);
     
     
 
@@ -40,7 +38,7 @@ const AccountDetails = (props: Props) => {
       <ScrollView style = {styles.scrollview}>
         <View style = {styles.container}>
         <View style = {{width: 100, height: 100, borderColor: theme.primary, borderWidth: 5, borderRadius: 500, justifyContent: 'center', alignItems: 'center', marginTop: 75, marginBottom: 25}}>
-            <Image source={{uri: userdata[0].photoURL || 'https://i.imgur.com/AivI1mB.png'}} resizeMode='cover' style = {{width: '90%', height: '90%', borderRadius: 500}}/>
+            <Image source={{uri: userdata[0]?.photoURL || 'https://i.imgur.com/AivI1mB.png'}} resizeMode='cover' style = {{width: '90%', height: '90%', borderRadius: 500}}/>
           </View>
         <Text style={[styles.h4, { fontFamily: 'Montserrat-SemiBold', marginBottom: 10 }]}>
              Personal Information
@@ -52,7 +50,7 @@ const AccountDetails = (props: Props) => {
               name="account-outline"
               size={25}
               color={black.B004}
-              value = {userdata[0].fullname}
+              value = {userdata[0]?.fullname}
               editable = {false}
           />
         <Text style = {{alignSelf: 'flex-start', marginLeft: 15, fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 15}}>Contact Number</Text>
@@ -62,7 +60,7 @@ const AccountDetails = (props: Props) => {
               name="phone-outline"
               size={25}
               color={black.B004}
-              value = {userdata[0].contactnumber}
+              value = {userdata[0]?.contactnumber}
               editable = {false}
           />
         <Text style = {{alignSelf: 'flex-start', marginLeft: 15, fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 15}}>Email</Text>
@@ -72,7 +70,7 @@ const AccountDetails = (props: Props) => {
               name="email-outline"
               size={25}
               color={black.B004}
-              value = {userdata[0].email}
+              value = {userdata[0]?.email}
               editable = {false}
           />
         <Text style = {{alignSelf: 'flex-start', marginLeft: 15, fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 15}}>Address</Text>
@@ -86,6 +84,7 @@ const AccountDetails = (props: Props) => {
               editable = {false}
           />
             <Text style = {{alignSelf: 'flex-start', marginLeft: 15, fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 15}}>Address</Text>
+            {userdata[0].usertype == 'freelance' && 
             <DefaultField
             style={{height: 250}}
               placeholder="Enter your text here"
@@ -93,16 +92,16 @@ const AccountDetails = (props: Props) => {
               name="calendar-outline"
               size={25}
               color={black.B004}
-              value = {userdata[0].description}
+              value = {userdata[0]?.description}
               editable = {false}
-          />
+            />}
              <DefaultField
               placeholder="Business Hours"
               placeholderTextColor={black.B005}
               name="briefcase-outline"
               size={25}
               color={black.B004}
-              value = {userdata[0].businesshours}
+              value = {userdata[0]?.businesshours}
               editable = {false}
           />
           <View style={{ marginBottom: 50 }} />

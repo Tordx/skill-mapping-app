@@ -1,8 +1,8 @@
-import { View, Text, ToastAndroid } from 'react-native'
+import { View, Text, ToastAndroid, Pressable } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { DefaultField } from '../../../global/partials/fields'
 import { styles } from '../../../styles'
-import { black } from '../../../assets/colors'
+import { black, success, theme } from '../../../assets/colors'
 import firestore from '@react-native-firebase/firestore'
 import { firebase } from '@react-native-firebase/auth'
 import { LogButton, TextButton } from '../../../global/partials/buttons'
@@ -10,7 +10,11 @@ import { useNavigation } from '@react-navigation/native'
 import { Loadingmodal } from '../../../global/partials/modals'
 import { idgen } from '../../../global/functions'
 import { getexistingdata } from '../../../firebase'
-
+import { Chip } from 'react-native-paper'
+import FilePickerManager, { FilePickerResult } from 'react-native-file-picker'
+import RNFS from 'react-native-fs'
+import storage from '@react-native-firebase/storage';
+import  Icon  from 'react-native-vector-icons/MaterialCommunityIcons'
 type Props = {
   position: number;
   setposition: (position: number) => void;
@@ -70,23 +74,20 @@ type Props = {
     const [suffix, setsuffix] = useState('')
     const [dob, setdob] = useState('')
     const [gender, setgender] = useState('')
-    const [nationality, setnationality] = useState('')
-    const [jobTitle, setjobTitle] = useState('')
-    const [highesteduc, sethighesteduc] = useState('')
-    const [ProfLi, setProfLi] = useState('')
-    const [Cert, setCert] = useState('')
-    const [CSE, setCSE] = useState('')
-    const [SpeSkills, setSpeSkills] = useState('')
+    const [skills, setskills] = useState<string[]>([])
+    const [skillvalue, setskillvalue] = useState('')
+    const [competencies, setcompetencies] = useState<string[]>([])
+    const [compvalue, setcompvalue] = useState('')
+    const [files, setfiles] = useState<string[]>([])
+    const [filevalue, setfilevalue] = useState('');
+    const [filearray, setfilearray] = useState<string[]>([])
+    const [salary, setsalary] = useState('')
     const [Province, setProvince] = useState('')
     const [City, setCity] = useState('')
     const [Barangay, setBarangay] = useState('')
     const [Street, setStreet] = useState('')
     const [ContactNumber, setContactNumber] = useState('')
     const [email, setemail] = useState('')
-    const [emergencycontactname,setemergencycontactname] = useState('')
-    const [readonlyelationship,setreadonlyelationship] = useState('')
-    const [emergencycontactnum,setemergencycontactnum] = useState('')
-    const [address,setaddress] = useState('')
     const [username,setusername] = useState('')
     const [password,setpassword] = useState('')
     const [cpassword,setcpassword] = useState('')
@@ -130,16 +131,10 @@ type Props = {
               email: email,
               dob: dob,
               gender: gender,
-              nationality: nationality,
-              jobTitle: jobTitle,
-              highesteduc: highesteduc,
-              ProfLi: ProfLi,
-              Cert: Cert,
-              CSE: CSE,
-              SpeSkills: SpeSkills,
-              emergencycontactname: emergencycontactname,
-              emergencycontactnum: emergencycontactnum,
-              readonlyelationship: readonlyelationship,
+              skills: skills,
+              competencies: competencies,
+              files: files,
+              salary: salary,
               contactnumber: ContactNumber,
               address: [
                 {
@@ -187,31 +182,91 @@ type Props = {
       }
     };
 
-  
+    const handleKeyPress = (e:any) => {
+
+        console.log('weh pressed');
+        setskills([...skills, skillvalue]);
+        setskillvalue(''); 
+    };
+    const handleKeyPressComp = (e:any) => {
+
+        console.log('weh pressed');
+        setcompetencies([...competencies, compvalue]);
+        setcompvalue(''); 
+    };
+    const handleKeyPressfiles = () => {
+      console.log('here')
+      try {
+        FilePickerManager.showFilePicker( async(response: FilePickerResult) => {
+          if (response.didCancel) {
+            ToastAndroid.show('User did not pick', ToastAndroid.BOTTOM)
+            return
+          } else if(response.error) {
+            ToastAndroid.show('something went wrong', ToastAndroid.BOTTOM)
+          } else {
+            if (response != null) {
+              const fileContent = await RNFS.readFile(response.uri, 'base64');
+              setfilevalue(response.fileName)
+              const blob = new Blob([fileContent]);
+
+              const reference = storage().ref(response.fileName);
+              await reference.put(blob);
+
+              const downloadURL = await reference.getDownloadURL();
+              setfiles([...files, downloadURL]);
+              setfilevalue('')
+              setfilearray([...filearray, response.fileName])
+              console.log('Download URL:', downloadURL);
+            }
+          }
+        });
+      } catch (err) {
+          throw err;
+      }
+    };
+
+    const handleskillDelete = (index: number) => {
+      const updatecomp = [...skills];
+      updatecomp.splice(index, 1);
+      setskills(updatecomp);
+    };
+    const handlecompDelete = (index: number) => {
+      const updatecomp = [...competencies];
+      updatecomp.splice(index, 1);
+      setcompetencies(updatecomp);
+    };
+    const handlefileDelete = (index: number) => {
+      const updatecomp = [...files];
+      updatecomp.splice(index, 1);
+      setfiles(updatecomp);
+      setfilearray(updatecomp)
+    };
     
   const submit = () => {
 
+    
+
 
     if(position === 3) {
-      if(!emergencycontactname && !emergencycontactnum && !address && !readonlyelationship && !username && !password && !cpassword) {
+      if(!email && !username && !password && !cpassword) {
         ToastAndroid.show('Some fields might be blank', ToastAndroid.LONG)
       } else {
         handleSave()
       }
     } if (position === 2){
-      if(!Province && !City && !Barangay && !Street && !ContactNumber && !email ) {
+      if(!Province && !City && !Barangay && !Street && !ContactNumber ) {
         ToastAndroid.show('Some fields might be blank', ToastAndroid.LONG)
       } else {
       setposition(position + 1)
       }
     } if (position === 1) {
-      if(!highesteduc  && !ProfLi  && !Cert  && !CSE  && !SpeSkills){
+      if(!skills  && !competencies  && !salary){
         ToastAndroid.show('Some fields might be blank', ToastAndroid.LONG)
       } else {
         setposition(position + 1)
       }
     } if(position === 0) {
-      if(!firstname  && !middlename  && !lastname  && !dob  && !gender && !nationality){
+      if(!firstname  && !middlename  && !lastname  && !dob  && !gender){
         ToastAndroid.show('Some fields might be blank', ToastAndroid.LONG)
       } else {
         setposition(position + 1)
@@ -271,7 +326,7 @@ type Props = {
             onChangeText={(value) => setdob(value)}
           />
           <DefaultField
-            placeholder="Gender*"
+            placeholder="Sex*"
             placeholderTextColor={black.B005}
             name="account-circle-outline"
             size={25}
@@ -279,78 +334,96 @@ type Props = {
             value = {gender}
             onChangeText={(value) => setgender(value)}
           />
-          <DefaultField
-            placeholder="Nationality*"
-            placeholderTextColor={black.B005}
-            name="flag-outline"
-            size={25}
-            color={black.B004}
-            value = {nationality}
-            onChangeText={(value) => setnationality(value)}
-          />
-          <Text style={[styles.h4, { fontFamily: 'Montserrat-SemiBold', marginBottom: 10 }]}>
-            Employment Details
-          </Text>
-          <DefaultField
-            placeholder="Job Title, Position, or Skills...*"
-            placeholderTextColor={black.B005}
-            name="briefcase-outline"
-            size={25}
-            color={black.B004}
-            value = {jobTitle}
-            onChangeText={(value) => setjobTitle(value)}
-          />
           <View style={{ marginBottom: 50 }} />
         </>
         }
       {position == 1 &&  <>
         <Text style={[styles.h4, { fontFamily: 'Montserrat-SemiBold', marginBottom: 10 }]}>
-          Educational Background
+          Skills and Competencies
         </Text>
+        <View style = {{flexDirection: 'row', width: '100%', justifyContent: 'center', alignItems: 'center',}}>
         <DefaultField
-          placeholder="Highest Educational Attainment*"
+          placeholder="Add skills"
           placeholderTextColor={black.B005}
-          name="school-outline"
           size={25}
+          name = {skillvalue.length > 0 ? 'blank': 'hammer-wrench'}
           color={black.B004}
-          value = {highesteduc}
-          onChangeText={(value) => sethighesteduc(value)}
+          value = {skillvalue}
+          onChangeText={(e) => setskillvalue(e)}
+          onSubmitEditing={handleKeyPress}
         />
+        {skillvalue && <Pressable onPress={handleKeyPress} style = {{position: 'absolute', right: 25}}>
+          <Icon name = 'plus-circle-outline' size={30} color={theme.accenta} />
+        </Pressable>}
+        </View>
+        <Text style = {{textAlign: 'left', fontSize: 16, width: '95%', fontFamily: 'Montserrat-Regular', marginTop: 5, color: black.main}}>Skills Added</Text>
+        {skills.length > 0 && <View style = {{flexDirection: 'row', marginVertical: 20, justifyContent: 'flex-start', width: '95%'}}>
+          {skills?.map((requirement: any, index: any) => (
+            <Chip 
+              style = {{marginRight: 10, backgroundColor:  success.G008}} 
+              textStyle = {{color: black.main}}
+              onPress={() => handleskillDelete(index)}
+            >{requirement}</Chip>
+          ))}
+          </View>}
+          <View style = {{flexDirection: 'row', width: '100%', justifyContent: 'center', alignItems: 'center',}}>
+          <DefaultField
+            placeholder="Add Competencies"
+            placeholderTextColor={black.B005}
+            size={25}
+            name = {compvalue.length > 0 ? 'blank': 'star-plus-outline'}
+            color={black.B004}
+            value = {compvalue}
+            onChangeText={(value) => setcompvalue(value)}
+          />
+           {compvalue && <Pressable onPress={handleKeyPressComp} style = {{position: 'absolute', right: 25}}>
+          <Icon name = 'plus-circle-outline' size={30} color={theme.accenta} />
+        </Pressable>}
+        </View>
+        {competencies.length > 0 &&  <Text style = {{textAlign: 'left', fontSize: 16, width: '95%', fontFamily: 'Montserrat-Regular', marginTop: 5, color: black.main}}>Competencies Added</Text>}
+        {competencies.length > 0 &&  <View style = {{flexDirection: 'row', marginVertical: 20}}>
+                    {competencies?.map((requirement: any, index: any) => (
+                      <Chip 
+                        style = {{marginRight: 10, backgroundColor:  success.G008}} 
+                        textStyle = {{color: black.main}}
+                        onPress={() => handlecompDelete(index)}
+                      >{requirement}</Chip>
+                    ))}
+          </View>}
+          <Pressable style = {{width: '100%', justifyContent: 'center', alignItems: 'center'}} onPress={() => handleKeyPressfiles()}>
+          <Text style = {{textAlign: 'left', fontSize: 12, width: '95%', fontFamily: 'Montserrat-Regular', marginTop: 5, color: black.main}}>Proof of Competencies/Certification</Text>     
+            <DefaultField
+              placeholder="Selecf files"
+              placeholderTextColor={black.B005}
+              editable = {false}
+              size={25}
+              name = 'file-multiple-outline'
+              color={black.B004}
+              value = {filevalue}
+              onChangeText={(value) => setfilevalue(value)}
+            />
+          </Pressable>     
+          {<Text style = {{textAlign: 'left', fontSize: 16, width: '95%', fontFamily: 'Montserrat-Regular', marginTop: 5, color: black.main}}>Files added</Text>}
+          
+          {filearray.length > 0 &&  
+            <View style = {{flexDirection: 'row', marginVertical: 20}}>
+              {filearray?.map((requirement: any, index: any) => (
+                <Chip 
+                  style = {{marginRight: 10, backgroundColor:  success.G008}} 
+                  textStyle = {{color: black.main}}
+                  onPress={() => handlefileDelete(index)}
+                >{requirement}</Chip>
+              ))}
+            </View>}
+            <Text style = {{textAlign: 'left', fontSize: 12, width: '95%', fontFamily: 'Montserrat-Regular', marginTop: 5, color: black.main}}>Preferred Salary</Text>
         <DefaultField
-          placeholder="Professional Licenses*"
+          placeholder="Preferred Salary"
           placeholderTextColor={black.B005}
-          name="medal-outline"
+          name="cash"
           size={25}
           color={black.B004}
-          value = {ProfLi}
-          onChangeText={(value) => setProfLi(value)}
-        />
-        <DefaultField
-          placeholder="Certification/Training attended"
-          placeholderTextColor={black.B005}
-          name="certificate-outline"
-          size={25}
-          color={black.B004}
-          value = {Cert}
-          onChangeText={(value) => setCert(value)}
-        />
-        <DefaultField
-          placeholder="Civil service eligibility"
-          placeholderTextColor={black.B005}
-          name="certificate-outline"
-          size={25}
-          color={black.B004}
-          value = {CSE}
-          onChangeText={(value) => setCSE(value)}
-        />
-        <DefaultField
-          placeholder="Special Skills"
-          placeholderTextColor={black.B005}
-          name="star-outline"
-          size={25}
-          color={black.B004}
-          value = {SpeSkills}
-          onChangeText={(value) => setSpeSkills(value)}
+          value = {salary}
+          onChangeText={(value) => setsalary(value)}
         />
         <View style={{ marginBottom: 50 }} />
         </>}
@@ -404,6 +477,14 @@ type Props = {
               onChangeText={(value) => setContactNumber(value)}
               keyboardType='phone-pad'
           />
+       
+          <View style={{ marginBottom: 50 }} />
+          </>}
+        {position == 3 && <>
+          
+           <Text style={[styles.h4, { fontFamily: 'Montserrat-SemiBold', marginBottom: 10 }]}>
+              User Credentials
+          </Text>
           <DefaultField
               placeholder="Email Address"
               placeholderTextColor={black.B005}
@@ -414,53 +495,6 @@ type Props = {
               onChangeText={(value) => setemail(value)}
               keyboardType='email-address'
           />
-          <View style={{ marginBottom: 50 }} />
-          </>}
-        {position == 3 && <>
-          <Text style={[styles.h4, { fontFamily: 'Montserrat-SemiBold', marginBottom: 10 }]}>
-              Emergency Contact
-          </Text>
-          <DefaultField
-              placeholder="Emergency Contact*"
-              placeholderTextColor={black.B005}
-              name="account-circle-outline"
-              size={25}
-              color={black.B004}
-              value = {emergencycontactname}
-              onChangeText={(value) => setemergencycontactname(value)}
-             
-          />
-          <DefaultField
-              placeholder="Relationship*"
-              placeholderTextColor={black.B005}
-              name="account-circle-outline"
-              size={25}
-              color={black.B004}
-              value = {readonlyelationship}
-              onChangeText={(value) => setreadonlyelationship(value)}
-          />
-          <DefaultField
-              placeholder="Contact Number"
-              placeholderTextColor={black.B005}
-              name="phone-outline"
-              size={25}
-              color={black.B004}
-              value = {emergencycontactnum}
-              onChangeText={(value) => setemergencycontactnum(value)}
-              keyboardType='phone-pad'
-          />
-          <DefaultField
-              placeholder="Address"
-              placeholderTextColor={black.B005}
-              name="map-marker-outline"
-              size={25}
-              color={black.B004}
-              value = {address}
-              onChangeText={(value) => setaddress(value)}
-          />
-           <Text style={[styles.h4, { fontFamily: 'Montserrat-SemiBold', marginBottom: 10 }]}>
-              User Credentials
-          </Text>
           <DefaultField
               placeholder="Username"
               placeholderTextColor={black.B005}
@@ -515,7 +549,6 @@ type Props = {
     const [fullname, setfullname] = useState('');
     const [contactnumber, setcontactnumber] =  useState('');
     const [email, setemail] = useState('');
-    const [website, setwebsite] = useState('');
     const [Province, setProvince] = useState('')
     const [City, setCity] = useState('');
     const [Barangay, setBarangay] = useState('');
@@ -544,7 +577,6 @@ type Props = {
                   username: username,
                   photoURL: 'https://i.imgur.com/AivI1mB.png',
                   contactnumber: contactnumber,
-                  website: website,
                   businesshours: 'enter business hours',
                   usertype: 'employer',
                   email: email,
@@ -585,9 +617,14 @@ type Props = {
   const submit = () => {
     if(position === 2) {
       handleSave()
-    } else {
+    } else if(position == 1) {
       setposition(position + 1)
-      
+    } else if(position == 0) {
+      if(!fullname && !contactnumber){
+        ToastAndroid.show('Some fields are blank', ToastAndroid.LONG)
+      } else {
+        setposition(position + 1)
+      }
     }
   }
     return (
@@ -597,7 +634,7 @@ type Props = {
           Personal Information
         </Text>
         <DefaultField
-          placeholder="fullname*"
+          placeholder="Name*"
           placeholderTextColor={black.B005}
           name="account-circle-outline"
           size={25}
@@ -614,25 +651,6 @@ type Props = {
           value = {contactnumber}
           onChangeText={(value) => setcontactnumber(value)}
         />
-        <DefaultField
-          placeholder="Email Address*"
-          placeholderTextColor={black.B005}
-          name="email-outline"
-          size={25}
-          color={black.B004}
-          
-          value = {email}
-          onChangeText={(value) => setemail(value)}
-        />
-        <DefaultField
-          placeholder="Website URL (optional)"
-          placeholderTextColor={black.B005}
-          name="web"
-          size={25}
-          value = {website}
-          onChangeText={(value) => setwebsite(value)}
-        />
-
         <View style={{ marginBottom: 50 }} />
       </>
       }
@@ -684,6 +702,16 @@ type Props = {
          <Text style={[styles.h4, { fontFamily: 'Montserrat-SemiBold', marginBottom: 10 }]}>
             User Credentials
         </Text>
+        <DefaultField
+          placeholder="Email Address*"
+          placeholderTextColor={black.B005}
+          name="email-outline"
+          size={25}
+          color={black.B004}
+          
+          value = {email}
+          onChangeText={(value) => setemail(value)}
+        />
         <DefaultField
             placeholder="Username"
             placeholderTextColor={black.B005}

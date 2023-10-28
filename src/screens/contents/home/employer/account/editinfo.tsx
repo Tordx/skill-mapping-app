@@ -20,15 +20,15 @@ type Props = {}
 export const PersonalInfo = (props: Props) => {
 
     const {userdata} = useSelector((action: data) => action._userdata)
-    const [fullname, setfullname] = useState(userdata[0].fullname);
-    const [contactnumber, setcontactnumber] = useState(userdata[0].contactnumber);
-    const [email, setemail] = useState(userdata[0].email);
-    const [description, setdescription] = useState(userdata[0].description);
-    const [province, setprovince] = useState(userdata[0].address[0]?.Province);
-    const [city, setcity] = useState(userdata[0].address[1]?.City);
-    const [barangay, setbarangay] = useState(userdata[0].address[2]?.Barangay);
-    const [street, setstreet] = useState(userdata[0].address[3]?.Street);
-    const [company, setcompany] = useState(userdata[0].company)
+    const [fullname, setfullname] = useState(userdata[0]?.fullname);
+    const [contactnumber, setcontactnumber] = useState(userdata[0]?.contactnumber);
+    const [email, setemail] = useState(userdata[0]?.email);
+    const [description, setdescription] = useState(userdata[0]?.description);
+    const [province, setprovince] = useState(userdata[0]?.address[0]?.Province);
+    const [city, setcity] = useState(userdata[0]?.address[1]?.City);
+    const [barangay, setbarangay] = useState(userdata[0]?.address[2]?.Barangay);
+    const [street, setstreet] = useState(userdata[0]?.address[3]?.Street);
+    const [company, setcompany] = useState(userdata[0]?.company)
     const dispatch = useDispatch()
     const navigation = useNavigation()
     const [loading, setloading] = useState(false)
@@ -36,7 +36,7 @@ export const PersonalInfo = (props: Props) => {
     const updatedata = async() => {
       setloading(true)
       try {
-        await firestore().collection('user').doc(userdata[0].uid).update({
+        await firestore().collection('user').doc(userdata[0]?.uid).update({
           fullname: fullname,
           contactnumber: contactnumber,
           address: [
@@ -58,7 +58,7 @@ export const PersonalInfo = (props: Props) => {
           company: company,
         }).then(async() => {
           ToastAndroid.show('Succesfully updated your information', ToastAndroid.BOTTOM)
-           const data: data[] = await getexistingdata('user', 'uid', userdata[0].uid)
+           const data: data[] = await getexistingdata('user', 'uid', userdata[0]?.uid)
             console.log('here');
            console.log(data);
            dispatch(setuserdata(data))
@@ -191,21 +191,21 @@ export const PersonalInfo = (props: Props) => {
 export const AdditionalInfo: React.FC <Props> = () => {
   
   const {userdata} = useSelector((action: data) => action._userdata)
-  const [businesshours, setbusinesshours] = useState(userdata[0].businesshours)
+  const [businesshours, setbusinesshours] = useState(userdata[0]?.businesshours)
   const [loading, setloading] = useState(false)
   const navigation = useNavigation()
   const dispatch = useDispatch()
 
   const updatedata = async() => {
 
-    console.log(userdata[0].uid);
+    console.log(userdata[0]?.uid);
     setloading(true)
     try {
-      await firestore().collection('user').doc(userdata[0].uid).update({
+      await firestore().collection('user').doc(userdata[0]?.uid).update({
         businesshours: businesshours
       }).then(async() =>{
         ToastAndroid.show('Succesfully updated business hours, re-login to see changes', ToastAndroid.BOTTOM)
-            const data: data[] = await getexistingdata('user', 'uid', userdata[0].uid)
+            const data: data[] = await getexistingdata('user', 'uid', userdata[0]?.uid)
             dispatch(setuserdata(data))
         navigation.goBack();
         setloading(false)

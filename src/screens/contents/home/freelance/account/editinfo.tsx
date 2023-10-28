@@ -1,20 +1,24 @@
-import { View, Text, ToastAndroid } from 'react-native'
+import { View, Text, ToastAndroid, Pressable } from 'react-native'
 import React, { useState } from 'react'
 import { styles } from '../../../../../styles'
 import { ScrollView } from 'react-native-gesture-handler'
 import { DefaultField, Multitextfield } from '../../../../../global/partials/fields'
-import { black, theme } from '../../../../../assets/colors'
+import { black, success, theme } from '../../../../../assets/colors'
 import { useDispatch, useSelector } from 'react-redux'
 import { data } from '../../../../../library/constants'
 import { GoBack, LogButton } from '../../../../../global/partials/buttons'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useTheme } from '@react-navigation/native'
 import firestore from '@react-native-firebase/firestore'
 import { Loadingmodal } from '../../../../../global/partials/modals'
 import { firebase } from '@react-native-firebase/auth'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getexistingdata } from '../../../../../firebase'
 import { setuserdata } from '../../../../../library/redux/userslice'
-
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { Chip } from 'react-native-paper'
+import RNFS from 'react-native-fs'
+import storage from '@react-native-firebase/storage';
+import FilePickerManager, { FilePickerResult } from 'react-native-file-picker'
 type Props = {}
 
 export const Editjobtitle = (props: Props) => {
@@ -78,25 +82,91 @@ export const Editjobtitle = (props: Props) => {
 export const EditEducBackground: React.FC = () => {
  
     const {userdata} = useSelector((action: data) => action._userdata)
-    const [highesteduc, sethighesteduc] = useState(userdata[0].highesteduc);
-    const [ProfLi, setProfLi] = useState(userdata[0].ProfLi);
-    const [Cert, setCert] = useState(userdata[0].Cert);
-    const [CSE, setCSE] = useState(userdata[0].CSE);
-    const [SpeSkills, setSpeSkills] = useState(userdata[0].SpeSkills);
+    const [skills, setskills] = useState<string[]>(userdata[0]?.skills || []);
+    const [skillvalue, setskillvalue] = useState('');
+    const [competencies, setcompetencies] = useState<string[]>(userdata[0]?.competencies|| []);
+    const [compvalue, setcompvalue] = useState('');
+    const [files, setfiles] = useState<string[]>(userdata[0]?.files || []);
+    const [filearray, setfilearray] = useState<string[]>([]);
+    const [filevalue, setfilevalue] = useState('')
+    const [salary, setsalary] = useState('')
+    
     const dispatch = useDispatch()
     const navigation = useNavigation()
     const [loading, setloading] = useState(false)
+
+    const handleKeyPress = (e:any) => {
+
+      console.log('weh pressed');
+      setskills([...skills, skillvalue]);
+      setskillvalue(''); 
+  };
+  const handleKeyPressComp = (e:any) => {
+
+      console.log('weh pressed');
+      setcompetencies([...competencies, compvalue]);
+      setcompvalue(''); 
+  };
+  const handleKeyPressfiles = () => {
+    try {
+      FilePickerManager.showFilePicker( async(response: FilePickerResult) => {
+        if (response.didCancel) {
+          ToastAndroid.show('User did not pick', ToastAndroid.BOTTOM)
+          return
+        } else if(response.error) {
+          console.log(response.error);
+          
+          ToastAndroid.show('something went wrong', ToastAndroid.BOTTOM)
+        } else {
+          if (response != null) {
+            const fileContent = await RNFS.readFile(response.uri, 'base64');
+            setfilevalue(response.fileName)
+            const blob = new Blob([fileContent]);
+
+            const reference = storage().ref(response.fileName);
+            await reference.put(blob);
+
+            const downloadURL = await reference.getDownloadURL();
+            setfiles([...files, downloadURL]);
+            setfilevalue('')
+            setfilearray([...filearray, response.fileName])
+            console.log('Download URL:', downloadURL);
+          }
+        }
+      });
+    } catch (err) {
+
+        console.error(err)
+        throw err;
+    }
+  };
+
+  const handleskillDelete = (index: number) => {
+    const updatecomp = [...skills];
+    updatecomp.splice(index, 1);
+    setskills(updatecomp);
+  };
+  const handlecompDelete = (index: number) => {
+    const updatecomp = [...competencies];
+    updatecomp.splice(index, 1);
+    setcompetencies(updatecomp);
+  };
+  const handlefileDelete = (index: number) => {
+    const updatecomp = [...files];
+    updatecomp.splice(index, 1);
+    setfiles(updatecomp);
+    setfilearray(updatecomp)
+  };
     
     const updatedata = async() => {
       setloading(true)
       try {
         await firestore().collection('user').doc(userdata[0].uid).update({
 
-          highesteduc: highesteduc,
-          ProfLi: ProfLi,
-          Cert: Cert,
-          CSE: CSE,
-          SpeSkills: SpeSkills,
+          skills: skills,
+          competencies: competencies,
+          files: files,
+          salary: salary,
          
         }).then(async() => {
           ToastAndroid.show('Succesfully updated Educational Information, re-login to see changes', ToastAndroid.BOTTOM)
@@ -115,55 +185,93 @@ export const EditEducBackground: React.FC = () => {
   return (
     <View style = {styles.container}>
       <ScrollView style = {styles.scrollview}>
-        <View style = {styles.container}>
-        <Text style={[styles.h4, { fontFamily: 'Montserrat-SemiBold', marginBottom: 10, marginTop: '20%' }]}>
-             Educational Information
-          </Text>
-          <Text style = {{alignSelf: 'flex-start', marginLeft: 15, fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 15}}>Name</Text>
+        <View style = {[styles.container, {paddingTop: '20%'}]}>
+        <Text style={[styles.h4, { fontFamily: 'Montserrat-SemiBold', marginBottom: 10 }]}>
+          Skills and Competencies
+        </Text>
+        <View style = {{flexDirection: 'row', width: '100%', justifyContent: 'center', alignItems: 'center',}}>
+        <DefaultField
+          placeholder="Add skills"
+          placeholderTextColor={black.B005}
+          size={25}
+          name = {skillvalue.length > 0 ? 'blank': 'hammer-wrench'}
+          color={black.B004}
+          value = {skillvalue}
+          onChangeText={(e) => setskillvalue(e)}
+          onSubmitEditing={handleKeyPress}
+        />
+        {skillvalue && <Pressable onPress={handleKeyPress} style = {{position: 'absolute', right: 25}}>
+          <Icon name = 'plus-circle-outline' size={30} color={theme.accenta} />
+        </Pressable>}
+        </View>
+        <Text style = {{textAlign: 'left', fontSize: 16, width: '95%', fontFamily: 'Montserrat-Regular', marginTop: 5, color: black.main}}>Skills Added</Text>
+        {skills?.length > 0 && <View style = {{flexDirection: 'row', marginVertical: 20, justifyContent: 'flex-start', width: '95%'}}>
+          {skills?.map((requirement: any, index: any) => (
+            <Chip 
+              style = {{marginRight: 10, backgroundColor:  success.G008}} 
+              textStyle = {{color: black.main}}
+              onPress={() => handleskillDelete(index)}
+            >{requirement}</Chip>
+          ))}
+          </View>}
+          <View style = {{flexDirection: 'row', width: '100%', justifyContent: 'center', alignItems: 'center',}}>
           <DefaultField
-          placeholder="Highest Educational Attainment*"
-          placeholderTextColor={black.B005}
-          name="school-outline"
-          size={25}
-          color={black.B004}
-          value = {highesteduc}
-          onChangeText={(value) => sethighesteduc(value)}
-        />
+            placeholder="Add Competencies"
+            placeholderTextColor={black.B005}
+            size={25}
+            name = {compvalue.length > 0 ? 'blank': 'star-plus-outline'}
+            color={black.B004}
+            value = {compvalue}
+            onChangeText={(value) => setcompvalue(value)}
+          />
+           {compvalue && <Pressable onPress={handleKeyPressComp} style = {{position: 'absolute', right: 25}}>
+          <Icon name = 'plus-circle-outline' size={30} color={theme.accenta} />
+        </Pressable>}
+        </View>
+        {competencies?.length > 0 &&  <Text style = {{textAlign: 'left', fontSize: 16, width: '95%', fontFamily: 'Montserrat-Regular', marginTop: 5, color: black.main}}>Competencies Added</Text>}
+        {competencies?.length > 0 &&  <View style = {{flexDirection: 'row', marginVertical: 20}}>
+                    {competencies?.map((requirement: any, index: any) => (
+                      <Chip 
+                        style = {{marginRight: 10, backgroundColor:  success.G008}} 
+                        textStyle = {{color: black.main}}
+                        onPress={() => handlecompDelete(index)}
+                      >{requirement}</Chip>
+                    ))}
+          </View>}
+          <Pressable style = {{width: '100%', justifyContent: 'center', alignItems: 'center'}} onPress={() => handleKeyPressfiles()}>
+          <Text style = {{textAlign: 'left', fontSize: 12, width: '95%', fontFamily: 'Montserrat-Regular', marginTop: 5, color: black.main}}>Proof of Competencies/Certification</Text>     
+            <DefaultField
+              placeholder="Selecf files"
+              placeholderTextColor={black.B005}
+              editable = {false}
+              size={25}
+              name = 'file-multiple-outline'
+              color={black.B004}
+              value = {filevalue}
+              onChangeText={(value) => setfilevalue(value)}
+            />
+          </Pressable>     
+          {filearray?.length > 0 &&<Text style = {{textAlign: 'left', fontSize: 16, width: '95%', fontFamily: 'Montserrat-Regular', marginTop: 5, color: black.main}}>Files added</Text>}
+          
+          {filearray?.length > 0 &&  
+            <View style = {{flexDirection: 'row', marginVertical: 20}}>
+              {filearray?.map((requirement: any, index: any) => (
+                <Chip 
+                  style = {{marginRight: 10, backgroundColor:  success.G008}} 
+                  textStyle = {{color: black.main}}
+                  onPress={() => handlefileDelete(index)}
+                >{requirement}</Chip>
+              ))}
+            </View>}
+            <Text style = {{textAlign: 'left', fontSize: 12, width: '95%', fontFamily: 'Montserrat-Regular', marginTop: 5, color: black.main}}>Preferred Salary</Text>
         <DefaultField
-          placeholder="Professional Licenses*"
+          placeholder="Preferred Salary"
           placeholderTextColor={black.B005}
-          name="medal-outline"
+          name="cash"
           size={25}
           color={black.B004}
-          value = {ProfLi}
-          onChangeText={(value) => setProfLi(value)}
-        />
-        <DefaultField
-          placeholder="Certification/Training attended"
-          placeholderTextColor={black.B005}
-          name="certificate-outline"
-          size={25}
-          color={black.B004}
-          value = {Cert}
-          onChangeText={(value) => setCert(value)}
-        />
-        <DefaultField
-          placeholder="Civil service eligibility"
-          placeholderTextColor={black.B005}
-          name="certificate-outline"
-          size={25}
-          color={black.B004}
-          value = {CSE}
-          onChangeText={(value) => setCSE(value)}
-        />
-        <DefaultField
-          placeholder="Special Skills"
-          placeholderTextColor={black.B005}
-          name="star-outline"
-          size={25}
-          color={black.B004}
-          value = {SpeSkills}
-          onChangeText={(value) => setSpeSkills(value)}
+          value = {salary}
+          onChangeText={(value) => setsalary(value)}
         />
           <View style={{ marginBottom: 50 }} />
           <LogButton title = 'Update' onPress={updatedata}/>

@@ -1,4 +1,4 @@
-import { View, Text, ToastAndroid, Alert } from 'react-native'
+import { View, Text, ToastAndroid, Alert, Pressable } from 'react-native'
 import React, {useState, useEffect} from 'react'
 import { styles } from '../../../../../styles'
 import { useNavigation } from '@react-navigation/native';
@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { jobdata } from '../../../../../library/constants';
 import { ScrollView } from 'react-native-gesture-handler';
 import Createjobs from '../add/createjobs';
+import  Icon  from 'react-native-vector-icons/MaterialCommunityIcons';
 type Props = {
 
   position: number,
@@ -68,8 +69,10 @@ const EditJobdetails: React.FC<Props> = ({position, setposition}) => {
   const {JobData} = useSelector((action: jobdata) => action._jobdata);
   const [jobtitle, setjobtitle] = useState(JobData.jobtitle);
   const [joblocation, setjoblocation] = useState(JobData.joblocation);
-  const [requirements, setrequirements] = useState <string[]>([]);
-  const [requirementvalue, setrequirementvalue] = useState(JobData.requirementvalue);
+  const [requirements, setrequirements] = useState <string[]>(JobData?.requirements || []);
+  const [requirementvalue, setrequirementvalue] = useState('');
+  const [competencies, setcompetencies] = useState<string[]>(JobData?.competencies || []);
+  const [compvalue, setcompvalue] = useState('')
   const [type, settype] = useState(JobData.type);
   const [scope, setscope] = useState(JobData.scope);
   const [budget, setbudget] = useState(0);
@@ -79,24 +82,31 @@ const EditJobdetails: React.FC<Props> = ({position, setposition}) => {
   const [userid, setuserid] = useState(JobData.userid);
   const [fullname, setfullname] = useState(JobData.fullname);
   const navigation = useNavigation()
+
   const handleDelete = (index: number) => {
     const updatedRequirements = [...requirements];
     updatedRequirements.splice(index, 1);
     setrequirements(updatedRequirements);
   };
 
+  const handleCompDelete = (index: number) => {
+    const updatedRequirements = [...competencies];
+    updatedRequirements.splice(index, 1);
+    setcompetencies(updatedRequirements);
+  };
+
   const handleKeyPress = (e:any) => {
 
-    const nativeEvent = e.nativeEvent.key
-
-    console.log(nativeEvent);
-    
-    if(nativeEvent == " ") {
-      console.log('weh pressed');
       setrequirements([...requirements, requirementvalue]);
       setrequirementvalue(''); 
-    }
   };
+
+  const handleKeyCompPress = () => {
+
+    setcompetencies([...competencies, compvalue]);
+    setcompvalue(''); 
+};
+
 
   const prevpos = () => {
     console.log('i am pressed');
@@ -186,6 +196,7 @@ const EditJobdetails: React.FC<Props> = ({position, setposition}) => {
             jobtitle: jobtitle,
             joblocation: joblocation,
             requirements: requirements,
+            competencies: competencies,
             type: type,
             scope: scope,
             budget: budget,
@@ -233,27 +244,60 @@ return (
   {position == 2 && 
     <View style = {{width: '100%', justifyContent: 'center', alignItems: 'center',}}>
       <Text style={[styles.h1, {width: '95%', marginBottom: 30}]}>
-       What are the main skills required for your work?
+       What are the main skills and competencies required for your work?
       </Text>
-      <DefaultField
-        placeholder="Write a title for your job post"
-        placeholderTextColor={black.B005}
-        size={25}
-        color={black.B004}
-        value = {requirementvalue}
-        onChangeText={(e) => setrequirementvalue(e)}
-        onKeyPress={(e) => handleKeyPress(e)}
-      />
+      <View style = {{flexDirection: 'row', width: '100%', justifyContent: 'center', alignItems: 'center',}}>
+        <DefaultField
+          placeholder="Add skills"
+          placeholderTextColor={black.B005}
+          size={25}
+          name = {requirements.length > 0 ? 'blank': 'hammer-wrench'}
+          color={black.B004}
+          value = {requirementvalue}
+          onChangeText={(e) => setcompvalue(e)}
+          onSubmitEditing={handleKeyPress}
+        />
+        {requirementvalue && <Pressable onPress={handleKeyPress} style = {{position: 'absolute', right: 25}}>
+          <Icon name = 'plus-circle-outline' size={30} color={theme.accenta} />
+        </Pressable>}
+        </View>
       <Text style = {{textAlign: 'left', fontSize: 16, width: '95%', fontFamily: 'Montserrat-Regular', marginTop: 5, color: black.main}}>For best results, add 3-5 skills</Text>
-      <View style = {{flexDirection: 'row', marginVertical: 20}}>
-                {requirements?.map((requirement: any, index: any) => (
-                  <Chip 
-                    style = {{marginRight: 10, backgroundColor:  success.G008}} 
-                    textStyle = {{color: black.main}}
-                    onPress={() => handleDelete(index)}
-                  >{requirement}</Chip>
-                ))}
-      </View>
+      {requirements?.length > 0 && 
+          <View style = {{flexDirection: 'column', marginVertical: 20, justifyContent: 'flex-start', width: '95%'}}>
+          {requirements?.map((requirement: any, index: any) => (
+            <Chip 
+              style = {{marginRight: 10, backgroundColor:  success.G008, marginTop: 5, paddingHorizontal: 15,}} 
+              textStyle = {{color: black.main}}
+              onPress={() => handleDelete(index)}
+            >{requirement}</Chip>
+          ))}
+          </View>}
+      <View style = {{flexDirection: 'row', width: '100%', justifyContent: 'center', alignItems: 'center',}}>
+        <DefaultField
+          placeholder="Add competencies"
+          placeholderTextColor={black.B005}
+          size={25}
+          name = {compvalue.length > 0 ? 'blank': 'hammer-wrench'}
+          color={black.B004}
+          value = {compvalue}
+          onChangeText={(e) => setcompvalue(e)}
+          onSubmitEditing={handleKeyCompPress}
+        />
+        {compvalue && <Pressable onPress={handleKeyCompPress} style = {{position: 'absolute', right: 25}}>
+          <Icon name = 'plus-circle-outline' size={30} color={theme.accenta} />
+        </Pressable>}
+        </View>
+        <Text style = {{textAlign: 'left', fontSize: 16, width: '95%', fontFamily: 'Montserrat-Regular', marginTop: 5, color: black.main}}>Competencies Added</Text>
+        {competencies?.length > 0 && 
+          <View style = {{flexDirection: 'column', marginVertical: 20, justifyContent: 'flex-start', width: '95%'}}>
+          {competencies?.map((requirement: any, index: any) => (
+            <Chip 
+              style = {{marginRight: 10, backgroundColor:  success.G008, padding: 5, marginTop: 5, width: '50%'}} 
+              textStyle = {{color: black.main}}
+              onPress={() => handleCompDelete(index)}
+            >{requirement}</Chip>
+          ))}
+          </View>}
       <View style = {{width: '90%', flexDirection: 'row', justifyContent: 'space-between', marginTop: 25}}>
      <PrevButton onPress={prevpos}/>
      <NextButton onPress={submit}/>

@@ -1,4 +1,4 @@
-import { View, Text,TextInput, ViewStyle, Pressable } from 'react-native'
+import { View, Text,TextInput, ViewStyle, Pressable, KeyboardTypeOptions } from 'react-native'
 import React, { useState } from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { styles } from '../../../styles'
@@ -21,7 +21,7 @@ type Props = {
     placeholder?: string,
     placeholderTextColor?: string,
     secureTextEntry?: boolean,
-    keyboardType?: string,
+    keyboardType?: KeyboardTypeOptions,
     onSubmitEditing?: (e: any) => void,
 }
 

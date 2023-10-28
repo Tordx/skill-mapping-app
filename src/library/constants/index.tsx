@@ -1,51 +1,39 @@
 export interface data {
-    uid: string,
-    firstname: string; 
-    middlename: string; 
-    lastname: string 
-    suffix: string;
-    dob: string;
-    gender: string;
-    nationality: string;
-    jobTitle: string;
-    highesteduc: string;
-    ProfLi: string;
-    Cert: string;
-    CSE: string;
-    SpeSkills: string;
-    Province: string;
-    City: string;
-    Barangay: string;
-    Street: string;
-    contactnumber: string;
-    email: string;
-    emergencycontactname: string;
-    readonlyelationship: string;
-    emergencycontactnum: string;
-    Address: string,
-    address: [
-      {Province: string,},
-      {City: string,},
-      {Barangay: string},
-      {Street: string},
-    ];
-    username: string;
-    fullname: string;
-    website: string;
-    type: string;
-    usertype: string;
-    _userdata: any;
-    company: string,
-    businesshours: string,
-    description: string,
-    photoURL: string,
-  
+  _userdata: any,
+  username: string;
+  fullname: [
+    {firstname: string,},
+    {middlename: string;},
+    {lastname: string;},
+    {suffix: string;},
+  ]
+  firstname: string;
+  middlename: string;
+  lastname: string;
+  suffix: string;
+  usertype: 'freelance' | 'employer';
+  photoURL: string;
+  email: string;
+  dob: string; 
+  gender: string;
+  skills: string[];
+  competencies: string[];
+  files: string[];
+  salary: string; 
+  contactnumber: string;
+  Province: string
+  City: string;
+  Barangay: string
+  Street: string;
+  uid: string; // Assuming 'getid' is a string
+ 
   }
 
 export interface jobdata {
     jobtitle: string;
     joblocation: string,
-    requirements: any;
+    requirements: string[];
+    competencies: string[];
     type: string;
     scope: string;
     budget: number;
