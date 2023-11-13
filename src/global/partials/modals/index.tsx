@@ -26,8 +26,28 @@ type Props = {
 export const JobInfoModal: React.FC<Props> = ({onPress, visible, onRequestClose, title}) => {
 
   const {JobData} = useSelector((action: jobdata) => action._jobdata);
-  console.log(JobData);
+  const {userdata} = useSelector((action: data) => action._userdata)
+
+  let userResult: string[] = userdata[0]?.skills?.concat(userdata[0]?.competencies || []) || [];
+  let jobResult: string[] = JobData?.requirements?.concat(JobData?.competencies || []) || [];
+  const additionalString = JobData?.jobtitle?.toLowerCase() || "";
+  jobResult = jobResult.concat(additionalString);
+
+  jobResult = [...jobResult, additionalString];
+  let matchedCount = 0;
+  console.log(additionalString)
+  if (userResult.length > 0) {
+    jobResult && jobResult.forEach((jobItem: string) => {
+      userResult && userResult.forEach((userItem: string) => {
+        if (jobItem.toLowerCase().includes(userItem.toLowerCase())) {
+          matchedCount += 1;
+        }
+      });
+    });
+  }
   
+  const percentage = jobResult.length > 0 ? (matchedCount / jobResult.length) * 100 : 0;
+
 
   return (
     <Modal visible = {visible} transparent onRequestClose={onRequestClose} animationType='slide' statusBarTranslucent>
@@ -43,19 +63,24 @@ export const JobInfoModal: React.FC<Props> = ({onPress, visible, onRequestClose,
                 <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}>PHP {JobData.budget}</Text>
               </View>
             </View>
-            <View style = {{flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', width: '95%'}}>
-              <View style = {{flexDirection: 'row', marginVertical: 5, justifyContent: 'center', alignContent: 'center'}}>
-                <Icon name ='clock-outline' size={20}/>
+            <View style = {{justifyContent: 'center', alignItems: 'center', width: '95%'}}>
+              <View style = {{flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', width: '100%'}}>
+                <View style = {{flexDirection: 'row', marginVertical: 5, justifyContent: 'center', alignContent: 'center'}}>
+                  <Icon name ='clock-outline' size={20}/>
+                    <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}>
+                      {' posted '}
+                  </Text>
+                  <TimeAgo time={JobData.timestamp} textStyle={{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}/>
+                </View>
+                <View style = {{flexDirection: 'row', marginVertical: 5, justifyContent: 'center', alignContent: 'center'}}>
+                  <Icon name ='map-marker-outline' size={20}/>
                   <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}>
-                    {' posted '}
-                </Text>
-                <TimeAgo time={JobData.timestamp} textStyle={{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}/>
+                    {JobData.joblocation}
+                  </Text>
+                </View>
               </View>
-              <View style = {{flexDirection: 'row', marginVertical: 5, justifyContent: 'center', alignContent: 'center'}}>
-                <Icon name ='map-marker-outline' size={20}/>
-                <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}>
-                  {JobData.joblocation}
-                </Text>
+              <View style = {{position: 'absolute', right: 20, width: 65, height: 65, borderRadius: 100, borderColor: theme.primary, borderWidth: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <Text>{percentage.toFixed(0)}%</Text>
               </View>
             </View>
             <View style = {{flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', width: '95%', marginTop: 15}}>
@@ -71,17 +96,17 @@ export const JobInfoModal: React.FC<Props> = ({onPress, visible, onRequestClose,
                 </Text>
                 </View>
             <Text style = {[styles.h1, {fontSize: 14, color: black.main, fontFamily: 'Montserrat-Bold',marginTop: 10}]}>Skills and Expertise needed</Text>
-            <View style = {{flexDirection: 'row', marginVertical: 20}}>
+            <ScrollView horizontal style = {{flexDirection: 'row', marginVertical: 20}}>
                   {JobData.requirements?.map((requirement: any, index: any) => (
                     <Chip style = {{marginRight: 10, backgroundColor: '#F8FBEA'}} textStyle = {{color: theme.secondary}}>{requirement}</Chip>
                   ))}
-                </View>
+                </ScrollView>
                 <Text style = {[styles.h1, {fontSize: 14, color: black.main, fontFamily: 'Montserrat-Bold',marginTop: 10}]}>Competencies</Text>
-            <View style = {{flexDirection: 'row', marginVertical: 20}}>
+            <ScrollView horizontal  style = {{flexDirection: 'row', marginVertical: 20}}>
                   {JobData.competencies?.map((requirement: any, index: any) => (
                     <Chip style = {{marginRight: 10, backgroundColor: '#F8FBEA'}} textStyle = {{color: theme.secondary}}>{requirement}</Chip>
                   ))}
-                </View>
+                </ScrollView>
                 <View style = {{justifyContent: 'center', alignItems: 'center', alignSelf: 'center', width: '105%', marginVertical: 20}}>
                 <LogButton title= {title || ''} onPress={onPress} />
                 </View>

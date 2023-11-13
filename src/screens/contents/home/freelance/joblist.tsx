@@ -80,7 +80,6 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
       try {
           const retrievedalljobdata: jobdata[] = await getAllData('job-post');
           setalldata(retrievedalljobdata);
-          
           const filteredJobData = retrievedalljobdata.filter((item) => {
             if (item) {
                 const jobTitle = item.jobtitle.toLowerCase(); // Convert to lowercase for case-insensitive comparison
@@ -187,6 +186,7 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
     const date = new Date(timeInSeconds * 1000);
     const formattedTime = date
     const isSaved = save.some((savedItem) => savedItem.jobid === item.jobid);
+    const percentage = item.requirements.filter((item) => item)
     return(
         <Pressable onPress = {() => viewjob(item)}  style = {{width: '100%', justifyContent: 'center', alignItems: 'center'}}>
           <View style = {{backgroundColor: '#ececec', width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start', marginVertical: 10}}>

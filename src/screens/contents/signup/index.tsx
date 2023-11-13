@@ -15,6 +15,8 @@ import FilePickerManager, { FilePickerResult } from 'react-native-file-picker'
 import RNFS from 'react-native-fs'
 import storage from '@react-native-firebase/storage';
 import  Icon  from 'react-native-vector-icons/MaterialCommunityIcons'
+import { Kalamansig, Lebak, Palimbang, municipality } from '../../../library/constants'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 type Props = {
   position: number;
   setposition: (position: number) => void;
@@ -82,7 +84,7 @@ type Props = {
     const [filevalue, setfilevalue] = useState('');
     const [filearray, setfilearray] = useState<string[]>([])
     const [salary, setsalary] = useState('')
-    const [Province, setProvince] = useState('')
+    const [Province, setProvince] = useState('Sultan Kudarat')
     const [City, setCity] = useState('')
     const [Barangay, setBarangay] = useState('')
     const [Street, setStreet] = useState('')
@@ -92,6 +94,9 @@ type Props = {
     const [password,setpassword] = useState('')
     const [cpassword,setcpassword] = useState('')
     const [loading, setloading] = useState(false)
+    const [municipalities, setmunicipalities] = useState(false)
+    const [barangays, setbarangays] = useState(false)
+    const [barangayList, setBarangayList] = useState<string[]>([])
 
     const navigation = useNavigation();
 
@@ -184,7 +189,6 @@ type Props = {
 
     const handleKeyPress = (e:any) => {
 
-        console.log('weh pressed');
         setskills([...skills, skillvalue]);
         setskillvalue(''); 
     };
@@ -244,9 +248,6 @@ type Props = {
     
   const submit = () => {
 
-    
-
-
     if(position === 3) {
       if(!email && !username && !password && !cpassword) {
         ToastAndroid.show('Some fields might be blank', ToastAndroid.LONG)
@@ -273,6 +274,21 @@ type Props = {
       }
     }
   }
+
+  useEffect(() => {
+    if(City == 'Kalamansig') {
+      setBarangayList(Kalamansig)
+    }
+    if(City == 'Palimbang') {
+      setBarangayList(Palimbang)
+    }
+    if(City == 'Lebak') {
+      setBarangayList(Lebak)
+    } else {
+      return
+    }
+
+  },[City])
 
       return (
         <>
@@ -434,30 +450,75 @@ type Props = {
           <DefaultField
               placeholder="Province*"
               placeholderTextColor={black.B005}
-              name="map-marker-outline"
+              name="chevron-right"
               size={25}
               color={black.B004}
               value = {Province}
+              editable = {false}
               onChangeText={(value) => setProvince(value)} 
           />
+         
           <DefaultField
               placeholder="City/Town*"
               placeholderTextColor={black.B005}
-              name="map-marker-outline"
+              name={municipalities ? "chevron-down" : 'chevron-right'}
               size={25}
               color={black.B004}
               value = {City}
-              onChangeText={(value) => setCity(value)}
+              editable = {false}
+              onPress={() => setmunicipalities(!municipalities)}
+              onChangeText={(e) => setCity(e)}
           />
+           {municipalities && 
+            <View  style = {{width: '90%', justifyContent: 'flex-start', alignItems: 'flex-start', margin: 20}}>
+              {municipality && municipality.map((name: string, index: number) => {
+                
+                const handleSelect = () => {
+                  setCity(name)
+                  setmunicipalities(false)
+                  setBarangay('')
+                }
+
+                return (
+                  <TouchableOpacity onPress={() => handleSelect()}>
+                    <Text style = {{fontSize: 18, margin: 5, color: black.main}}>
+                      {name}
+                    </Text>
+                  </TouchableOpacity>
+                )
+              })}
+            </View>
+          }
           <DefaultField
               placeholder="Barangay"
               placeholderTextColor={black.B005}
-              name="map-marker-outline"
+              name={barangays ? "chevron-down" : 'chevron-right'}
               size={25}
               color={black.B004}
               value = {Barangay}
+              editable = {false}
+              onPress={() => setbarangays(!barangays)}
               onChangeText={(value) => setBarangay(value)}
           />
+          {barangays && 
+            <View  style = {{width: '90%', justifyContent: 'flex-start', alignItems: 'flex-start', margin: 20}}>
+              {barangayList && barangayList.map((name: string, index: number) => {
+                
+                const handleSelect = () => {
+                  setBarangay(name)
+                  setbarangays(false)
+                }
+
+                return (
+                  <TouchableOpacity onPress={() => handleSelect()}>
+                    <Text style = {{fontSize: 18, margin: 5, color: black.main}}>
+                      {name}
+                    </Text>
+                  </TouchableOpacity>
+                )
+              })}
+            </View>
+          }
           <DefaultField
               placeholder="Street"
               placeholderTextColor={black.B005}

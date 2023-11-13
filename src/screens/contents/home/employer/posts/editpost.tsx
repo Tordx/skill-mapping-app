@@ -254,7 +254,7 @@ return (
           name = {requirements.length > 0 ? 'blank': 'hammer-wrench'}
           color={black.B004}
           value = {requirementvalue}
-          onChangeText={(e) => setcompvalue(e)}
+          onChangeText={(e) => setrequirementvalue(e)}
           onSubmitEditing={handleKeyPress}
         />
         {requirementvalue && <Pressable onPress={handleKeyPress} style = {{position: 'absolute', right: 25}}>
@@ -436,6 +436,15 @@ return (
       radiocolor= {theme.accentd}
       />
         <JoinasButton
+      title = 'Monthly rate'
+      name = 'currency-php'
+      onPress={() =>{setpertimeframe('Monthly')}}
+      size = {25}
+      status= {pertimeframe === 'Monthly' ? 'checked' : 'unchecked'}
+      style = {{borderColor: pertimeframe === 'Monthly' ? theme.accentd : black.B005, backgroundColor: pertimeframe === 'Monthly' ? theme.accentc : theme.light}}
+      radiocolor= {theme.accentd}
+      />
+      <JoinasButton
       title = 'Negotiable rate'
       name = 'currency-php'
       onPress={() =>{setpertimeframe('$$$')}}

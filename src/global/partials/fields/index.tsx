@@ -25,12 +25,12 @@ type Props = {
     onSubmitEditing?: (e: any) => void,
 }
 
-export const DefaultField: React.FC<Props> = ({onSubmitEditing,keyboardType, onKeyPress, onChangeText, value , onFocus, name, size, color, editable, style, onBlur, placeholder, placeholderTextColor, secureTextEntry}) => {
+export const DefaultField: React.FC<Props> = ({onPress, onSubmitEditing,keyboardType, onKeyPress, onChangeText, value , onFocus, name, size, color, editable, style, onBlur, placeholder, placeholderTextColor, secureTextEntry}) => {
 
     
 
   return (
-    <View style = {[styles.inputcontainer,  style]}>
+    <Pressable onPress={onPress} style = {[styles.inputcontainer,  style]}>
       <TextInput
         secureTextEntry = {secureTextEntry}
         editable = {editable}
@@ -53,7 +53,7 @@ export const DefaultField: React.FC<Props> = ({onSubmitEditing,keyboardType, onK
         color = {color}
       />
       }
-    </View>
+    </Pressable>
   )
 }
 
