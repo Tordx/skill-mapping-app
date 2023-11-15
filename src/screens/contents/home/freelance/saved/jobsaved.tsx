@@ -136,6 +136,7 @@ export const JobSave: React.FC = () => {
             data={save}
              style = {{width: '100%', height: '100%',}}
             renderItem={renderitem}
+            keyExtractor={(item) => item.jobid}
             refreshControl={<RefreshControl refreshing = {refreshing} onRefresh={refresh} />}
         /> : <Text style = {{color: 'black'}}>No Jobs Matches your preferrence</Text> }
         <JobInfoModal onPress={() => {}} title='Apply Now' onRequestClose = {() => setopenmodal(false)}  visible = {openmodal}/>

@@ -1,21 +1,21 @@
 import { View, Text,FlatList, Pressable, RefreshControl, ToastAndroid, Alert } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { createsave, getAllData, getSpecificjobData, gethireddata, getsaves } from '../../../../firebase';
-import { data, hirestatus, jobdata, jobid } from '../../../../library/constants';
+import { createsave, getAllData, getEmployerJobData, getSpecificjobData, gethireddata, getsaves } from '../../../../../firebase';
+import { archiveData, data, hirestatus, jobdata, jobid } from '../../../../../library/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import TimeAgo from 'react-native-timeago';
 import { Image } from 'react-native';
-import { black, theme, white } from '../../../../assets/colors';
-import { styles } from '../../../../styles';
+import { black, theme, white } from '../../../../../assets/colors';
+import { styles } from '../../../../../styles';
 import { Chip } from 'react-native-paper';
 import  Icon  from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
-import { setjobdata } from '../../../../library/redux/jobslice';
-import { HiredModal, JobInfoModal, Loadingmodal } from '../../../../global/partials/modals';
+import { setjobdata } from '../.././../../../library/redux/jobslice';
+import { HiredModal, JobInfoModal, Loadingmodal } from '../../../../../global/partials/modals';
 import firestore from '@react-native-firebase/firestore'
-import { idgen } from '../../../../global/functions';
+import { idgen } from '../../../../../global/functions';
 import { firebase } from '@react-native-firebase/auth';
-import { SearchField } from '../../../../global/partials/fields';
+import { SearchField } from '../../../../../global/partials/fields';
 
 type Props = {
 
@@ -31,7 +31,7 @@ interface getdata {
 
 }
 
-const SearchList: React.FC<Props> = ({focus, setfocus}) => {
+const SearchListE: React.FC<Props> = ({focus, setfocus}) => {
 
     const [alldata, setalldata] = useState<jobdata[]>([]);
     const [matchdata, setmatchdata] = useState<jobdata[]>([]);
@@ -40,6 +40,7 @@ const SearchList: React.FC<Props> = ({focus, setfocus}) => {
     const [ishired, setishired] = useState(false)
     const {userdata} = useSelector((action: data) => action._userdata)
     const {JobData} = useSelector((action: jobdata) => action._jobdata)
+		const {archivedata} = useSelector((action: archiveData) => action._archivedata)
     const [save, setsave] = useState<jobid[]>([]);
     const [data, setdata] = useState<jobdata[]>([]);
     const [openmodal, setopenmodal] = useState(false);
@@ -74,20 +75,33 @@ const SearchList: React.FC<Props> = ({focus, setfocus}) => {
 
     }
     
-    const savejob = async (item: jobdata) => {
-      const id = idgen();
-      try {
-        const timestamp = firebase.firestore.FieldValue.serverTimestamp()
-        await createsave(item, userdata[0], id, timestamp)
-        setsave((prevSave) => [...prevSave, { jobid: item.jobid, saveid: id } as jobid]);
-      } catch (error) {
-        console.log(error);
-      }
+    const archivejob = async (item: jobdata) => {
+       
+        try {
+        
+            const jobId = item.jobid.trim();
+            await firestore().collection('job-post').doc(jobId).update({
+              status: false,
+            });
+            fetchData()
+    
+          } catch(error) {
+            console.log(error)
+          }
+    
     };
     const fetchData = async () => {
+				console.log(archivedata)
         try {
-            const retrievedalljobdata: jobdata[] = await getAllData('job-post');
-            setalldata(retrievedalljobdata)
+            const retrievedalljobdata: jobdata[] = await getEmployerJobData('job-post');
+						const myjobpost = retrievedalljobdata.filter((item: jobdata) => item.userid === userdata[0].uid)
+						if(archivedata){
+							const archivedresult = myjobpost.filter((item: jobdata) => item.status === false)
+							setalldata(archivedresult)
+						} else {
+							const archivedresult = myjobpost.filter((item: jobdata) => item.status === true)
+							setalldata(archivedresult)
+						}
             
           }  catch (error) {
           console.log('Error fetching data:', error);
@@ -111,18 +125,7 @@ const SearchList: React.FC<Props> = ({focus, setfocus}) => {
     }
 
   const viewjob = (item: any) => {
-    const { timestamp, ...restOfTheItem } = item;
-    const firstDataItem = item;
-    const timeInSeconds = firstDataItem?.timestamp?._seconds || 0;
-    const date = new Date(timeInSeconds * 1000);
-    const formattedTime = date.toLocaleDateString()
-    
-    const dataToDispatch = {
-      formattedTime,
-      timestamp: timeInSeconds,
-      ...restOfTheItem,
-    };
-    dispatch(setjobdata(dataToDispatch));
+    dispatch(setjobdata(item));
     setopenmodal(true);
   };
   
@@ -178,8 +181,8 @@ const SearchList: React.FC<Props> = ({focus, setfocus}) => {
               <TimeAgo time={formattedTime} textStyle={{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}/>
             </View>
           </View>
-          <Pressable disabled = {isSaved} onPress={() => savejob(item)} style = {{position: 'absolute', top: 20, right: 20, }}>
-                <Icon name  ={isSaved ? 'content-save': 'content-save-outline'} size={25} color={isSaved ? theme.primary : black.B005} />
+          <Pressable disabled = {isSaved} onPress={() => archivejob(item)} style = {{position: 'absolute', top: 20, right: 20, }}>
+            <Icon name  ='archive-arrow-down-outline' size={25} color={isSaved ? theme.primary : black.B005} />
           </Pressable>
         </Pressable>
     )
@@ -194,13 +197,18 @@ const SearchList: React.FC<Props> = ({focus, setfocus}) => {
             data={alldata}
              style = {{width: '100%', height: '100%',}}
             renderItem={renderitem}
-            keyExtractor={(item) => item.jobid}
             refreshControl={<RefreshControl refreshing = {refreshing} onRefresh={refresh} />}
+						keyExtractor={(item) => item.jobid}
         /> : <Text style = {{color: 'black'}}>No Jobs Matches your preferrence</Text> }
-        <JobInfoModal onPress={() => {setopenmodal(false); navigation.navigate('Presumbit' as never)}} title='Apply Now' onRequestClose = {() => setopenmodal(false)}  visible = {openmodal}/>
+          <JobInfoModal  
+            title = 'Update Details' 
+            onRequestClose = {() => setopenmodal(false)}  
+            visible = {openmodal}
+            onPress={() => {setopenmodal(false); navigation.navigate('EditPost' as never)}}
+            />
         <Loadingmodal title = 'Submitting Application, Please wait...' visible = {loading} onRequestClose={()=> {}}/>
     </View>
   )
 }
 
-export default SearchList
+export default SearchListE

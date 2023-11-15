@@ -59,15 +59,15 @@ const ViewProfile = () => {
         </View>
         <Text style={[styles.h4, { fontFamily: 'Montserrat-SemiBold', marginBottom: 10 }]}>
              {profile[0]?.fullname[0].firstname} {profile[0]?.fullname[1].middlename}  {profile[0]?.fullname[2].lastname} {profile[0]?.fullname[3]?.suffix} 
-        </Text>
-				{profile[0]?.gender && <Text style = {{ fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 15}}>{profile[0]?.gender}</Text>}
+        </Text>{profile[0]?.gender && <Text style = {{ fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 15, marginVertical: 20}}>{profile[0]?.contactnumber} / {profile[0].email}</Text>}
+				{profile[0]?.gender && <Text style = {{ fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 15, marginVertical: 20}}>{profile[0]?.gender}</Text>}
 				<Text style = {{ fontFamily: 'Montserrat-Bold', color: black.main, fontSize: 18}}>Skills</Text>
 				<View style = {{flexDirection: 'row', marginVertical: 20}}>
 				{profile[0]?.skills && profile[0].skills?.length > 0 && 
-          <View style = {{flexDirection: 'column', marginVertical: 20, justifyContent: 'flex-start',}}>
+          <View style = {{flexDirection: 'column', marginVertical: 20, justifyContent: 'flex-start', width: '100%', alignItems: 'center'}}>
           {profile[0].skills?.map((requirement: any, index: any) => (
             <Chip 
-              style = {{marginRight: 10, backgroundColor:  success.G008, padding: 5, marginTop: 5}} 
+              style = {{marginRight: 10, backgroundColor:  success.G008, padding: 5, marginTop: 5, width: '90%'}} 
               textStyle = {{color: black.main}}
               onPress={(e) => console.log(e)}
             >{requirement}</Chip>
@@ -77,10 +77,10 @@ const ViewProfile = () => {
 					<Text style = {{ fontFamily: 'Montserrat-Bold', color: black.main, fontSize: 18}}>Competencies</Text>
 					<View style = {{flexDirection: 'row', marginVertical: 20}}>
 					{profile[0]?.competencies && profile[0].competencies?.length > 0 && 
-          <View style = {{flexDirection: 'column', marginVertical: 20, justifyContent: 'flex-start',}}>
+          <View style = {{flexDirection: 'column', marginVertical: 20, justifyContent: 'flex-start', width: '100%', alignItems: 'center'}}>
           {profile[0].competencies?.map((requirement: any, index: any) => (
             <Chip 
-              style = {{marginRight: 10, backgroundColor:  success.G008, padding: 5, marginTop: 5}} 
+              style = {{marginRight: 10, backgroundColor:  success.G008, padding: 5, marginTop: 5, width: '90%'}} 
               textStyle = {{color: black.main}}
               onPress={(e) => console.log(e)}
             >{requirement}</Chip>
@@ -90,10 +90,10 @@ const ViewProfile = () => {
 					<Text style = {{ fontFamily: 'Montserrat-Bold', color: black.main, fontSize: 18}}>Proof of Competencies</Text>
 					<View style = {{flexDirection: 'row', marginVertical: 20}}>
 					{profile[0]?.files && profile[0].files?.length > 0 && 
-          <View style = {{flexDirection: 'column', marginVertical: 20, justifyContent: 'flex-start',}}>
+          <View style = {{flexDirection: 'column', marginVertical: 20, justifyContent: 'flex-start',  width: '100%', alignItems: 'center'}}>
           {profile[0].files?.map((requirement: any, index: any) => (
             <Chip 
-              style = {{marginRight: 10, backgroundColor:  success.G008, padding: 5, marginTop: 5}} 
+              style = {{marginRight: 10, backgroundColor:  success.G008, padding: 5, marginTop: 5, width: '90%'}} 
               textStyle = {{color: black.main}}
               onPress={() => dlfile(requirement)}
             >file {index}</Chip>

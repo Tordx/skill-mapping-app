@@ -186,7 +186,6 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
     const date = new Date(timeInSeconds * 1000);
     const formattedTime = date
     const isSaved = save.some((savedItem) => savedItem.jobid === item.jobid);
-    const percentage = item.requirements.filter((item) => item)
     return(
         <Pressable onPress = {() => viewjob(item)}  style = {{width: '100%', justifyContent: 'center', alignItems: 'center'}}>
           <View style = {{backgroundColor: '#ececec', width: '95%', justifyContent: 'flex-start', alignItems: 'flex-start', marginVertical: 10}}>
@@ -196,7 +195,11 @@ const JobsLists: React.FC<Props> = ({focus, setfocus}) => {
                 <Text style = {[styles.h1, {fontSize: 20, color: theme.primary}]}>
                     {item.jobtitle}
                 </Text>
-                <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}>PHP {item.budget.toLocaleString()} / {item.pertimeframe}</Text>
+                {item.pertimeframe !== '$$$' ?
+                  <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}>PHP {item.budget.toLocaleString()} / {item.pertimeframe}</Text>
+                  : 
+                  <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}>Negotiable</Text>
+                  }
               </View>
             </View>
             <View style={{ width: '90%', justifyContent: 'flex-start', alignSelf: 'flex-start', }}>

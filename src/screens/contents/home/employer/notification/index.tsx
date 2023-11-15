@@ -115,6 +115,7 @@ const Applications = (props: Props) => {
            style = {{width: '100%', height: '100%',}}
           renderItem={renderitem}
           refreshControl={<RefreshControl refreshing = {refreshing} onRefresh={refresh} />}
+          keyExtractor={(item) => item.jobid}
       /> : <Text style = {{color: 'black'}}>No Jobs Matches your preferrence</Text> }
       
   </View>

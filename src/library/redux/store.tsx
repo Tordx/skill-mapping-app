@@ -4,6 +4,7 @@ import userslice from './userslice';
 import jobslice from './jobslice';
 import applicationslice from './applicationslice';
 import idslice from './idslice';
+import archiveslice from './archiveslice';
 
 
 export default configureStore({
@@ -13,6 +14,7 @@ export default configureStore({
         _jobdata: jobslice,
         _applicationdata: applicationslice,
         _profileuiddata: idslice,
+        _archivedata: archiveslice,
     },
     middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

@@ -193,6 +193,7 @@ const ArchivePosts: React.FC = () => {
              style = {{width: '100%', height: '100%'}}
             renderItem={renderitem}
             refreshControl={<RefreshControl refreshing = {refresh} onRefresh={handleRefresh} />}
+            keyExtractor={(item) => item.jobid}
         /> 
         : <Text style = {{color: black.main}}>There's nothing to show</Text> }
         <JobInfoModal  

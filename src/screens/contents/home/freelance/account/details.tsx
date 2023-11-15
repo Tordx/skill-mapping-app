@@ -79,6 +79,7 @@ const FPersonalInformation = (props: Props) => {
               color={black.B004}
               value = {userdata[0].dob}
               editable = {false}
+              
           />
         <Text style = {{alignSelf: 'flex-start', marginLeft: 15, fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 15}}>Nationality</Text>
           <DefaultField

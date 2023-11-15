@@ -55,7 +55,7 @@ const Joinas: React.FC<Props> = (props) => {
         radiocolor= {theme.accentd}
       />
       <JoinasButton
-        title = 'I am a freelancer'
+        title = 'I am a Job Seeker'
         name = 'account-search-outline'
         onPress={() =>{setusertype('freelance')}}
         size = {25}

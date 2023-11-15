@@ -82,6 +82,23 @@ import { idgen } from '../global/functions';
       }
     };
 
+    export const getEmployerJobData = async (toretrieve: string): Promise<jobdata[]> => {
+      try {
+        const collectionRef = firestore().collection(toretrieve);
+        const querySnapshot = await collectionRef.get();
+    
+        const data: jobdata[] = [];
+        querySnapshot.forEach((documentSnapshot) => {
+          const docData = documentSnapshot.data() as jobdata;
+          data.push(docData);
+        });
+        return data;
+      } catch (error) {
+        console.log('Error retrieving data:', error);
+        throw error;
+      }
+    };
+
     export const getSpecificjobData = async (datapull: string, dataparameter: string, parameter: string,): Promise<jobdata[]> => {
       try {
         const collectionRef = firestore().collection(datapull);

@@ -24,6 +24,7 @@ import { CurrentApplication } from '../../screens/contents/home/freelance/notifi
 import Search from '../../screens/contents/home/freelance/search'
 import { CardStyleInterpolators } from '@react-navigation/stack'
 import ViewProfile from '../../screens/temp/viewprofile'
+import SearchMyPost from '../../screens/contents/home/employer/archive/searchmypost'
 
 type Props = {}
 
@@ -233,13 +234,22 @@ const  Stacks: React.FC = () => {
                     headerShown: false,
                 }}
             />
-             <Stack.Screen 
+            <Stack.Screen 
                 name='ViewProfile'
                 component={ViewProfile}
                 options={{
                     headerShown: false,
                 }}
             />
+            <Stack.Screen 
+                name='SearchMyPost'
+                component={SearchMyPost}
+                options={{
+                    headerShown: false,
+                }}
+            />
+
+
         </Stack.Navigator>
     </NavigationContainer>
   )

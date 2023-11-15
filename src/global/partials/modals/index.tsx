@@ -31,9 +31,8 @@ export const JobInfoModal: React.FC<Props> = ({onPress, visible, onRequestClose,
   let userResult: string[] = userdata[0]?.skills?.concat(userdata[0]?.competencies || []) || [];
   let jobResult: string[] = JobData?.requirements?.concat(JobData?.competencies || []) || [];
   const additionalString = JobData?.jobtitle?.toLowerCase() || "";
-  jobResult = jobResult.concat(additionalString);
+  // jobResult = jobResult.concat(additionalString);
 
-  jobResult = [...jobResult, additionalString];
   let matchedCount = 0;
   console.log(additionalString)
   if (userResult.length > 0) {
@@ -47,7 +46,13 @@ export const JobInfoModal: React.FC<Props> = ({onPress, visible, onRequestClose,
   }
   
   const percentage = jobResult.length > 0 ? (matchedCount / jobResult.length) * 100 : 0;
-
+  
+  const firstDataItem = JobData
+  console.log(jobResult.length)
+  console.log(userResult)
+  const timeInSeconds = firstDataItem.timestamp?._seconds || 0; 
+  const date = new Date(timeInSeconds * 1000);
+  const formattedTime = date
 
   return (
     <Modal visible = {visible} transparent onRequestClose={onRequestClose} animationType='slide' statusBarTranslucent>
@@ -56,12 +61,16 @@ export const JobInfoModal: React.FC<Props> = ({onPress, visible, onRequestClose,
         <View style = {{position: 'absolute', bottom: 10, width: '95%', height: '75%', justifyContent: 'center', alignItems: 'center', backgroundColor: theme.light, borderRadius: 15}}>
         <ScrollView style = {[styles.scrollview, {width: '90%'}]} showsVerticalScrollIndicator = {false}>
             <View style = {{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginVertical: 20, marginTop: 30}}>
-              <View style = {{ flexDirection: 'column', width: '85%'}}>
+              <View style = {{ flexDirection: 'column', width: '100%'}}>
                 <Text style = {[styles.h1, {fontSize: 20, color: theme.primary}]}>
                     {JobData.jobtitle}
                 </Text>
+                {JobData.pertimeframe !== '$$$' ? 
                 <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}>PHP {JobData.budget}</Text>
-              </View>
+                :
+                <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}>Negotiable</Text>
+                }
+              </View> 
             </View>
             <View style = {{justifyContent: 'center', alignItems: 'center', width: '95%'}}>
               <View style = {{flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', width: '100%'}}>
@@ -70,7 +79,7 @@ export const JobInfoModal: React.FC<Props> = ({onPress, visible, onRequestClose,
                     <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}>
                       {' posted '}
                   </Text>
-                  <TimeAgo time={JobData.timestamp} textStyle={{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}/>
+                  <TimeAgo time={formattedTime} textStyle={{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}/>
                 </View>
                 <View style = {{flexDirection: 'row', marginVertical: 5, justifyContent: 'center', alignContent: 'center'}}>
                   <Icon name ='map-marker-outline' size={20}/>
@@ -79,9 +88,11 @@ export const JobInfoModal: React.FC<Props> = ({onPress, visible, onRequestClose,
                   </Text>
                 </View>
               </View>
-              <View style = {{position: 'absolute', right: 20, width: 65, height: 65, borderRadius: 100, borderColor: theme.primary, borderWidth: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <Text>{percentage.toFixed(0)}%</Text>
-              </View>
+              {userdata[0].usertype === 'freelance' && 
+                <View style = {{position: 'absolute', right: 20, width: 65, height: 65, borderRadius: 100, borderColor: theme.primary, borderWidth: 1, justifyContent: 'center', alignItems: 'center'}}>
+                  <Text>{percentage.toFixed(0)}%</Text>
+                </View>
+              }
             </View>
             <View style = {{flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', width: '95%', marginTop: 15}}>
             <Text style = {[styles.h1, {fontSize: 14, color: black.main, fontFamily: 'Montserrat-Bold'}]}>Employment Type:  <Text style = {{fontFamily: 'Montserrat-Regular', fontSize: 14, color: black.main}}>

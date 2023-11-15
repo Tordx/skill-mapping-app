@@ -23,6 +23,7 @@ type Props = {
     secureTextEntry?: boolean,
     keyboardType?: KeyboardTypeOptions,
     onSubmitEditing?: (e: any) => void,
+
 }
 
 export const DefaultField: React.FC<Props> = ({onPress, onSubmitEditing,keyboardType, onKeyPress, onChangeText, value , onFocus, name, size, color, editable, style, onBlur, placeholder, placeholderTextColor, secureTextEntry}) => {
@@ -104,17 +105,18 @@ export const Multitextfield: React.FC<Props> = ({onKeyPress, onChangeText, value
 }
 
 
-export const SearchField: React.FC<Props> = ({onPress, onChangeText, value}) => {
+export const SearchField: React.FC<Props> = ({onPress, onChangeText, value, editable}) => {
 
   const [focus, setfocus] = useState(false)
 
   return (
-    <Pressable style = {[styles.inputcontainer, {backgroundColor: focus ? '#f8fbea' : theme.light}]}>
+    <Pressable  onPress = {onPress} style = {[styles.inputcontainer, {backgroundColor: focus ? '#f8fbea' : theme.light}]}>
       <TextInput
         onBlur={() => {setfocus(false)}}
         onFocus={() => {setfocus(true)}}
         placeholder='Search...'
         placeholderTextColor={black.B005}
+        editable = {editable}
         style = {[styles.inputfield, {width: '85%', paddingLeft: 20}]}
         onChangeText={onChangeText}
         value = {value}

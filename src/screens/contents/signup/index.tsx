@@ -17,6 +17,8 @@ import storage from '@react-native-firebase/storage';
 import  Icon  from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Kalamansig, Lebak, Palimbang, municipality } from '../../../library/constants'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import DatePicker from 'react-native-date-picker'
+import { launchImageLibrary } from 'react-native-image-picker'
 type Props = {
   position: number;
   setposition: (position: number) => void;
@@ -97,7 +99,8 @@ type Props = {
     const [municipalities, setmunicipalities] = useState(false)
     const [barangays, setbarangays] = useState(false)
     const [barangayList, setBarangayList] = useState<string[]>([])
-
+    const [opendate, setopendate] = useState(false)
+    const [transferred, setTransferred] = useState(0)
     const navigation = useNavigation();
 
     const handleSave = async () => {
@@ -199,32 +202,27 @@ type Props = {
         setcompvalue(''); 
     };
     const handleKeyPressfiles = () => {
-      console.log('here')
       try {
-        FilePickerManager.showFilePicker( async(response: FilePickerResult) => {
-          if (response.didCancel) {
-            ToastAndroid.show('User did not pick', ToastAndroid.BOTTOM)
-            return
-          } else if(response.error) {
-            ToastAndroid.show('something went wrong', ToastAndroid.BOTTOM)
-          } else {
-            if (response != null) {
-              const fileContent = await RNFS.readFile(response.uri, 'base64');
-              setfilevalue(response.fileName)
-              const blob = new Blob([fileContent]);
-
-              const reference = storage().ref(response.fileName);
-              await reference.put(blob);
-
-              const downloadURL = await reference.getDownloadURL();
-              setfiles([...files, downloadURL]);
-              setfilevalue('')
-              setfilearray([...filearray, response.fileName])
-              console.log('Download URL:', downloadURL);
-            }
-          }
+        launchImageLibrary({mediaType: 'photo'},(response: any) => {
+        }).then(async (image: any) => {
+          console.log(image)
+          const uri = image.assets[0].uri
+          const filename = image.assets[0].fileName
+          setTransferred(0);
+          const task = storage().ref(filename).putFile(uri)
+          task.on('state_changed', snapshot => {
+          setTransferred(
+          Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
+        )
+      })
+      return await task.then(async () => {
+        const firebasedata = await storage().ref(filename).getDownloadURL()
+        setfiles([...files, firebasedata])
+      })
         });
       } catch (err) {
+  
+          console.error(err)
           throw err;
       }
     };
@@ -339,7 +337,8 @@ type Props = {
             size={25}
             color={black.B004}
             value = {dob}
-            onChangeText={(value) => setdob(value)}
+            editable = {false}
+            onPress={() => setopendate(!opendate)}
           />
           <DefaultField
             placeholder="Sex*"
@@ -351,6 +350,21 @@ type Props = {
             onChangeText={(value) => setgender(value)}
           />
           <View style={{ marginBottom: 50 }} />
+          <DatePicker
+            modal
+            open = {opendate}
+            date = {new Date()}
+            mode = {'date'}
+            onConfirm={(e) => {
+              const formattedDate = e.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+              setdob(formattedDate);
+              setopendate(false);
+            }}
+          
+            onCancel={() => {
+              setopendate(false)
+            }}
+          />
         </>
         }
       {position == 1 &&  <>
@@ -421,14 +435,14 @@ type Props = {
           </Pressable>     
           {<Text style = {{textAlign: 'left', fontSize: 16, width: '95%', fontFamily: 'Montserrat-Regular', marginTop: 5, color: black.main}}>Files added</Text>}
           
-          {filearray.length > 0 &&  
+          {files.length > 0 &&  
             <View style = {{flexDirection: 'row', marginVertical: 20}}>
-              {filearray?.map((requirement: any, index: any) => (
+              {files?.map((requirement: any, index: any) => (
                 <Chip 
                   style = {{marginRight: 10, backgroundColor:  success.G008}} 
                   textStyle = {{color: black.main}}
                   onPress={() => handlefileDelete(index)}
-                >{requirement}</Chip>
+                >File {index + 1}</Chip>
               ))}
             </View>}
             <Text style = {{textAlign: 'left', fontSize: 12, width: '95%', fontFamily: 'Montserrat-Regular', marginTop: 5, color: black.main}}>Preferred Salary</Text>

@@ -29,6 +29,11 @@ export interface data {
  
   }
 
+export interface archiveData {
+  archivedata: boolean,
+  _archivedata: any,
+}
+
 export interface jobdata {
     jobtitle: string;
     joblocation: string,

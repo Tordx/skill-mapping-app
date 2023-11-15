@@ -377,6 +377,18 @@ const Createjobs: React.FC<Props> = ({position, setposition}) => {
             <Text style = {{textAlign: 'left', fontSize: 12, width: '95%', fontFamily: 'Montserrat-Regular', color: black.main}}>Longer term or complex initiative (ex. design and build a full website)</Text>
           </View>
         </View>
+        <View style = {{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '85%',marginTop: 25}}>
+          <RadioButton 
+            value={scope} 
+            onPress={() => setscope('Government')} 
+            status={ scope === 'Government' ? 'checked' : 'unchecked' }
+            color= {theme.accentd}
+          />
+          <View style = {{width: '100%',flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', }}>
+            <Text style = {{textAlign: 'left', fontSize: 17, width: '95%', fontFamily: 'Montserrat-Bold', color: black.main}}>Government Jobs</Text>
+            <Text style = {{textAlign: 'left', fontSize: 12, width: '95%', fontFamily: 'Montserrat-Regular', color: black.main}}>encompass a wide range of positions across various departments and levels of government. ( ex. Social Worker )</Text>
+          </View>
+        </View>
         <View style = {{width: '90%', flexDirection: 'row', justifyContent: 'space-between', marginTop: 25}}>
        <PrevButton onPress={prevpos}/>
        <NextButton onPress={submit}/>
@@ -408,14 +420,23 @@ const Createjobs: React.FC<Props> = ({position, setposition}) => {
         style = {{ borderColor: pertimeframe === 'Project Budget' ? theme.accentd : black.B005, backgroundColor: pertimeframe === 'Project Budget' ? theme.accentc : theme.light}}
         radiocolor= {theme.accentd}
         />
-          <JoinasButton
+        <JoinasButton
+          title = 'Monthly rate'
+          name = 'currency-php'
+          onPress={() =>{setpertimeframe('Monthly')}}
+          size = {25}
+          status= {pertimeframe === 'Monthly' ? 'checked' : 'unchecked'}
+          style = {{borderColor: pertimeframe === 'Monthly' ? theme.accentd : black.B005, backgroundColor: pertimeframe === 'Monthly' ? theme.accentc : theme.light}}
+          radiocolor= {theme.accentd}
+        />
+        <JoinasButton
         title = 'Negotiable rate'
-        name = 'currency-php'
-        onPress={() =>{setpertimeframe('$$$')}}
-        size = {25}
-        status= {pertimeframe === '$$$' ? 'checked' : 'unchecked'}
-        style = {{borderColor: pertimeframe === '$$$' ? theme.accentd : black.B005, backgroundColor: pertimeframe === '$$$' ? theme.accentc : theme.light}}
-        radiocolor= {theme.accentd}
+          name = 'currency-php'
+          onPress={() =>{setpertimeframe('$$$')}}
+          size = {25}
+          status= {pertimeframe === '$$$' ? 'checked' : 'unchecked'}
+          style = {{borderColor: pertimeframe === '$$$' ? theme.accentd : black.B005, backgroundColor: pertimeframe === '$$$' ? theme.accentc : theme.light}}
+          radiocolor= {theme.accentd}
         />
         </View>
         {pertimeframe !== '$$$'  && 

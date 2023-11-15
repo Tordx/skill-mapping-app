@@ -183,6 +183,7 @@ const PostList: React.FC<Props> = () => {
              style = {{width: '100%', height: '100%', marginBottom: 50}}
             renderItem={renderitem}
             refreshControl={<RefreshControl refreshing = {refresh} onRefresh={handleRefresh} />}
+          
         /> 
         : <Text style = {{color: black.main}}>There's nothing to show</Text> }
         <JobInfoModal  

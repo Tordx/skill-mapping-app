@@ -6,6 +6,8 @@ import { useNavigation } from '@react-navigation/native'
 import { HoverButton } from '../../../global/partials/buttons'
 import { black, theme, white } from '../../../assets/colors'
 import ArchivePosts from '../../contents/home/employer/archive/archived'
+import { useDispatch } from 'react-redux'
+import { setArchiveData } from '../../../library/redux/archiveslice'
 
 
 type Props = {}
@@ -13,10 +15,11 @@ type Props = {}
 const EmployerArchived = (props: Props) => {
 
   const navigation = useNavigation()
+  const dispatch = useDispatch()
 
   return (
     <View style = {styles.container}> 
-      <SearchField onPress={() => navigation.navigate('Search' as never)}/>
+      <SearchField onPress={() => {navigation.navigate('SearchMyPost' as never); dispatch(setArchiveData(true))}} editable = {false}/>
       <View style = {{flexDirection: 'row', marginTop: 15,}}>
         <HoverButton 
           title = 'Archived Posts'

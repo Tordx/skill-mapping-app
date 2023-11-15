@@ -25,6 +25,7 @@ const NotificationList = (props: Props) => {
           data={data}
            style = {{width: '100%', height: '100%'}}
           renderItem={renderitem}
+          keyExtractor={(item) => item.userid}
       /> : <Text style = {{color: 'black'}}>No Jobs Matches your preferrence</Text> }
       {/* <JobInfoModal onRequestClose = {() => setopenmodal(false)}  visible = {openmodal}/> */}
   </View>

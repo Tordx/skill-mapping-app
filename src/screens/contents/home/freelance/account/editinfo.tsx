@@ -1,4 +1,4 @@
-import { View, Text, ToastAndroid, Pressable } from 'react-native'
+import { View, Text, ToastAndroid, Pressable, Linking, Platform } from 'react-native'
 import React, { useState } from 'react'
 import { styles } from '../../../../../styles'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -19,6 +19,8 @@ import { Chip } from 'react-native-paper'
 import RNFS from 'react-native-fs'
 import storage from '@react-native-firebase/storage';
 import FilePickerManager, { FilePickerResult } from 'react-native-file-picker'
+import DatePicker from 'react-native-date-picker'
+import { launchImageLibrary } from 'react-native-image-picker'
 type Props = {}
 
 export const Editjobtitle = (props: Props) => {
@@ -90,6 +92,7 @@ export const EditEducBackground: React.FC = () => {
     const [filearray, setfilearray] = useState<string[]>([]);
     const [filevalue, setfilevalue] = useState('')
     const [salary, setsalary] = useState('')
+    const [transferred, setTransferred] = useState(0)
     
     const dispatch = useDispatch()
     const navigation = useNavigation()
@@ -107,32 +110,25 @@ export const EditEducBackground: React.FC = () => {
       setcompetencies([...competencies, compvalue]);
       setcompvalue(''); 
   };
+
   const handleKeyPressfiles = () => {
     try {
-      FilePickerManager.showFilePicker( async(response: FilePickerResult) => {
-        if (response.didCancel) {
-          ToastAndroid.show('User did not pick', ToastAndroid.BOTTOM)
-          return
-        } else if(response.error) {
-          console.log(response.error);
-          
-          ToastAndroid.show('something went wrong', ToastAndroid.BOTTOM)
-        } else {
-          if (response != null) {
-            const fileContent = await RNFS.readFile(response.uri, 'base64');
-            setfilevalue(response.fileName)
-            const blob = new Blob([fileContent]);
-
-            const reference = storage().ref(response.fileName);
-            await reference.put(blob);
-
-            const downloadURL = await reference.getDownloadURL();
-            setfiles([...files, downloadURL]);
-            setfilevalue('')
-            setfilearray([...filearray, response.fileName])
-            console.log('Download URL:', downloadURL);
-          }
-        }
+      launchImageLibrary({mediaType: 'photo'},(response: any) => {
+      }).then(async (image: any) => {
+        console.log(image)
+        const uri = image.assets[0].uri
+        const filename = image.assets[0].fileName
+        setTransferred(0);
+        const task = storage().ref(filename).putFile(uri)
+        task.on('state_changed', snapshot => {
+        setTransferred(
+        Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
+      )
+    })
+    return await task.then(async () => {
+      const firebasedata = await storage().ref(filename).getDownloadURL()
+      setfiles([...files, firebasedata])
+    })
       });
     } catch (err) {
 
@@ -140,6 +136,7 @@ export const EditEducBackground: React.FC = () => {
         throw err;
     }
   };
+  
 
   const handleskillDelete = (index: number) => {
     const updatecomp = [...skills];
@@ -157,6 +154,10 @@ export const EditEducBackground: React.FC = () => {
     setfiles(updatecomp);
     setfilearray(updatecomp)
   };
+
+  const viewfile = (requirement: string) => {
+    Linking.openURL(requirement)
+  }
     
     const updatedata = async() => {
       setloading(true)
@@ -229,7 +230,7 @@ export const EditEducBackground: React.FC = () => {
         </Pressable>}
         </View>
         {competencies?.length > 0 &&  <Text style = {{textAlign: 'left', fontSize: 16, width: '95%', fontFamily: 'Montserrat-Regular', marginTop: 5, color: black.main}}>Competencies Added</Text>}
-        {competencies?.length > 0 &&  <View style = {{flexDirection: 'row', marginVertical: 20}}>
+        {competencies?.length > 0 &&  <ScrollView horizontal style = {{flexDirection: 'row', marginVertical: 20, width: '100%'}}>
                     {competencies?.map((requirement: any, index: any) => (
                       <Chip 
                         style = {{marginRight: 10, backgroundColor:  success.G008}} 
@@ -237,8 +238,8 @@ export const EditEducBackground: React.FC = () => {
                         onPress={() => handlecompDelete(index)}
                       >{requirement}</Chip>
                     ))}
-          </View>}
-          <Pressable style = {{width: '100%', justifyContent: 'center', alignItems: 'center'}} onPress={() => handleKeyPressfiles()}>
+          </ScrollView>}
+          <Pressable style = {{width: '100%', justifyContent: 'center', alignItems: 'center'}}>
           <Text style = {{textAlign: 'left', fontSize: 12, width: '95%', fontFamily: 'Montserrat-Regular', marginTop: 5, color: black.main}}>Proof of Competencies/Certification</Text>     
             <DefaultField
               placeholder="Selecf files"
@@ -248,19 +249,21 @@ export const EditEducBackground: React.FC = () => {
               name = 'file-multiple-outline'
               color={black.B004}
               value = {filevalue}
+              onPress={() => handleKeyPressfiles()}
               onChangeText={(value) => setfilevalue(value)}
             />
           </Pressable>     
-          {filearray?.length > 0 &&<Text style = {{textAlign: 'left', fontSize: 16, width: '95%', fontFamily: 'Montserrat-Regular', marginTop: 5, color: black.main}}>Files added</Text>}
+          {files?.length > 0 &&<Text style = {{textAlign: 'left', fontSize: 16, width: '95%', fontFamily: 'Montserrat-Regular', marginTop: 5, color: black.main}}>Files added</Text>}
           
-          {filearray?.length > 0 &&  
+          {files?.length > 0 &&  
             <View style = {{flexDirection: 'row', marginVertical: 20}}>
-              {filearray?.map((requirement: any, index: any) => (
+              {files?.map((requirement: any, index: any) => (
                 <Chip 
                   style = {{marginRight: 10, backgroundColor:  success.G008}} 
                   textStyle = {{color: black.main}}
-                  onPress={() => handlefileDelete(index)}
-                >{requirement}</Chip>
+                  onLongPress={() => handlefileDelete(index)}
+                  onPress={() => viewfile(requirement)}
+                >File {index + 1}</Chip>
               ))}
             </View>}
             <Text style = {{textAlign: 'left', fontSize: 12, width: '95%', fontFamily: 'Montserrat-Regular', marginTop: 5, color: black.main}}>Preferred Salary</Text>
@@ -298,6 +301,7 @@ export const EditPersonalInfoF:React.FC = () => {
   const [barangay, setbarangay] = useState(userdata[0].address[2]?.Barangay);
   const [street, setstreet] = useState(userdata[0].address[3]?.Street);
   const [gender, setgender] = useState(userdata[0].gender)
+  const [opendate, setopendate] = useState(false);
   const dispatch = useDispatch()
   const navigation = useNavigation()
   const [loading, setloading] = useState(false)
@@ -387,7 +391,8 @@ return (
             color={black.B004}
             value = {dob}
             onChangeText={(e) => setdob(e)}
-            
+            editable = {false}
+            onPress={() => {setopendate(true)}}
         />
       <Text style = {{alignSelf: 'flex-start', marginLeft: 15, fontFamily: 'Montserrat-Regular', color: black.main, fontSize: 15}}>Gender</Text>
           <DefaultField
@@ -416,6 +421,21 @@ return (
       </View>
     </ScrollView>
    <Loadingmodal title='Updating Personal Information' visible = {loading} onRequestClose={() => {}}/>
+   <DatePicker
+            modal
+            open = {opendate}
+            date = {new Date()}
+            mode = {'date'}
+            onConfirm={(e) => {
+              const formattedDate = e.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+              setdob(formattedDate);
+              setopendate(false);
+            }}
+          
+            onCancel={() => {
+              setopendate(false)
+            }}
+          />
   </View>
 )
 }
